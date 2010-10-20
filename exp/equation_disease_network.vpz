@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-0.9.0.dtd">
+<vle_project version="0.9.0" date="mer., 20 oct. 2010" author="bruno, raphael">
+<structures>
+<model name="Top model" type="coupled" x="0" y="0" width="1394" height="734"  >
+<submodels>
+<model name="Node_4" type="coupled" x="538" y="322" width="100" height="45"  >
+<in>
+ <port name="Node_2" />
+</in>
+<out>
+ <port name="Node_2" />
+</out>
+<submodels>
+</submodels>
+<connections>
+</connections>
+</model>
+<model name="Node_3" type="coupled" x="528" y="52" width="100" height="45"  >
+<in>
+ <port name="Node_2" />
+</in>
+<out>
+ <port name="Node_2" />
+</out>
+<submodels>
+</submodels>
+<connections>
+</connections>
+</model>
+<model name="Node_2" type="coupled" x="261" y="184" width="100" height="75"  >
+<in>
+ <port name="Node_1" />
+ <port name="Node_3" />
+ <port name="Node_4" />
+</in>
+<out>
+ <port name="Node_1" />
+ <port name="Node_3" />
+ <port name="Node_4" />
+</out>
+<submodels>
+</submodels>
+<connections>
+</connections>
+</model>
+<model name="Node_1" type="coupled" x="29" y="52" width="100" height="45"  >
+<in>
+ <port name="Node_2" />
+</in>
+<out>
+ <port name="Node_2" />
+</out>
+<submodels>
+</submodels>
+<connections>
+</connections>
+</model>
+</submodels>
+<connections>
+<connection type="internal">
+ <origin model="Node_1" port="Node_2" />
+ <destination model="Node_2" port="Node_1" />
+</connection>
+<connection type="internal">
+ <origin model="Node_2" port="Node_1" />
+ <destination model="Node_1" port="Node_2" />
+</connection>
+<connection type="internal">
+ <origin model="Node_2" port="Node_3" />
+ <destination model="Node_3" port="Node_2" />
+</connection>
+<connection type="internal">
+ <origin model="Node_2" port="Node_4" />
+ <destination model="Node_4" port="Node_2" />
+</connection>
+<connection type="internal">
+ <origin model="Node_3" port="Node_2" />
+ <destination model="Node_2" port="Node_3" />
+</connection>
+<connection type="internal">
+ <origin model="Node_4" port="Node_2" />
+ <destination model="Node_2" port="Node_4" />
+</connection>
+</connections>
+</model>
+</structures>
+<experiment name="exp" duration="1.000000000000000" begin="0.000000000000000" combination="linear" seed="1" >
+<views>
+</views>
+</experiment>
+</vle_project>

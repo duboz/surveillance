@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-0.9.0.dtd">
+<vle_project version="0.9.0" date="mer., 20 oct. 2010" author="bruno, raphael">
+<structures>
+<model name="Top model" type="coupled" x="0" y="0" width="1190" height="648"  >
+<submodels>
+<model name="Node_4" type="coupled" x="405" y="195" width="100" height="45"  >
+<in>
+ <port name="Node_2" />
+</in>
+<submodels>
+</submodels>
+<connections>
+</connections>
+</model>
+<model name="Node_3" type="coupled" x="404" y="70" width="100" height="45"  >
+<in>
+ <port name="Node_2" />
+</in>
+<submodels>
+<model name="Infection" type="atomic" dynamics="" x="55" y="111" width="100" height="30" >
+<in>
+ <port name="infection" />
+</in>
+<out>
+ <port name="state" />
+</out>
+</model>
+<model name="Transmission" type="atomic" dynamics="" x="128" y="39" width="100" height="30" >
+<in>
+ <port name="state" />
+</in>
+</model>
+</submodels>
+<connections>
+<connection type="input">
+ <origin model="Node_3" port="Node_2" />
+ <destination model="Infection" port="infection" />
+</connection>
+<connection type="internal">
+ <origin model="Infection" port="state" />
+ <destination model="Transmission" port="state" />
+</connection>
+</connections>
+</model>
+<model name="Node_2" type="coupled" x="200" y="106" width="100" height="60"  >
+<in>
+ <port name="Node_1" />
+</in>
+<out>
+ <port name="Node_3" />
+ <port name="Node_4" />
+</out>
+<submodels>
+<model name="Infection" type="atomic" dynamics="" x="239" y="100" width="100" height="60" >
+<in>
+ <port name="state" />
+</in>
+<out>
+ <port name="infection_1" />
+ <port name="infection_2" />
+</out>
+</model>
+<model name="Transmission" type="atomic" dynamics="" x="67" y="41" width="100" height="30" >
+<in>
+ <port name="infection" />
+</in>
+<out>
+ <port name="state" />
+</out>
+</model>
+</submodels>
+<connections>
+<connection type="output">
+ <origin model="Infection" port="infection_1" />
+ <destination model="Node_2" port="Node_3" />
+</connection>
+<connection type="output">
+ <origin model="Infection" port="infection_2" />
+ <destination model="Node_2" port="Node_4" />
+</connection>
+<connection type="input">
+ <origin model="Node_2" port="Node_1" />
+ <destination model="Transmission" port="infection" />
+</connection>
+<connection type="internal">
+ <origin model="Transmission" port="state" />
+ <destination model="Infection" port="state" />
+</connection>
+</connections>
+</model>
+<model name="Node_1" type="coupled" x="39" y="114" width="100" height="45"  >
+<out>
+ <port name="Node_2" />
+</out>
+<submodels>
+<model name="Infection" type="atomic" dynamics="" x="34" y="61" width="100" height="30" >
+<out>
+ <port name="state" />
+</out>
+</model>
+<model name="Transmission" type="atomic" dynamics="" x="199" y="33" width="100" height="30" >
+<in>
+ <port name="state" />
+</in>
+<out>
+ <port name="infection" />
+</out>
+</model>
+</submodels>
+<connections>
+<connection type="output">
+ <origin model="Transmission" port="infection" />
+ <destination model="Node_1" port="Node_2" />
+</connection>
+<connection type="internal">
+ <origin model="Infection" port="state" />
+ <destination model="Transmission" port="state" />
+</connection>
+</connections>
+</model>
+</submodels>
+<connections>
+<connection type="internal">
+ <origin model="Node_1" port="Node_2" />
+ <destination model="Node_2" port="Node_1" />
+</connection>
+<connection type="internal">
+ <origin model="Node_2" port="Node_3" />
+ <destination model="Node_3" port="Node_2" />
+</connection>
+<connection type="internal">
+ <origin model="Node_2" port="Node_4" />
+ <destination model="Node_4" port="Node_2" />
+</connection>
+</connections>
+</model>
+</structures>
+<experiment name="exp" duration="1.000000000000000" begin="0.000000000000000" combination="linear" seed="1" >
+<views>
+</views>
+</experiment>
+</vle_project>
