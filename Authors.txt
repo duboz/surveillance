@@ -3,3 +3,5 @@ Authors
 - first name last name < yourmail @ your server >
 - Thomas DE BONA <thomas.debona@gmail.com>
 - Virginies BATICLE <baticle@polytech.unice.fr>
+- Romaric Pighetti < romaric.pighetti@gmail.com >
+- Jeremy Gabriele < gabriele@polytech.unice.fr >

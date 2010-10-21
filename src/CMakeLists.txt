@@ -10,7 +10,9 @@ LINK_DIRECTORIES(
 ADD_LIBRARY(sir SHARED	infection.cpp
 			transmission.cpp
 			SirDifferentialEquation.cpp
-			SirDifferentialEquation.hpp)
+			SirDifferentialEquation.hpp
+      data_collector.cpp
+      collector_test.cpp)
 
 TARGET_LINK_LIBRARIES(sir
   ${VLE_LIBRARIES}
