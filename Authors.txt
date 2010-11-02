@@ -1,3 +1,5 @@
 Authors
 -------
 - first name last name < yourmail @ your server >
+- Thomas DE BONA <thomas.debona@gmail.com>
+- Virginies BATICLE <baticle@polytech.unice.fr>

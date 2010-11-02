@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-0.9.0.dtd">
+<vle_project version="0.9.0" date="mer., 27 oct. 2010" author="Thomas DE BONA et Virginie BATICLE">
+<structures>
+<model name="Top model" type="coupled" x="0" y="0" width="848" height="433"  >
+<in>
+ <port name="in" />
+</in>
+<out>
+ <port name="infection" />
+</out>
+<submodels>
+<model name="infection" type="atomic" conditions="infection" dynamics="Infection" observables="infectionState" x="55" y="25" width="100" height="45" >
+<in>
+ <port name="in" />
+</in>
+<out>
+ <port name="infect" />
+</out>
+</model>
+<model name="transmission" type="atomic" conditions="transmission" dynamics="Transmission" observables="transmissionState" x="182" y="85" width="100" height="45" >
+<in>
+ <port name="in" />
+</in>
+<out>
+ <port name="infect" />
+</out>
+</model>
+</submodels>
+<connections>
+<connection type="output">
+ <origin model="transmission" port="infect" />
+ <destination model="Top model" port="infection" />
+</connection>
+<connection type="input">
+ <origin model="Top model" port="in" />
+ <destination model="infection" port="in" />
+</connection>
+<connection type="internal">
+ <origin model="infection" port="infect" />
+ <destination model="transmission" port="in" />
+</connection>
+</connections>
+</model>
+</structures>
+<dynamics>
+<dynamic name="Infection" library="sir" model="infection" package="surveillance" type="local"  />
+<dynamic name="Transmission" library="sir" model="transmission" package="surveillance" type="local"  />
+</dynamics>
+<experiment name="test" duration="30.000000000000000" begin="0.000000000000000" combination="linear" seed="581869302" >
+<conditions>
+<condition name="infection" >
+ <port name="autoInfect" >
+<double>10.000000000000000</double>
+</port>
+ <port name="infectiousPeriod" >
+<double>10.000000000000000</double>
+</port>
+</condition>
+<condition name="transmission" >
+ <port name="nbPorts" >
+<integer>5</integer>
+</port>
+ <port name="rate" >
+<double>0.500000000000000</double>
+</port>
+</condition>
+</conditions>
+<views>
+<outputs>
+<output name="testITEvent" location="output" format="local" plugin="file" />
+
+<output name="testITTimed" location="output" format="local" plugin="file" />
+
+</outputs>
+<observables>
+<observable name="infectionState" >
+<port name="state" >
+ <attachedview name="testITEvent" />
+ <attachedview name="testITTimed" />
+</port>
+
+</observable>
+
+<observable name="transmissionState" >
+<port name="state" >
+ <attachedview name="testITEvent" />
+ <attachedview name="testITTimed" />
+</port>
+
+</observable>
+
+</observables>
+<view name="testITEvent" output="testITEvent" type="event" />
+
+<view name="testITTimed" output="testITTimed" type="timed" timestep="0.100000000000000" />
+
+</views>
+</experiment>
+</vle_project>
