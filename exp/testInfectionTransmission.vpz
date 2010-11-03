@@ -68,9 +68,9 @@
 </conditions>
 <views>
 <outputs>
-<output name="testITEvent" location="output" format="local" plugin="file" />
+<output name="testITEvent" location="" format="local" plugin="file" />
 
-<output name="testITTimed" location="output" format="local" plugin="file" />
+<output name="testITTimed" location="" format="local" plugin="file" />
 
 </outputs>
 <observables>
