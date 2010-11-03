@@ -7,7 +7,10 @@ LINK_DIRECTORIES(
   ${VLE_LIBRARY_DIRS}
   ${Boost_LIBRARY_DIRS})
 
-ADD_LIBRARY(sir SHARED infection.cpp transmission.cpp)
+ADD_LIBRARY(sir SHARED	infection.cpp
+			transmission.cpp
+			SirDifferentialEquation.cpp
+			SirDifferentialEquation.hpp)
 
 TARGET_LINK_LIBRARIES(sir
   ${VLE_LIBRARIES}
