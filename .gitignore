@@ -1,4 +1,6 @@
 *.patch
 build/
 lib/
-
+*~
+.directory
+*.dat

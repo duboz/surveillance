@@ -24,51 +24,46 @@
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
 
+#include "infection.hpp"
+
 namespace vd = vle::devs;
 namespace vv = vle::value;
 
 namespace model {
 
-class Infection : public vd::Dynamics
-{
-        
-public:
-    Infection(const vd::DynamicsInit& init, const vd::InitEventList& events)
+    Infection::Infection(const vd::DynamicsInit& init, const vd::InitEventList& events)
         : vd::Dynamics(init, events)
     {
         mInfectiousPeriod = vv::toDouble(events.get("infectiousPeriod"));
         mAutoInfect = vv::toDouble(events.get("autoInfect"));
     }
 
-    virtual ~Infection()
+    Infection::~Infection()
     {
     }
 
-    virtual vd::Time init(const vd::Time& /*time*/)
+    vd::Time Infection::init(const vd::Time& /*time*/)
     {
         mPhase = INIT;
         return 0;
     }
 
-    /**
-    *Envoie message infecté : transmission
-    *Envoie message recovered : arrete d'infecter les gens
-    */
-    virtual void output(const vd::Time& /*time*/,
+
+    void Infection::output(const vd::Time& time,
                         vd::ExternalEventList& output) const
     {
-        if (mPhase == S) {
-            vd::ExternalEvent* event = new vd::ExternalEvent("infect");
-            event << vd::attribute("infecting", true);
+        if (mPhase == S || mPhase == SI) {
+            vd::ExternalEvent* event = new vd::ExternalEvent("state");
+            event << vd::attribute("state", true);
             output.addEvent(event);
         }else if (mPhase == I) {
-            vd::ExternalEvent* event = new vd::ExternalEvent("infect");
-            event << vd::attribute("infecting", false);     
+            vd::ExternalEvent* event = new vd::ExternalEvent("state");
+            event << vd::attribute("state", false);     
             output.addEvent(event);
         }
     }
 
-    virtual vd::Time timeAdvance() const
+    vd::Time Infection::timeAdvance() const
     {
         switch (mPhase) {
         case INIT :
@@ -82,15 +77,18 @@ public:
             return vd::Time(mInfectiousPeriod);
         case R :
             return vd::Time::infinity;
+        case SI :
+            return 0;
         }
     }
 
-    virtual void internalTransition(const vd::Time& /*time*/)
+    void Infection::internalTransition(const vd::Time& /*time*/)
     {
         switch (mPhase) {
         case INIT :
             mPhase = S;
             break;
+        case SI:
         case S:
             mPhase = I;
             break;
@@ -102,32 +100,28 @@ public:
         }
     }
 
-    virtual void externalTransition(const vd::ExternalEventList& /*event*/,
+    void Infection::externalTransition(const vd::ExternalEventList& /*event*/,
                                     const vd::Time& /*time*/)
     {
         if (mPhase == S)
-            mPhase = I;
+            mPhase = SI;
     }
 
-    virtual void confluentTransitions(const vd::Time& time,
+    void Infection::confluentTransitions(const vd::Time& time,
                                     const vd::ExternalEventList& events)
     {
         internalTransition(time);
         externalTransition(events, time);
-    }
+	}
 
-    virtual void request(const vd::RequestEvent& /*event*/,
-                        const vd::Time& /*time*/,
-                        vd::ExternalEventList& /*output*/) const
-    {
-    }
-
-    virtual vv::Value* observation(const vd::ObservationEvent& event) const
+    vv::Value* Infection::observation(const vd::ObservationEvent& event) const
     {
         if (event.onPort("state")) {
             switch (mPhase) {
             case INIT :
                 return new vv::String("INIT");
+            case SI:
+                return new vv::String("SI");
             case S:
                 return new vv::String("S");
             case I :
@@ -141,17 +135,37 @@ public:
             return 0;
     }
 
-    virtual void finish()
+    void Infection::finish()
     {
     }
-    
-private:
-    enum PHASE {INIT, S, I, R};
-    PHASE mPhase;
-    double mInfectiousPeriod;
-    double mAutoInfect;
-    
-};
+
+    void Infection::request(const vd::RequestEvent& event,
+                         const vd::Time& /*time*/,
+                         vd::ExternalEventList& output) const
+    {
+        if (event.getStringAttributeValue ("name") == "status") {
+            std::string responseValue = std::string("");
+            switch (mPhase) {
+            case INIT:
+            case S:
+                responseValue = std::string("S");
+                break;
+            case SI:
+            case I:
+                responseValue = std::string("I");
+                break;
+
+            case R:
+                responseValue = std::string("R");
+                break;
+
+            }
+            vd::ExternalEvent * response = new vd::ExternalEvent ("status");
+            response << vd::attribute ("name", std::string("status"));
+            response << vd::attribute ("value", responseValue);
+            output.addEvent (response);
+        }
+    }
 
 } // namespace vle example
 

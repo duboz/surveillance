@@ -24,17 +24,14 @@
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
 
+#include "transmission.hpp"
+
 namespace vd = vle::devs;
 namespace vv = vle::value;
 
 namespace model {
 
-class Transmission : public vd::Dynamics
-{
-
-    
-public:
-    Transmission(const vd::DynamicsInit& init, const vd::InitEventList& events)
+    Transmission::Transmission(const vd::DynamicsInit& init, const vd::InitEventList& events)
         : vd::Dynamics(init, events)
     {
         mRate = vv::toDouble(events.get("rate"));
@@ -44,11 +41,11 @@ public:
             mNbPort = 4;
     }
 
-    virtual ~Transmission()
+    Transmission::~Transmission()
     {
     }
 
-    virtual vd::Time init(const vd::Time& /*time*/)
+    vd::Time Transmission::init(const vd::Time& /*time*/)
     {
 
         mPhase = INIT;
@@ -58,19 +55,19 @@ public:
         return 0;
     }
 
-    virtual void output(const vd::Time& /*time*/,
+    void Transmission::output(const vd::Time& /*time*/,
                         vd::ExternalEventList& output) const
     {
         if (mPhase == INFECTING ) {
             // TODO Send event to the good port
             // int port = mOrder[mPortIndex];
-            vd::ExternalEvent* event = new vd::ExternalEvent("infect");
+            vd::ExternalEvent* event = new vd::ExternalEvent("infection");
             event << vd::attribute("infection_evt", 1);
             output.addEvent(event);
         }
     }
 
-    virtual vd::Time timeAdvance() const
+    vd::Time Transmission::timeAdvance() const
     {
         switch (mPhase) {
         case INIT:
@@ -86,7 +83,7 @@ public:
         return vd::Time::infinity;
     }
 
-    virtual void internalTransition(const vd::Time& /*time*/)
+    void Transmission::internalTransition(const vd::Time& /*time*/)
     {
         if (mPhase == INIT) {
             mPhase = IDLE;
@@ -96,12 +93,12 @@ public:
         }
     }
 
-    virtual void externalTransition(const vd::ExternalEventList& events,
+    void Transmission::externalTransition(const vd::ExternalEventList& events,
                                     const vd::Time& /*time*/)
     {
         for (unsigned int i = 0; i < events.size(); i++) {
-            if (events[i]->existAttributeValue("infecting")) {
-                if (events[i]->getBooleanAttributeValue("infecting")) {
+            if (events[i]->existAttributeValue("state")) {
+                if (events[i]->getBooleanAttributeValue("state")) {
                     mPhase = INFECTING;
                     randomizeOrder();
                     randomizeInfectionTime();
@@ -112,20 +109,20 @@ public:
         }
     }
 
-    virtual void confluentTransitions(const vd::Time& time,
+    void Transmission::confluentTransitions(const vd::Time& time,
                                     const vd::ExternalEventList& events)
     {
         internalTransition(time);
         externalTransition(events, time);
     }
 
-    virtual void request(const vd::RequestEvent& /*event*/,
+    void Transmission::request(const vd::RequestEvent& /*event*/,
                         const vd::Time& /*time*/,
                         vd::ExternalEventList& /*output*/) const
     {
     }
 
-    virtual vv::Value* observation(const vd::ObservationEvent& event) const
+    vv::Value* Transmission::observation(const vd::ObservationEvent& event) const
     {
         if (event.onPort("state")) {
             switch (mPhase) {
@@ -146,22 +143,8 @@ public:
         }else
             return 0;
     }
-
-    virtual void finish()
-    {
-    }
     
-private:
-    enum PHASE {INIT, IDLE, INFECTING};
-    PHASE mPhase;
-    int mNbPort;
-    int mPortIndex;
-    int* mOrder;
-    double* mInfectionOffsets;
-    double mRate;
-    bool mStateDisplayed;
-    
-    void randomizeOrder() {
+    void Transmission::randomizeOrder() {
         for (int i = 0; i < mNbPort; i++)
             mOrder[i] = i;
         for (int i = 0; i < mNbPort; i++) {
@@ -172,7 +155,7 @@ private:
         }
     }
     
-    void randomizeInfectionTime() {
+    void Transmission::randomizeInfectionTime() {
         // Generate dates
         double infectionDates[mNbPort];
         for (int i = 0; i < mNbPort; i++)
@@ -192,10 +175,6 @@ private:
         for (int i = 1; i < mNbPort; i++)
             mInfectionOffsets[i] = infectionDates[i] - infectionDates[i - 1];
     }
-    
-    
-    
-};
 
 } // namespace vle example
 

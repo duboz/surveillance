@@ -8,7 +8,9 @@ LINK_DIRECTORIES(
   ${Boost_LIBRARY_DIRS})
 
 ADD_LIBRARY(sir SHARED	infection.cpp
+			infection.hpp
 			transmission.cpp
+			transmission.hpp
 			SirDifferentialEquation.cpp
 			SirDifferentialEquation.hpp
       			data_collector.cpp
@@ -22,3 +24,4 @@ INSTALL(TARGETS sir
   RUNTIME DESTINATION lib
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
+
