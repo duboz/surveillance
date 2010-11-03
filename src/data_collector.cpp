@@ -43,7 +43,7 @@ namespace model {
  *   -one attribute value which name is "status" and value is the string "S", 
  *   "I" or "R", depending on the state of the model that respond.
  *
- * For every request the number of each response is stocked together with the 
+ * For every request the number of each response is stored together with the 
  * date of the request in a matrix. The matrix can be seen through the obser-
  * vation method at the end of the simulation.
  *
