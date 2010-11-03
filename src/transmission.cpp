@@ -83,6 +83,7 @@ public:
             else
                 return vd::Time::infinity;
         }
+        return vd::Time::infinity;
     }
 
     virtual void internalTransition(const vd::Time& /*time*/)
