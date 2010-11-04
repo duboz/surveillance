@@ -57,6 +57,7 @@ double SirDiffentialEquation::compute(unsigned int i, const vd::Time& /* time */
 	case 2: // R
 	    return mGamma * mI();
     }
+    return 0.;
 }
 
 } // namespace model
