@@ -49,7 +49,7 @@ namespace model {
     }
 
 
-    void Infection::output(const vd::Time& time,
+    void Infection::output(const vd::Time& /*time*/,
                         vd::ExternalEventList& output) const
     {
         if (mPhase == S || mPhase == SI) {
@@ -80,6 +80,7 @@ namespace model {
         case SI :
             return 0;
         }
+        return vd::Time::infinity;
     }
 
     void Infection::internalTransition(const vd::Time& /*time*/)
