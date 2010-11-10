@@ -104,7 +104,7 @@ namespace model {
     void Infection::externalTransition(const vd::ExternalEventList& /*event*/,
                                     const vd::Time& /*time*/)
     {
-        if (mPhase == S)
+        if (mPhase == S || mPhase == R)
             mPhase = SI;
     }
 

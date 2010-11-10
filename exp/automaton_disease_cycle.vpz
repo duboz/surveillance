@@ -221,7 +221,7 @@
 <double>3.000000000000000</double>
 </port>
  <port name="infectiousPeriod" >
-<double>10.000000000000000</double>
+<double>1.000000000000000</double>
 </port>
 </condition>
 <condition name="infection_1" >
@@ -229,7 +229,7 @@
 <double>0.000000000000000</double>
 </port>
  <port name="infectiousPeriod" >
-<double>20.000000000000000</double>
+<double>1.000000000000000</double>
 </port>
 </condition>
 <condition name="transmission" >
@@ -237,7 +237,7 @@
 <integer>1</integer>
 </port>
  <port name="rate" >
-<double>0.500000000000000</double>
+<double>0.900000000000000</double>
 </port>
 </condition>
 </conditions>

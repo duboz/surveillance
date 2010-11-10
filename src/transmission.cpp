@@ -159,7 +159,7 @@ namespace model {
         // Generate dates
         double infectionDates[mNbPort];
         for (int i = 0; i < mNbPort; i++)
-            infectionDates[i] = rand().exponential(mRate);
+            infectionDates[i] = mRate; // FIXME rand().exponential(mRate);
         // Sort this dates
         for (int i = 0; i < mNbPort; i++) {
             for (int j = i + 1; j < mNbPort; j++) {
