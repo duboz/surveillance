@@ -1,2 +1,2 @@
-INSTALL(FILES file.doc DESTINATION doc)
+INSTALL(FILES user-guide.doc DESTINATION doc)
 
