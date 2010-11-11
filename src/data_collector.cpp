@@ -53,16 +53,6 @@ namespace model {
       mSainResult = 0;
       mRecoveredResult = 0;
       mInfectedResult = 0;
-      mDataCollection = new vv::Matrix();
-      mDataCollection->addRow();
-      mDataCollection->addColumn();
-      mDataCollection->addColumn();
-      mDataCollection->addColumn();
-      mDataCollection->addColumn();
-      mDataCollection->addString(0,0,std::string("Time"));
-      mDataCollection->addString(1,0,std::string("S"));
-      mDataCollection->addString(2,0,std::string("I"));
-      mDataCollection->addString(3,0,std::string("R"));
       return 0;
   }
 
@@ -94,15 +84,6 @@ namespace model {
           mCurrentTime = vd::Time(time);
           break;
       case RECEIVE:
-          mDataCollection->addRow();
-          mDataCollection->addDouble(0,mDataCollection->rows()-1,
-                                                                mLastRequestTime.getValue());
-          mDataCollection->addDouble(1,mDataCollection->rows()-1,
-                                                                mSainResult);
-          mDataCollection->addDouble(2,mDataCollection->rows()-1,
-                                                                mInfectedResult);
-          mDataCollection->addDouble(3,mDataCollection->rows()-1,
-                                                                mRecoveredResult);
           mSainResult = 0;
           mInfectedResult = 0;
           mRecoveredResult = 0;
@@ -159,7 +140,11 @@ namespace model {
   vv::Value* DataCollector::observation(
                        const vd::ObservationEvent& /*event*/) const
   {
-      return mDataCollection;
+      vv::Tuple* result = new vv::Tuple();
+      result -> add(mSainResult);
+      result -> add(mInfectedResult);
+      result -> add(mRecoveredResult);
+      return result;
   }
 
   void DataCollector::finish()

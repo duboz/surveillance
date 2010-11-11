@@ -79,7 +79,6 @@ private:
     int mSainResult;
     int mInfectedResult;
     int mRecoveredResult;
-    vv::Matrix *mDataCollection;
 };
 
 } // namespace model
