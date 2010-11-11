@@ -17,11 +17,17 @@ ADD_LIBRARY(sir SHARED	infection.cpp
       			data_collector.cpp
       			collector_test.cpp)
 
-TARGET_LINK_LIBRARIES(sir
+ADD_LIBRARY(graph SHARED	
+			vertexExecutive.cpp
+			vertexExecutive.hpp
+			graphExecutive.cpp)
+
+
+TARGET_LINK_LIBRARIES(sir graph
   ${VLE_LIBRARIES}
   ${Boost_LIBRARIES})
 
-INSTALL(TARGETS sir
+INSTALL(TARGETS sir graph
   RUNTIME DESTINATION lib
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
