@@ -13,7 +13,7 @@ ADD_LIBRARY(sir SHARED	infection.cpp
 			transmission.hpp
 			SirDifferentialEquation.cpp
 			SirDifferentialEquation.hpp
-      data_collector.hpp
+      			data_collector.hpp
       			data_collector.cpp
       			collector_test.cpp)
 
@@ -23,11 +23,20 @@ ADD_LIBRARY(graph SHARED
 			graphExecutive.cpp)
 
 
-TARGET_LINK_LIBRARIES(sir graph
+TARGET_LINK_LIBRARIES(sir
   ${VLE_LIBRARIES}
   ${Boost_LIBRARIES})
 
-INSTALL(TARGETS sir graph
+TARGET_LINK_LIBRARIES(graph
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS sir
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+INSTALL(TARGETS graph
   RUNTIME DESTINATION lib
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
