@@ -37,6 +37,8 @@ namespace model {
     devs::Time VertexExecutive::init(const vle::devs::Time& /* time */)
     {
 	m_phase=INIT;
+			addInputPort("infection", "status?");
+			addOutputPort("infection", "status");
 	return 0.0;
     }
 
@@ -47,16 +49,21 @@ namespace model {
        const graph::ConnectionList& listin = coupledmodel().getInternalInputPortList();
        graph::ConnectionList::const_iterator itin;
       
-       /* input ports for connection with the coupled model*/
+       /* Output ports for connection with the coupled model*/
        const graph::ConnectionList& list =coupledmodel().getInternalOutputPortList();
        graph::ConnectionList::const_iterator it;
        
        /* Input and Output connections */
+       //in
+       addConnection(coupledmodelName(),"status?", "infection","status?");
        for (itin = listin.begin(); itin != listin.end(); ++itin) {
-            addConnection(coupledmodelName(),itin->first,"infection","infection");
+           if (itin->first != "status?")
+          	addConnection(coupledmodelName(),itin->first,"infection","infection");
        }
-       
+       //out
+	addConnection("infection","status",coupledmodelName(),"status");
         for (it = list.begin(); it != list.end(); ++it) {
+           if (it->first != "status")
     		addConnection("transmission","infection",coupledmodelName(),it->first);
         }
         m_phase=INITIALIZED;

@@ -27,7 +27,8 @@
 #include <vle/devs/ExecutiveDbg.hpp>
 #include <vle/translator/GraphTranslator.hpp>
 #include <vle/value/Map.hpp>
- 
+#include <boost/lexical_cast.hpp>
+
 using namespace vle;
 
 namespace vd = vle::devs;
@@ -44,7 +45,9 @@ public:
 		   const devs::InitEventList& events)
         : devs::Executive(mdl, events)
     {
-	m_graphInfo.value()= value::toMap(events.get("graphInfo")->clone());
+	m_graphInfo.value() = value::toMap(events.get("graphInfo")->clone());
+	m_nb_model = m_graphInfo.getInt("number");
+	m_model_prefix = m_graphInfo.getString("prefix");
     }
  
     virtual ~GraphExecutive()
@@ -52,14 +55,28 @@ public:
  
     virtual devs::Time init(const devs::Time& /* time */)
     {
-        translator::GraphTranslator tr(*this);
- 
+        translator::GraphTranslator tr(*this); 
         tr.translate(m_graphInfo);
+
+		addInputPort("data_collector", "status");
+		addOutputPort("data_collector", "status?");
+				
+		for (int i = 0; i < m_nb_model; i++) {
+			/* Add an input and output port "status" and "status?" for vertex */
+			std::string vetName = m_model_prefix + "-" + boost::lexical_cast<std::string>(i);			
+			addInputPort(vetName, "status?");
+			addOutputPort(vetName, "status");
+			addConnection(vetName, "status","data_collector","status");
+			addConnection("data_collector","status?",vetName, "status?");			
+		}
+
         return devs::Time::infinity;
     }
 
 private:
     value::Map m_graphInfo;
+    int m_nb_model;
+    std::string m_model_prefix;
 };
 
 } // namespace model

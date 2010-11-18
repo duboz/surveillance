@@ -2,9 +2,11 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
 <structures>
-<model name="graph" type="coupled" width="466" height="455"  >
+<model name="graph" type="coupled" width="1183" height="595"  >
 <submodels>
-<model name="gen_network" type="atomic" conditions="cond_graph" dynamics="dyn_network" x="154" y="56" width="100" height="30" >
+<model name="data_collector" type="atomic" dynamics="collector" observables="observer" x="71" y="66" width="100" height="30" >
+</model>
+<model name="gen_network" type="atomic" conditions="cond_graph" dynamics="dyn_network" x="238" y="66" width="100" height="30" >
 </model>
 </submodels>
 <connections>
@@ -14,12 +16,13 @@
 <dynamics>
 <dynamic name="Infection" library="sir" model="infection" package="surveillance" type="local"  />
 <dynamic name="Transmission" library="sir" model="transmission" package="surveillance" type="local"  />
+<dynamic name="collector" library="sir" model="data_collector" package="surveillance" type="local"  />
 <dynamic name="dyn_network" library="graph" model="dyn_graphExecutive" package="surveillance" type="local"  />
 <dynamic name="dyn_vertexExecutive" library="graph" model="dyn_vertexExecutive" package="surveillance" type="local"  />
 </dynamics>
 <classes>
 <class name="InfectedVertex" >
-<model name="vertex" type="coupled" width="609" height="455"  >
+<model name="vertex" type="coupled" width="1248" height="595"  >
 <submodels>
 <model name="infection" type="atomic" conditions="infected" dynamics="Infection" observables="infectionState" x="75" y="130" width="100" height="45" >
 <in>
@@ -49,7 +52,7 @@
 </model>
 </class>
 <class name="Vertex" >
-<model name="vertex" type="coupled" width="1006" height="494"  >
+<model name="vertex" type="coupled" width="1248" height="595"  >
 <submodels>
 <model name="infection" type="atomic" conditions="susceptible" dynamics="Infection" observables="infectionState" x="75" y="130" width="100" height="45" >
 <in>
@@ -124,6 +127,8 @@
 </conditions>
 <views>
 <outputs>
+<output name="data_collector_view" location="" format="local" plugin="file" />
+
 <output name="infection" location="" format="local" plugin="file" />
 
 </outputs>
@@ -135,7 +140,16 @@
 
 </observable>
 
+<observable name="observer" >
+<port name="noPort" >
+ <attachedview name="data_collector_view" />
+</port>
+
+</observable>
+
 </observables>
+<view name="data_collector_view" output="data_collector_view" type="timed" timestep="1.000000000000000" />
+
 <view name="infection" output="infection" type="timed" timestep="0.100000000000000" />
 
 </views>

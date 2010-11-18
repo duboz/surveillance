@@ -27,7 +27,6 @@
 
 #include <vle/devs/Executive.hpp>
 
-
 namespace model {
 
 /*
