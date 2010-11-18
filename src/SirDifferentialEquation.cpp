@@ -38,9 +38,9 @@ SirDiffentialEquation::SirDiffentialEquation(const vd::DynamicsInit& model,
     mBeta = vv::toDouble(events.get("beta"));
     mGamma = vv::toDouble(events.get("gamma"));
 
-    mS = createVar(0, "S");
-    mI = createVar(1, "I");
-    mR = createVar(2, "R");
+    mSIR.push_back(createVar(0, "S"));
+    mSIR.push_back(createVar(1, "I"));
+    mSIR.push_back(createVar(2, "R"));
 }
 
 SirDiffentialEquation::~SirDiffentialEquation()
@@ -51,11 +51,11 @@ double SirDiffentialEquation::compute(unsigned int i, const vd::Time& /* time */
 {
     switch(i) {
 	case 0: // S		
-	    return -mBeta * mS() * mI();
+	    return -mBeta * (mSIR[0])() * (mSIR[1])();
 	case 1: // I
-	    return mBeta * mS() * mI() - mGamma * mI();
+	    return mBeta *  (mSIR[0])() * (mSIR[1])() - mGamma * (mSIR[2])();
 	case 2: // R
-	    return mGamma * mI();
+	    return mGamma * (mSIR[2])();
     }
     return 0.;
 }

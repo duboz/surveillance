@@ -25,6 +25,7 @@
 #ifndef SIR_DIFFERENTIAL_EQUATION_HPP
 #define SIR_DIFFERENTIAL_EQUATION_HPP 1
 #include <vle/extension/differential-equation/QSS.hpp>
+#include <vle/utils/Debug.hpp>
 
 namespace vd = vle::devs;
 namespace vq = vle::extension::QSS;
@@ -44,10 +45,8 @@ public:
 
 private:
 	
-	int value;
-    Var mS;
-    Var mI;
-    Var mR;
+    int value;
+    std::vector <Var > mSIR;
     
     double mBeta;
     double mGamma;

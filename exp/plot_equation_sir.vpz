@@ -38,7 +38,7 @@
 <double>0.000000000000000</double>
 </port>
  <port name="threshold" >
-<double>0.000100000000000</double>
+<double>0.00100000000</double>
 </port>
  <port name="variables" >
 <set><set><string>S</string><double>900.000000000000000</double><double>0.010000000000000</double></set><set><string>I</string><double>100.000000000000000</double><double>0.010000000000000</double></set><set><string>R</string><double>0.000000000000000</double><double>0.010000000000000</double></set></set>
