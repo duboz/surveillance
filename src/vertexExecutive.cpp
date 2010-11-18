@@ -37,8 +37,8 @@ namespace model {
     devs::Time VertexExecutive::init(const vle::devs::Time& /* time */)
     {
 	m_phase=INIT;
-			addInputPort("infection", "status?");
-			addOutputPort("infection", "status");
+	addInputPort("infection", "status?");
+	addOutputPort("infection", "status");
 	return 0.0;
     }
 
@@ -62,9 +62,14 @@ namespace model {
        }
        //out
 	addConnection("infection","status",coupledmodelName(),"status");
+        int nb = 0;
         for (it = list.begin(); it != list.end(); ++it) {
            if (it->first != "status")
-    		addConnection("transmission","infection",coupledmodelName(),it->first);
+           {
+   		std::string prtName = "infection" + boost::lexical_cast<std::string>(nb);
+    		addConnection("transmission", prtName, coupledmodelName(),it->first);
+		nb++;
+	    }        
         }
         m_phase=INITIALIZED;
     }
