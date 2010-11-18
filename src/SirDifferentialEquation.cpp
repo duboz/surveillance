@@ -53,9 +53,9 @@ double SirDiffentialEquation::compute(unsigned int i, const vd::Time& /* time */
 	case 0: // S		
 	    return -mBeta * (mSIR[0])() * (mSIR[1])();
 	case 1: // I
-	    return mBeta *  (mSIR[0])() * (mSIR[1])() - mGamma * (mSIR[2])();
+	    return mBeta *  (mSIR[0])() * (mSIR[1])() - mGamma * (mSIR[1])();
 	case 2: // R
-	    return mGamma * (mSIR[2])();
+	    return mGamma * (mSIR[1])();
     }
     return 0.;
 }

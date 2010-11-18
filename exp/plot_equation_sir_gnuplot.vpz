@@ -19,7 +19,7 @@
 <dynamics>
 <dynamic name="dyn_sir" library="sir" model="sirDifferentialEquation" package="surveillance" type="local"  />
 </dynamics>
-<experiment name="single_equation_sir" duration="1000.000000000000000" begin="0.000000000000000" combination="linear" seed="3499211612" >
+<experiment name="single_equation_sir" duration="100.000000000000000" begin="0.000000000000000" combination="linear" seed="3499211612" >
 <conditions>
 <condition name="cond_sir" >
  <port name="active" >
@@ -38,10 +38,10 @@
 <double>0.000000000000000</double>
 </port>
  <port name="threshold" >
-<double>0.000100000000000</double>
+<double>0.00000000100000</double>
 </port>
  <port name="variables" >
-<set><set><string>S</string><double>900.000000000000000</double><double>0.010000000000000</double></set><set><string>I</string><double>100.000000000000000</double><double>0.010000000000000</double></set><set><string>R</string><double>0.000000000000000</double><double>0.010000000000000</double></set></set>
+<set><set><string>S</string><double>900.000000000000000</double><double>0.10000000000000</double></set><set><string>I</string><double>100.000000000000000</double><double>0.10000000000000</double></set><set><string>R</string><double>0.000000000000000</double><double>0.10000000000000</double></set></set>
 </port>
 </condition>
 </conditions>
