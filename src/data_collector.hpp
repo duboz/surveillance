@@ -35,17 +35,15 @@ namespace model {
  * @brief A class to collect data from the experiments made with sir models.
  *
  * This class send a RequestEvent on its "status?" port periodically. The time 
- * step is given by mObservationTimeStep. This variable is fixed in the source
- * code for now but should become a parameter soon.
+ * step is given by mObservationTimeStep. This variable is read on the initial 
+ * condition parmater timeStep.
  *
  * The response for the RequestEvent is expected on the "status" port of this 
  * model and must be an ExternalEvent with the structure:
+ *   -one attribute which name is "name" and contains the name of the observed
+ *   model.
  *   -one attribute value which name is "status" and value is the string "S", 
  *   "I" or "R", depending on the state of the model that respond.
- *
- * For every request the number of each response is stored together with the 
- * date of the request in a matrix. The matrix can be seen through the obser-
- * vation method at the end of the simulation.
  *
  */
 class DataCollector : public vd::Dynamics
@@ -73,9 +71,6 @@ private:
     vd::Time mLastRequestTime;
     vd::Time mCurrentTime;
     int mObservationTimeStep;
-    int mSainNumber;
-    int mInfectedNumber;
-    int mRecoveredNumber;
     int mSainResult;
     int mInfectedResult;
     int mRecoveredResult;

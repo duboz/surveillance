@@ -62,13 +62,12 @@ public:
                          const vd::Time& /*time*/,
                          vd::ExternalEventList& output) const
     {
-        if (event.getStringAttributeValue ("name") == "status") {
+        if (event.getPortName() == "status?") {
             std::string responseValue = std::string("");
             switch (mResult%3) {
             case 0:
                 responseValue = std::string("S");
                 break;
-
             case 1:
                 responseValue = std::string("I");
                 break;
@@ -78,8 +77,8 @@ public:
                 break;
 
             }
-            vd::ExternalEvent * response = new vd::ExternalEvent ("status");
-            response << vd::attribute ("name", std::string("status"));
+            vd::ExternalEvent * response = new vd::ExternalEvent (event.getStringAttributeValue("modelName"));
+            response << vd::attribute ("modelName", getModelName());
             response << vd::attribute ("value", responseValue);
             output.addEvent (response);
         }

@@ -4,7 +4,7 @@
 <structures>
 <model name="graph" type="coupled" width="737" height="440"  >
 <submodels>
-<model name="data_collector" type="atomic" dynamics="collector" observables="observer" x="71" y="66" width="100" height="30" >
+<model name="data_collector" type="atomic" conditions="collector" dynamics="collector" observables="observer" x="71" y="66" width="100" height="30" >
 </model>
 <model name="gen_network" type="atomic" conditions="cond_graph" dynamics="dyn_network" x="238" y="66" width="100" height="30" >
 </model>
@@ -79,6 +79,11 @@
 <experiment name="test_translator" duration="100.000000000000000" begin="0.000000000000000" combination="linear" seed="3890346734" >
 <replicas seed="3499211612" number="1" />
 <conditions>
+<condition name="collector" >
+ <port name="timeStep" >
+<double>1.000000000000000</double>
+</port>
+</condition>
 <condition name="cond_graph" >
  <port name="graphInfo" >
 <map><key name="adjacency matrix"><string>0 1 0 0 0 0 0

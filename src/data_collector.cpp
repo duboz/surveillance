@@ -32,9 +32,11 @@ namespace vv = vle::value;
 
 namespace model {
 
-  DataCollector::DataCollector(const vd::DynamicsInit& init, const vd::InitEventList& events)
+  DataCollector::DataCollector(const vd::DynamicsInit& init, 
+                                  const vd::InitEventList& events)
       : vd::Dynamics(init, events)
   {
+      mObservationTimeStep = vv::toDouble(events.get("timeStep"));
   }
 
   DataCollector::~DataCollector()
@@ -44,10 +46,6 @@ namespace model {
   vd::Time DataCollector::init(const vd::Time& time)
   {
       mPhase = SEND;
-      mObservationTimeStep = 5;
-      mSainNumber = 0;
-      mInfectedNumber = 0;
-      mRecoveredNumber = 0;
       mCurrentTime = vd::Time(time);
       mLastRequestTime = vd::Time(time);
       mSainResult = 0;
@@ -61,7 +59,7 @@ namespace model {
   {
       if (mPhase == SEND) {
           vd::RequestEvent * request = new vd::RequestEvent ("status?");
-          request << vd::attribute ("name", std::string ("status"));
+          request << vd::attribute ("modelName", std::string (getModelName()));
           output.addEvent (request);
       }
   }
@@ -103,17 +101,16 @@ namespace model {
       if (mPhase == RECEIVE) {
           for (vd::ExternalEventList::const_iterator it = event.begin();
                       it != event.end(); ++it) {
-                  if ((*it) -> getStringAttributeValue ("name") == "status") {
-                      std::string value = 
-                            (*it)-> getStringAttributeValue ("value");
-                      if (value == "S") {
-                          mSainResult++;
-                      } else if (value == "I") {
-                          mInfectedResult++;
-                      } else if (value == "R") {
-                          mRecoveredResult++;
-                      }
-                  }
+                    std::string value = 
+                          (*it)-> getStringAttributeValue ("value");
+                    if (value == "S") {
+                        mSainResult++;
+                    } else if (value == "I") {
+                        mInfectedResult++;
+                    } else if (value == "R") {
+                        mRecoveredResult++;
+                    }
+
           }
           mCurrentTime = vd::Time(time);
       }

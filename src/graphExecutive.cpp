@@ -65,8 +65,8 @@ public:
 			/* Add an input and output port "status" and "status?" for vertex */
 			std::string vetName = m_model_prefix + "-" + boost::lexical_cast<std::string>(i);			
 			addInputPort(vetName, "status?");
-			addOutputPort(vetName, "status");
-			addConnection(vetName, "status","data_collector","status");
+			addOutputPort(vetName, "data_collector");
+			addConnection(vetName, "data_collector","data_collector","status");
 			addConnection("data_collector","status?",vetName, "status?");			
 		}
 

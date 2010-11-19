@@ -57,7 +57,7 @@ namespace model {
   {
       if (mPhase == SEND) {
           vd::RequestEvent * request = new vd::RequestEvent ("status?");
-          request << vd::attribute ("name", std::string ("status"));
+          request << vd::attribute ("modelName", std::string (getModelName()));
           output.addEvent (request);
       }
   }
@@ -100,7 +100,7 @@ namespace model {
               vle::utils::Rand r;
               r.seed((uint32_t)12345);
               double randValue = r.getDouble();
-              if ((*it) -> getStringAttributeValue ("name") == "status") {
+              if ((*it) -> getPortName() == "status") {
 
                   std::string value = 
                         (*it)-> getStringAttributeValue ("value");

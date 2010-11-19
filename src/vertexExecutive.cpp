@@ -38,7 +38,7 @@ namespace model {
     {
 	m_phase=INIT;
 	addInputPort("infection", "status?");
-	addOutputPort("infection", "status");
+	addOutputPort("infection", "data_collector");
 	return 0.0;
     }
 
@@ -61,10 +61,10 @@ namespace model {
           	addConnection(coupledmodelName(),itin->first,"infection","infection");
        }
        //out
-	addConnection("infection","status",coupledmodelName(),"status");
+	addConnection("infection","data_collector",coupledmodelName(),"data_collector");
         int nb = 0;
         for (it = list.begin(); it != list.end(); ++it) {
-           if (it->first != "status")
+           if (it->first != "data_collector")
            {
    		std::string prtName = "infection_" + boost::lexical_cast<std::string>(nb);
    		addOutputPort("transmission", prtName);

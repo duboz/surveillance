@@ -144,7 +144,7 @@ namespace model {
                          const vd::Time& /*time*/,
                          vd::ExternalEventList& output) const
     {
-        if (event.getStringAttributeValue ("name") == "status") {
+        if (event.getPortName() == "status?") {
             std::string responseValue = std::string("");
             switch (mPhase) {
             case INIT:
@@ -161,11 +161,11 @@ namespace model {
                 break;
 
             }
-            vd::ExternalEvent * response = new vd::ExternalEvent ("status");
-            response << vd::attribute ("name", std::string("status"));
+            vd::ExternalEvent * response = 
+                new vd::ExternalEvent (event.getStringAttributeValue("modelName"));
             response << vd::attribute ("value", responseValue);
-            response << vd::attribute ("modelName",
-                                                          getModel().getParent()->getName());
+            response << vd::attribute ("modelName", 
+                                          getModel().getParent()->getName());
             output.addEvent (response);
         }
     }
