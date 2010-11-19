@@ -66,7 +66,8 @@ namespace model {
         for (it = list.begin(); it != list.end(); ++it) {
            if (it->first != "status")
            {
-   		std::string prtName = "infection" + boost::lexical_cast<std::string>(nb);
+   		std::string prtName = "infection_" + boost::lexical_cast<std::string>(nb);
+   		addOutputPort("transmission", prtName);
     		addConnection("transmission", prtName, coupledmodelName(),it->first);
 		nb++;
 	    }        

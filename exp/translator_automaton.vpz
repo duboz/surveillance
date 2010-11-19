@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
 <structures>
-<model name="graph" type="coupled" width="1124" height="595"  >
+<model name="graph" type="coupled" width="737" height="440"  >
 <submodels>
 <model name="data_collector" type="atomic" dynamics="collector" observables="observer" x="71" y="66" width="100" height="30" >
 </model>
@@ -22,7 +22,7 @@
 </dynamics>
 <classes>
 <class name="InfectedVertex" >
-<model name="vertex" type="coupled" width="1248" height="595"  >
+<model name="vertex" type="coupled" width="503" height="440"  >
 <submodels>
 <model name="infection" type="atomic" conditions="infected" dynamics="Infection" observables="infectionState" x="75" y="130" width="100" height="45" >
 <in>
@@ -32,13 +32,10 @@
  <port name="state" />
 </out>
 </model>
-<model name="transmission" type="atomic" conditions="transmission" dynamics="Transmission" x="240" y="100" width="100" height="45" >
+<model name="transmission" type="atomic" conditions="transmission" dynamics="Transmission" x="233" y="108" width="100" height="45" >
 <in>
  <port name="state" />
 </in>
-<out>
- <port name="infection" />
-</out>
 </model>
 <model name="vertexExecutive" type="atomic" dynamics="dyn_vertexExecutive" x="140" y="25" width="100" height="30" >
 </model>
@@ -52,7 +49,7 @@
 </model>
 </class>
 <class name="Vertex" >
-<model name="vertex" type="coupled" width="1248" height="595"  >
+<model name="vertex" type="coupled" width="503" height="440"  >
 <submodels>
 <model name="infection" type="atomic" conditions="susceptible" dynamics="Infection" observables="infectionState" x="75" y="130" width="100" height="45" >
 <in>
@@ -66,9 +63,6 @@
 <in>
  <port name="state" />
 </in>
-<out>
- <port name="infection" />
-</out>
 </model>
 <model name="vertexExecutive" type="atomic" dynamics="dyn_vertexExecutive" x="140" y="25" width="100" height="30" >
 </model>
@@ -93,7 +87,7 @@
 0 0 0 0 1 0 0
 0 0 0 0 0 1 0
 0 0 0 0 0 0 1
-1 0 0 0 0 0 0
+1 0 1 0 1 0 0
 </string></key><key name="classes"><string>
 	InfectedVertex	Vertex	Vertex	Vertex	Vertex	Vertex	Vertex
   </string></key><key name="number"><integer>7</integer></key><key name="port"><string>
