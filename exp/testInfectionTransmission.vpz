@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-0.9.0.dtd">
+<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
 <vle_project version="0.9.0" date="mer., 27 oct. 2010" author="Thomas DE BONA et Virginie BATICLE">
 <structures>
-<model name="Top model" type="coupled" x="0" y="0" width="848" height="433"  >
+<model name="Top model" type="coupled" x="0" y="0" width="488" height="367"  >
 <in>
  <port name="infection?" />
  <port name="status?" />
@@ -60,6 +60,7 @@
 <dynamic name="Transmission" library="sir" model="transmission" package="surveillance" type="local"  />
 </dynamics>
 <experiment name="test" duration="30.000000000000000" begin="0.000000000000000" combination="linear" seed="581869302" >
+<replicas seed="3499211612" number="1" />
 <conditions>
 <condition name="infection" >
  <port name="autoInfect" >
@@ -70,8 +71,8 @@
 </port>
 </condition>
 <condition name="transmission" >
- <port name="nbPorts" >
-<integer>5</integer>
+ <port name="prefix" >
+<string>infection</string>
 </port>
  <port name="rate" >
 <double>0.500000000000000</double>

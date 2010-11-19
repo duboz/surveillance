@@ -39,7 +39,6 @@ namespace model {
     {
         mRate = vv::toDouble(events.get("rate"));
          mPrefix = vv::toString(events.get("prefix"));
-         std::cout << mPrefix << std::endl;
     }
 
     Transmission::~Transmission()

@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
 <vle_project version="0.9.0" date="mer., 20 oct. 2010" author="Romaric Pighetti">
 <structures>
-<model name="Top model" type="coupled" x="0" y="0" width="1258" height="644"  >
+<model name="Top model" type="coupled" x="0" y="0" width="735" height="365"  >
 <submodels>
 <model name="data_collector" type="atomic" dynamics="collector" observables="report" x="575" y="250" width="100" height="45" >
 <in>
@@ -116,7 +116,7 @@
 </connection>
 </connections>
 </model>
-<model name="Node_1" type="coupled" x="43" y="109" width="100" height="60"  >
+<model name="Node_1" type="coupled" x="43" y="109" width="586" height="365"  >
 <in>
  <port name="infection?" />
  <port name="status?" />
@@ -196,7 +196,7 @@
 </connection>
 <connection type="internal">
  <origin model="data_collector" port="status?" />
- <destination model="Node_1" port="status?" />
+ <destination model="Node_2" port="status?" />
 </connection>
 <connection type="internal">
  <origin model="data_collector" port="status?" />
@@ -204,7 +204,7 @@
 </connection>
 <connection type="internal">
  <origin model="data_collector" port="status?" />
- <destination model="Node_2" port="status?" />
+ <destination model="Node_1" port="status?" />
 </connection>
 </connections>
 </model>
@@ -215,6 +215,7 @@
 <dynamic name="collector" library="sir" model="data_collector" package="surveillance" type="local"  />
 </dynamics>
 <experiment name="automatonTest" duration="30.000000000000000" begin="0.000000000000000" combination="linear" seed="1" >
+<replicas seed="3499211612" number="1" />
 <conditions>
 <condition name="infection" >
  <port name="autoInfect" >
@@ -233,8 +234,8 @@
 </port>
 </condition>
 <condition name="transmission" >
- <port name="nbPorts" >
-<integer>1</integer>
+ <port name="prefix" >
+<string>infection</string>
 </port>
  <port name="rate" >
 <double>0.900000000000000</double>
