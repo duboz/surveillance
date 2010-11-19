@@ -29,6 +29,7 @@
 
 namespace vd = vle::devs;
 namespace vv = vle::value;
+namespace vg = vle::graph;
 
 namespace model {
 
@@ -40,7 +41,7 @@ public:
     Transmission(const vd::DynamicsInit& init, const vd::InitEventList& events);
 
     virtual ~Transmission();
-	
+    
     virtual vd::Time init(const vd::Time& /*time*/);
 
     virtual void output(const vd::Time& /*time*/,
@@ -65,16 +66,16 @@ public:
 private:
     enum PHASE {INIT, IDLE, INFECTING};
     PHASE mPhase;
-    int mNbPort;
-    int mPortIndex;
-    int* mOrder;
+    unsigned int mPortIndex;
+    std::vector<std::string> mPorts;
     double* mInfectionOffsets;
     double mRate;
     bool mStateDisplayed;
+    std::string mPrefix;
     
-    void randomizeOrder();
-    
+    void randomizeOrder();    
     void randomizeInfectionTime();
+    std::vector<std::string> getPortNames(std::string pattern);
         
 };
 

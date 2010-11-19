@@ -23,11 +23,14 @@
 
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
+#include <boost/regex.hpp>
 
 #include "transmission.hpp"
 
 namespace vd = vle::devs;
 namespace vv = vle::value;
+namespace vg = vle::graph;
+
 
 namespace model {
 
@@ -35,10 +38,8 @@ namespace model {
         : vd::Dynamics(init, events)
     {
         mRate = vv::toDouble(events.get("rate"));
-        if (vv::toInteger(events.get("nbPorts")) > 0)
-            mNbPort = vv::toInteger(events.get("nbPorts"));
-        else
-            mNbPort = 4;
+         mPrefix = vv::toString(events.get("prefix"));
+         std::cout << mPrefix << std::endl;
     }
 
     Transmission::~Transmission()
@@ -50,8 +51,6 @@ namespace model {
 
         mPhase = INIT;
         mPortIndex = -1;
-        mOrder = new int[mNbPort];
-        mInfectionOffsets = new double[mNbPort];
         return 0;
     }
 
@@ -59,11 +58,13 @@ namespace model {
                         vd::ExternalEventList& output) const
     {
         if (mPhase == INFECTING ) {
-            // TODO Send event to the good port
-            // int port = mOrder[mPortIndex];
-            vd::ExternalEvent* event = new vd::ExternalEvent("infection");
-            event << vd::attribute("infection_evt", 1);
-            output.addEvent(event);
+            // Send event to the good port
+            std::string portName = mPorts[mPortIndex];
+            if (getModel().existOutputPort(portName)){
+                vd::ExternalEvent* event = new vd::ExternalEvent( portName );
+                event << vd::attribute("infection_evt", 1);
+                output.addEvent(event);
+            }
         }
     }
 
@@ -75,7 +76,7 @@ namespace model {
         case IDLE:
             return vd::Time::infinity;
         case INFECTING:
-            if (mPortIndex < mNbPort)
+            if (mPortIndex < mPorts.size())
                 return vd::Time(mInfectionOffsets[mPortIndex] );
             else
                 return vd::Time::infinity;
@@ -88,7 +89,7 @@ namespace model {
         if (mPhase == INIT) {
             mPhase = IDLE;
         }else if (mPhase == INFECTING) {
-            if (mPortIndex < mNbPort)
+            if (mPortIndex < mPorts.size())
                 mPortIndex++;
         }
     }
@@ -131,9 +132,9 @@ namespace model {
             case IDLE:
                 return new vv::String("IDLE");
             case INFECTING:
-                if (mPortIndex > 0 && mPortIndex <= mNbPort) {
+                if (mPortIndex > 0 && mPortIndex <= mPorts.size()) {
                     std::stringstream portStr;
-                    portStr << mOrder[mPortIndex-1];
+                    portStr << mPorts[mPortIndex-1];
                     return new vv::String("INFECTING : " + portStr.str() + " is now infected !");
                 }else
                     return new vv::String("INFECTING : wait");
@@ -145,24 +146,24 @@ namespace model {
     }
     
     void Transmission::randomizeOrder() {
-        for (int i = 0; i < mNbPort; i++)
-            mOrder[i] = i;
-        for (int i = 0; i < mNbPort; i++) {
-            int idx =  rand().getInt(0, mNbPort - 1);
-            int tmp = mOrder[i];
-            mOrder[i] = mOrder[idx];
-            mOrder[idx] = tmp;
+        mPorts = getPortNames(mPrefix + ".*");
+        for (unsigned int i = 0; i < mPorts.size(); i++) {
+            int idx =  rand().getInt(0, mPorts.size() - 1);
+            std::string tmp = mPorts[i];
+            mPorts[i] = mPorts[idx];
+            mPorts[idx] = tmp;
         }
     }
     
     void Transmission::randomizeInfectionTime() {
+        mInfectionOffsets = new double[mPorts.size()];
         // Generate dates
-        double infectionDates[mNbPort];
-        for (int i = 0; i < mNbPort; i++)
-            infectionDates[i] = mRate; // FIXME rand().exponential(mRate);
+        double infectionDates[mPorts.size()];
+        for (unsigned int i = 0; i < mPorts.size(); i++)
+            infectionDates[i] = rand().exponential(mRate);
         // Sort this dates
-        for (int i = 0; i < mNbPort; i++) {
-            for (int j = i + 1; j < mNbPort; j++) {
+        for (unsigned int i = 0; i < mPorts.size(); i++) {
+            for (unsigned int j = i + 1; j < mPorts.size(); j++) {
                 if (infectionDates[i] > infectionDates[j]) {
                     double tmp = infectionDates[i];
                     infectionDates[i] = infectionDates[j];
@@ -172,8 +173,32 @@ namespace model {
         }
         // Calculate the offsets
         mInfectionOffsets[0] = infectionDates[0];
-        for (int i = 1; i < mNbPort; i++)
+        for (unsigned int i = 1; i < mPorts.size(); i++)
             mInfectionOffsets[i] = infectionDates[i] - infectionDates[i - 1];
+    }
+
+    std::vector<std::string> Transmission::getPortNames(std::string pattern){
+        std::vector<std::string> vect;
+        
+        boost::regex regex;
+        try {
+            regex.assign(pattern, boost::regex_constants::icase);
+        }
+        catch (boost::regex_error& e)
+        {
+            return vect;
+        }
+        
+        vle::graph::ConnectionList map = getModel().getOutputPortList();
+        vle::graph::ConnectionList::const_iterator end = map.end();
+        for (vle::graph::ConnectionList::const_iterator it = map.begin(); it != end; ++it)
+        {
+            std::string key = it->first;
+            if (boost::regex_match(key, regex)){
+                vect.push_back(key);
+            }
+        }
+        return vect;
     }
 
 } // namespace vle example
