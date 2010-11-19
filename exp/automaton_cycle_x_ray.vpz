@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
 <vle_project version="0.9.0" date="ven., 19 nov. 2010" author="Virginie Baticle, Jeremy Gabriele">
 <structures>
-<model name="Top model" type="coupled" x="0" y="0" width="1299" height="634"  >
+<model name="Top model" type="coupled" x="0" y="0" width="857" height="477"  >
 <submodels>
 <model name="x_ray" type="atomic" conditions="probability" dynamics="xray" observables="report" x="575" y="250" width="100" height="45" >
 <in>
@@ -12,7 +12,7 @@
  <port name="status?" />
 </out>
 </model>
-<model name="Node_3" type="coupled" x="401" y="110" width="846" height="484"  >
+<model name="Node_3" type="coupled" x="401" y="110" width="100" height="60"  >
 <in>
  <port name="infection?" />
  <port name="status?" />
@@ -196,15 +196,15 @@
 </connection>
 <connection type="internal">
  <origin model="x_ray" port="status?" />
+ <destination model="Node_1" port="status?" />
+</connection>
+<connection type="internal">
+ <origin model="x_ray" port="status?" />
  <destination model="Node_3" port="status?" />
 </connection>
 <connection type="internal">
  <origin model="x_ray" port="status?" />
  <destination model="Node_2" port="status?" />
-</connection>
-<connection type="internal">
- <origin model="x_ray" port="status?" />
- <destination model="Node_1" port="status?" />
 </connection>
 </connections>
 </model>
@@ -242,8 +242,8 @@
 </port>
 </condition>
 <condition name="transmission" >
- <port name="nbPorts" >
-<integer>1</integer>
+ <port name="prefix" >
+<string>infection</string>
 </port>
  <port name="rate" >
 <double>0.900000000000000</double>
