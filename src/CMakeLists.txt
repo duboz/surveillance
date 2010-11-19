@@ -7,6 +7,10 @@ LINK_DIRECTORIES(
   ${VLE_LIBRARY_DIRS}
   ${Boost_LIBRARY_DIRS})
 
+ADD_LIBRARY(surveillance SHARED
+                        xRay.cpp
+                	xRay.hpp)
+
 ADD_LIBRARY(sir SHARED	infection.cpp
 			infection.hpp
 			transmission.cpp
@@ -22,6 +26,9 @@ ADD_LIBRARY(graph SHARED
 			vertexExecutive.hpp
 			graphExecutive.cpp)
 
+TARGET_LINK_LIBRARIES(surveillance
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
 
 TARGET_LINK_LIBRARIES(sir
   ${VLE_LIBRARIES}
@@ -30,6 +37,11 @@ TARGET_LINK_LIBRARIES(sir
 TARGET_LINK_LIBRARIES(graph
   ${VLE_LIBRARIES}
   ${Boost_LIBRARIES})
+
+INSTALL(TARGETS surveillance
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
 
 INSTALL(TARGETS sir
   RUNTIME DESTINATION lib

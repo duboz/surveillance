@@ -164,6 +164,8 @@ namespace model {
             vd::ExternalEvent * response = new vd::ExternalEvent ("status");
             response << vd::attribute ("name", std::string("status"));
             response << vd::attribute ("value", responseValue);
+            response << vd::attribute ("modelName",
+                                                          getModel().getParent()->getName());
             output.addEvent (response);
         }
     }
