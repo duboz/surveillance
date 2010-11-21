@@ -32,7 +32,20 @@ namespace vv = vle::value;
 namespace model {
 
 /**
- * @brief Surveillance model [to be continued]
+ * @brief X-Ray Surveillance model
+ *
+ * This class has exactly the same behavior as the data_collector class.
+ * Only two differences are notable :
+ *
+ *     - The "modelName" attribute of the ExternalEvent sent by the infection
+ *   model is taken in consideration to know the state of each SIR model.
+ *
+ *     - When an answer is got from a SIR model, a probability that the
+ *   collector "make a mistake" is applied to determine whether the stocked
+ *   result is the good one or its opposite.
+ *
+ *     - Every observation step, each couple [modelName, value] got are returned
+ *   by the observation method.
  *
  */
 class XRay : public vd::Dynamics
