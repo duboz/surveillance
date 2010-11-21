@@ -108,7 +108,7 @@ namespace model {
                                     const vd::Time& /*time*/)
     {
         if (mPhase == S || mPhase == R)
-        {mPhase = SI;}// unsigned tmax = 1; sleep(tmax);}
+        {mPhase = SI; unsigned tmax = 1; sleep(tmax);}
 
     }
 
@@ -123,36 +123,18 @@ namespace model {
     {
         if (event.onPort("state")) {
             switch (mPhase) {
-            case INIT :
-                return new vv::String("INIT");
-            case SI:
-                return new vv::String("I");
-            case S:
-                return new vv::String("S");
-            case I :
-                return new vv::String("I");
-            case R :
-                return new vv::String("R");
-            default :
-                return new vv::String("?");
-            }
-        }else if (event.onPort("infection_real")) {
-            switch (mPhase) {
-            case INIT :
-                return new vv::Double(1.0);
-            case SI:
-                return new vv::Double(10.0);
-            case S:
-                return new vv::Double(10.0);
-            case I :
-                return new vv::Double(150.0);
-            case R :
-                return new vv::Double(40.0);
-            default :
-                return new vv::Double(1.0);
-            }
+           case S :
+                return new vv::Integer(1);
+           case SI :
+                return new vv::Integer(2);
+           case I :
+                return new vv::Integer(2);
+           case R :
+                return new vv::Integer(3);
+           default:
+                return new vv::Integer(0);
+          }
         }else
-
             return 0;
     }
 

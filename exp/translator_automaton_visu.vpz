@@ -148,15 +148,37 @@
 140.125775390983 131.500490385030
 146.084864880566 145.298286247969
 151.30292377382 159.154432293714
-	       	 </string></key></map></key><key name="states"><map><key name="name"><string>infection_real</string></key><key name="type"><string>real</string></key><key name="values"><set><map><key name="color"><string>green</string></key><key name="max"><double>50.0000000000000</double></key><key name="min"><double>0.000000000000000</double></key><key name="type"><string>linear</string></key></map><map><key name="color"><string>red</string></key><key name="max"><double>200.000000000000000</double></key><key name="min"><double>50.0000000000000</double></key><key name="type"><string>linear</string></key></map></set></key></map></key></map></output>
-
+	</string></key></map></key>
+	<key name="states"><map>
+		<key name="name"><string>state</string></key>
+		<key name="type"><string>integer</string></key>
+		<key name="values"><set>
+				<map>
+		<key name="value"><integer>0</integer></key>
+		<key name="red"><integer>65535</integer></key>
+		<key name="green"><integer>65535</integer></key>
+		<key name="blue"><integer>65535</integer></key>
+		</map><map>	
+		<key name="value"><integer>1</integer></key>
+		<key name="red"><integer>0</integer></key>
+		<key name="green"><integer>0</integer></key>
+		<key name="blue"><integer>65535</integer></key>
+		</map><map>	
+		<key name="value"><integer>2</integer></key>
+		<key name="red"><integer>65535</integer></key>
+		<key name="green"><integer>0</integer></key>
+		<key name="blue"><integer>0</integer></key>
+		</map><map>	
+		<key name="value"><integer>3</integer></key>
+		<key name="red"><integer>0</integer></key>
+		<key name="green"><integer>65535</integer></key>
+		<key name="blue"><integer>0</integer></key>
+</map></set></key></map></key></map></output>
 </outputs>
 <observables>
 <observable name="infectionState" >
 <port name="state" >
  <attachedview name="infection" />
-</port>
-<port name="infection_real" >
  <attachedview name="graphview" />
 </port>
 </observable>
