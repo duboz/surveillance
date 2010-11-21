@@ -25,6 +25,9 @@
 #include <vle/devs.hpp>
 
 #include "infection.hpp"
+extern "C"{
+    #include <unistd.h>
+}
 
 namespace vd = vle::devs;
 namespace vv = vle::value;
@@ -105,7 +108,8 @@ namespace model {
                                     const vd::Time& /*time*/)
     {
         if (mPhase == S || mPhase == R)
-            mPhase = SI;
+        {mPhase = SI;}// unsigned tmax = 1; sleep(tmax);}
+
     }
 
     void Infection::confluentTransitions(const vd::Time& time,
@@ -122,7 +126,7 @@ namespace model {
             case INIT :
                 return new vv::String("INIT");
             case SI:
-                return new vv::String("SI");
+                return new vv::String("I");
             case S:
                 return new vv::String("S");
             case I :
@@ -132,7 +136,23 @@ namespace model {
             default :
                 return new vv::String("?");
             }
+        }else if (event.onPort("infection_real")) {
+            switch (mPhase) {
+            case INIT :
+                return new vv::Double(1.0);
+            case SI:
+                return new vv::Double(10.0);
+            case S:
+                return new vv::Double(10.0);
+            case I :
+                return new vv::Double(150.0);
+            case R :
+                return new vv::Double(40.0);
+            default :
+                return new vv::Double(1.0);
+            }
         }else
+
             return 0;
     }
 
