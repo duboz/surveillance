@@ -97,9 +97,7 @@ namespace model {
           for (vd::ExternalEventList::const_iterator it = event.begin();
                       it != event.end(); ++it) {
 
-              vle::utils::Rand r;
-              r.seed((uint32_t)12345);
-              double randValue = r.getDouble();
+              double randValue = rand().getDouble();
               if ((*it) -> getPortName() == "status") {
 
                   std::string value = 
