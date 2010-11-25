@@ -2,11 +2,11 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
 <structures>
-<model name="graph" type="coupled" width="737" height="440"  >
+<model name="graph" type="coupled" width="466" height="440"  >
 <submodels>
-<model name="data_collector" type="atomic" conditions="collector" dynamics="collector" observables="observer" x="71" y="66" width="100" height="30" >
+<model name="data_collector" type="atomic" conditions="collector,cond_graph" dynamics="collector" observables="observer" x="71" y="66" width="100" height="30" >
 </model>
-<model name="gen_network" type="atomic" conditions="cond_graph" dynamics="dyn_network" x="238" y="66" width="100" height="30" >
+<model name="gen_network" type="atomic" conditions="collectors,cond_graph" dynamics="dyn_network" x="238" y="66" width="100" height="30" >
 </model>
 </submodels>
 <connections>
@@ -37,7 +37,7 @@
  <port name="state" />
 </in>
 </model>
-<model name="vertexExecutive" type="atomic" dynamics="dyn_vertexExecutive" x="140" y="25" width="100" height="30" >
+<model name="vertexExecutive" type="atomic" conditions="collectors" dynamics="dyn_vertexExecutive" x="140" y="25" width="100" height="30" >
 </model>
 </submodels>
 <connections>
@@ -64,7 +64,7 @@
  <port name="state" />
 </in>
 </model>
-<model name="vertexExecutive" type="atomic" dynamics="dyn_vertexExecutive" x="140" y="25" width="100" height="30" >
+<model name="vertexExecutive" type="atomic" conditions="collectors" dynamics="dyn_vertexExecutive" x="140" y="25" width="100" height="30" >
 </model>
 </submodels>
 <connections>
@@ -82,6 +82,14 @@
 <condition name="collector" >
  <port name="timeStep" >
 <double>1.000000000000000</double>
+</port>
+</condition>
+<condition name="collectors" >
+ <port name="activeCollectors" >
+<set><string>data_collector</string></set>
+</port>
+ <port name="passiveCollectors" >
+<set></set>
 </port>
 </condition>
 <condition name="cond_graph" >

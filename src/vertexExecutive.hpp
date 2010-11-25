@@ -48,6 +48,7 @@ namespace model {
         void internalTransition(const vle::devs::Time &);
         vle::devs::Time timeAdvance() const;
     private:
+        vle::value::Set m_active_collectors;
         enum PHASE {INIT,INITIALIZED};
         PHASE m_phase;
     };

@@ -37,6 +37,8 @@ namespace model {
       : vd::Dynamics(init, events)
   {
       mObservationTimeStep = vv::toDouble(events.get("timeStep"));
+      mNbModel = events.getMap("graphInfo").getInt("number");
+      mPrefix = events.getMap("graphInfo").getString("prefix");
   }
 
   DataCollector::~DataCollector()
@@ -45,7 +47,7 @@ namespace model {
 
   vd::Time DataCollector::init(const vd::Time& time)
   {
-      mPhase = SEND;
+      mPhase = INIT;
       mCurrentTime = vd::Time(time);
       mLastRequestTime = vd::Time(time);
       mSainResult = 0;
@@ -62,6 +64,22 @@ namespace model {
           request << vd::attribute ("modelName", std::string (getModelName()));
           output.addEvent (request);
       }
+      if (mPhase == INIT and getModel().existOutputPort("connectTo")) {
+          vd::ExternalEvent* connectionRequest = 
+                new vd::ExternalEvent("connectTo");
+          vv::Set linkTo;
+          vv::Set unlink;
+          for (int i = 0; i < mNbModel; i++) {
+            std::string vetName = 
+              mPrefix + "-" + boost::lexical_cast<std::string>(i);
+            linkTo.addString(vetName);
+          }
+          connectionRequest << vd::attribute("modelName", 
+                                             std::string (getModelName()));
+          connectionRequest << vd::attribute("linkTo", linkTo);
+          connectionRequest << vd::attribute("unlink", unlink);
+          output.addEvent(connectionRequest);
+      }
   }
 
   vd::Time DataCollector::timeAdvance() const
@@ -76,6 +94,9 @@ namespace model {
   void DataCollector::internalTransition(const vd::Time& time)
   {
       switch (mPhase) {
+      case INIT:
+        mPhase = SEND;
+        break;
       case SEND:
           mPhase = RECEIVE;
           mLastRequestTime = vd::Time(time);

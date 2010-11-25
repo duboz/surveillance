@@ -32,14 +32,21 @@ namespace model {
                                  const vle::devs::InitEventList& evList): 
     devs::Executive(mdl,evList)
     {
+      m_active_collectors.value() = value::toSet(evList.get("activeCollectors")->clone());
+ 
     }
 
     devs::Time VertexExecutive::init(const vle::devs::Time& /* time */)
     {
-	m_phase=INIT;
-	addInputPort("infection", "status?");
-	addOutputPort("infection", "data_collector");
-	return 0.0;
+      m_phase=INIT;
+      addInputPort("infection", "status?");
+      
+      /* 
+       * Add output ports with the name of the active collectors models 
+       * and connect these to the output of the coupled model
+       */
+
+      return 0.0;
     }
 
     void VertexExecutive::internalTransition(const devs::Time & /*date*/)
@@ -60,8 +67,12 @@ namespace model {
            if (itin->first != "status?")
           	addConnection(coupledmodelName(),itin->first,"infection","infection");
        }
-       //out
-	addConnection("infection","data_collector",coupledmodelName(),"data_collector");
+      //out
+      for (unsigned int j = 0; j < m_active_collectors.size(); j++) {
+        addOutputPort("infection", m_active_collectors[j]->writeToString());
+        addConnection("infection", m_active_collectors[j]->writeToString(),
+                  coupledmodelName(),m_active_collectors[j]->writeToString());
+      }
         int nb = 0;
         for (it = list.begin(); it != list.end(); ++it) {
            if (it->first != "data_collector")
