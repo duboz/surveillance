@@ -97,6 +97,7 @@ namespace model {
                                     const vd::Time& /*time*/)
     {
         for (unsigned int i = 0; i < events.size(); i++) {
+
             if (events[i]->existAttributeValue("state")) {
                 if (events[i]->getBooleanAttributeValue("state")) {
                     mPhase = INFECTING;

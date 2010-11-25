@@ -9,7 +9,9 @@ LINK_DIRECTORIES(
 
 ADD_LIBRARY(surveillance SHARED
                         xRay.cpp
-                	xRay.hpp)
+                	xRay.hpp
+                	passive_collector.cpp
+                	passive_collector.hpp)
 
 ADD_LIBRARY(sir SHARED	infection.cpp
 			infection.hpp
