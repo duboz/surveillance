@@ -2,11 +2,15 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
 <structures>
-<model name="graph" type="coupled" width="466" height="440"  >
+<model name="graph" type="coupled" width="718" height="409"  >
 <submodels>
-<model name="data_collector" type="atomic" conditions="collector,cond_graph" dynamics="collector" observables="observer" x="71" y="66" width="100" height="30" >
+<model name="data_collector" type="atomic" conditions="collector,cond_graph" dynamics="collector" observables="observer" x="53" y="113" width="100" height="30" >
 </model>
 <model name="gen_network" type="atomic" conditions="collectors,cond_graph" dynamics="dyn_network" x="238" y="66" width="100" height="30" >
+</model>
+<model name="xRaySample" type="atomic" conditions="cond_graph,xRay_1" dynamics="dyn_xray" observables="xRay" x="239" y="163" width="100" height="30" >
+</model>
+<model name="xRayTotal" type="atomic" conditions="cond_graph,xRay" dynamics="dyn_xray" observables="xRay" x="79" y="33" width="100" height="30" >
 </model>
 </submodels>
 <connections>
@@ -19,10 +23,11 @@
 <dynamic name="collector" library="sir" model="data_collector" package="surveillance" type="local"  />
 <dynamic name="dyn_network" library="graph" model="dyn_graphExecutive" package="surveillance" type="local"  />
 <dynamic name="dyn_vertexExecutive" library="graph" model="dyn_vertexExecutive" package="surveillance" type="local"  />
+<dynamic name="dyn_xray" library="surveillance" model="x_ray" package="surveillance" type="local"  />
 </dynamics>
 <classes>
 <class name="InfectedVertex" >
-<model name="vertex" type="coupled" width="503" height="440"  >
+<model name="vertex" type="coupled" width="709" height="390"  >
 <submodels>
 <model name="infection" type="atomic" conditions="infected" dynamics="Infection" observables="infectionState" x="75" y="130" width="100" height="45" >
 <in>
@@ -49,7 +54,7 @@
 </model>
 </class>
 <class name="Vertex" >
-<model name="vertex" type="coupled" width="503" height="440"  >
+<model name="vertex" type="coupled" width="709" height="390"  >
 <submodels>
 <model name="infection" type="atomic" conditions="susceptible" dynamics="Infection" observables="infectionState" x="75" y="130" width="100" height="45" >
 <in>
@@ -86,7 +91,7 @@
 </condition>
 <condition name="collectors" >
  <port name="activeCollectors" >
-<set><string>data_collector</string></set>
+<set><string>data_collector</string><string>xRayTotal</string><string>xRaySample</string></set>
 </port>
  <port name="passiveCollectors" >
 <set></set>
@@ -132,9 +137,39 @@
 <double>0.500000000000000</double>
 </port>
 </condition>
+<condition name="xRay" >
+ <port name="echProp" >
+<double>1.000000000000000</double>
+</port>
+ <port name="probabilityRightI" >
+<double>1.000000000000000</double>
+</port>
+ <port name="probabilityRightSR" >
+<double>1.000000000000000</double>
+</port>
+ <port name="timeStep" >
+<double>5.000000000000000</double>
+</port>
+</condition>
+<condition name="xRay_1" >
+ <port name="echProp" >
+<double>0.200000000000000</double>
+</port>
+ <port name="probabilityRightI" >
+<double>1.000000000000000</double>
+</port>
+ <port name="probabilityRightSR" >
+<double>1.000000000000000</double>
+</port>
+ <port name="timeStep" >
+<double>5.000000000000000</double>
+</port>
+</condition>
 </conditions>
 <views>
 <outputs>
+<output name="analyse" location="" format="local" plugin="file" />
+
 <output name="data_collector_view" location="" format="local" plugin="file" />
 
 <output name="infection" location="" format="local" plugin="file" />
@@ -153,9 +188,30 @@
  <attachedview name="data_collector_view" />
 </port>
 
+<port name="prevalence" >
+ <attachedview name="analyse" />
+</port>
+
+</observable>
+
+<observable name="xRay" >
+<port name="incidence" >
+ <attachedview name="analyse" />
+</port>
+
+<port name="prevalence" >
+ <attachedview name="analyse" />
+</port>
+
+<port name="xrayview" >
+ <attachedview name="data_collector_view" />
+</port>
+
 </observable>
 
 </observables>
+<view name="analyse" output="analyse" type="timed" timestep="1.000000000000000" />
+
 <view name="data_collector_view" output="data_collector_view" type="timed" timestep="1.000000000000000" />
 
 <view name="infection" output="infection" type="timed" timestep="0.100000000000000" />

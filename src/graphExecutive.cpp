@@ -131,13 +131,15 @@ public:
           it != event.end(); ++it) {
         std::string modelName = (*it) -> getStringAttributeValue("modelName");
         vv::Set linkTo = (*it) -> getSetAttributeValue("linkTo");
-        vv::Set unlink = (*it) -> getSetAttributeValue("unlink");
-        for (unsigned int i = 0; i < unlink.size(); i++) {
+      //  vv::Set unlink = (*it) -> getSetAttributeValue("unlink");
+       /* for (unsigned int i = 0; i < unlink.size(); i++) {
           removeConnection(modelName, "status?", 
                            unlink[i]->writeToString(), "status?");
           removeConnection(unlink[i]->writeToString(), modelName,
                            modelName, "status");
-        }
+        }*/
+        removeOutputPort(modelName, "status?");
+        addOutputPort(modelName, "status?");
         
         for (unsigned int i = 0; i < linkTo.size(); i++) {
           addConnection(modelName, "status?", 

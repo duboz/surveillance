@@ -26,7 +26,7 @@
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
 #include "xRay.hpp"
-
+#include <vle/devs/DynamicsDbg.hpp>
 namespace vd = vle::devs;
 namespace vv = vle::value;
 
@@ -37,7 +37,13 @@ namespace model {
   {
     mProbabilityRightSR = vv::toDouble(events.get("probabilityRightSR"));
     mProbabilityRightI = vv::toDouble(events.get("probabilityRightI"));
-  }
+    mNbModel = events.getMap("graphInfo").getInt("number");
+    mPrefix = events.getMap("graphInfo").getString("prefix");
+    mObservationTimeStep =  vv::toDouble(events.get("timeStep"));
+    mSampleSize = /*boost::lexical_cast<int>*/ (vv::toDouble(events.get("echProp")) * mNbModel);
+    std::cout<<"smplesize= "<<mSampleSize<<"\n";
+    mPrevalence=0.; mIncidence=0.;
+      }
 
   XRay::~XRay()
   {
@@ -45,8 +51,7 @@ namespace model {
 
   vd::Time XRay::init(const vd::Time& time)
   {
-      mPhase = SEND;
-      mObservationTimeStep = 0.5;
+      mPhase = INIT;
       mCurrentTime = vd::Time(time);
       mLastRequestTime = vd::Time(time);
       return 0;
@@ -59,6 +64,36 @@ namespace model {
           vd::RequestEvent * request = new vd::RequestEvent ("status?");
           request << vd::attribute ("modelName", std::string (getModelName()));
           output.addEvent (request);
+      }
+
+      if ((mPhase == RECEIVE or mPhase == INIT) 
+          and getModel().existOutputPort("connectTo")) {
+          vd::ExternalEvent* connectionRequest = 
+                new vd::ExternalEvent("connectTo");
+          vv::Set linkTo;
+          std::vector <int> sample;
+          while (sample.size()<mSampleSize)
+          { 
+              bool exist=true;
+              int i;
+              while (exist){
+                  exist=false;
+                i =rand().getInt(0,mNbModel-1);
+                for (int j = 0; j < sample.size(); j++)
+                    if (i==sample[j])
+                        exist=true;
+              }
+              sample.push_back(i);
+          }
+          for (std::vector<int>::iterator i = sample.begin(); i!=sample.end(); ++i) {
+            std::string vetName = 
+              mPrefix + "-" + boost::lexical_cast<std::string>(*i);
+            linkTo.addString(vetName);
+          }
+          connectionRequest << vd::attribute("modelName", 
+                                             std::string (getModelName()));
+          connectionRequest << vd::attribute("linkTo", linkTo);
+          output.addEvent(connectionRequest);
       }
   }
 
@@ -83,6 +118,10 @@ namespace model {
           mPhase = SEND;
           mCurrentTime = vd::Time(time);
           break;
+      case INIT:
+          mPhase = SEND;
+          mCurrentTime = vd::Time(time);
+          break;
       default:
           std::cout << "bad state in XRay model !";
       }
@@ -94,6 +133,8 @@ namespace model {
   {
       
       if (mPhase == RECEIVE) {
+          if (!mapResult.empty())
+              mapResult.clear();
           for (vd::ExternalEventList::const_iterator it = event.begin();
                       it != event.end(); ++it) {
 
@@ -120,6 +161,16 @@ namespace model {
           }
           mCurrentTime = vd::Time(time);
       }
+      int nbInfected=0;
+      std::map<std::string, std::string>::iterator node;
+      for (node=mapResult.begin(); node!=mapResult.end();node++){
+          if (node->second == "I")
+              nbInfected++;
+      }
+      double tempPrev = ((double) nbInfected) / mSampleSize;
+      std::cout<<"tempPrev: "<<tempPrev<<"\n";
+      mIncidence = (tempPrev - mPrevalence)/mObservationTimeStep;
+      mPrevalence = tempPrev;
   }
 
   void XRay::confluentTransitions(const vd::Time& time,
@@ -141,17 +192,28 @@ namespace model {
   }
 
   vv::Value* XRay::observation(
-                       const vd::ObservationEvent& /*event*/) const
+                       const vd::ObservationEvent& event) const
   {
-      
-    vv::Map* tmpResult = new vv::Map();
-    std::map<std::string, std::string>::const_iterator it;
+    
+    if (event.onPort("xrayview")){ 
+        vv::Map* tmpResult = new vv::Map();
+        std::map<std::string, std::string>::const_iterator it;
 
-    for ( it = mapResult.begin(); it != mapResult.end(); ++it ) {
-      tmpResult->addString(it->first, it->second);
+        for ( it = mapResult.begin(); it != mapResult.end(); ++it ) {
+          tmpResult->addString(it->first, it->second);
+        }
+        return tmpResult;
     }
+    if (event.onPort("prevalence")){
+        std::cout<<"Prev is "<<mPrevalence<<"\n";
+        return buildDouble(mPrevalence);
+    }
+    if (event.onPort("incidence")){
+        std::cout<<"incidence is "<<mIncidence<<"\n";
+        return buildDouble(mIncidence);
+    }
+    else return 0;
 
-    return tmpResult;
   }
 
   void XRay::finish()
@@ -160,4 +222,4 @@ namespace model {
 
 } // namespace vle example
 
-DECLARE_NAMED_DYNAMICS(x_ray, model::XRay)
+DECLARE_NAMED_DYNAMICS_DBG(x_ray, model::XRay)

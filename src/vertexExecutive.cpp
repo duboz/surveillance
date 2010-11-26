@@ -24,7 +24,7 @@
 
 #include "vertexExecutive.hpp"
 #include <vle/graph/CoupledModel.hpp>
-
+#include <vle/devs/ExecutiveDbg.hpp>
 using namespace vle;
 
 namespace model {
@@ -75,7 +75,12 @@ namespace model {
       }
         int nb = 0;
         for (it = list.begin(); it != list.end(); ++it) {
-           if (it->first != "data_collector")
+	    bool isCollector=false;
+	    for (unsigned int j = 0; j < m_active_collectors.size(); j++){
+	    if (it->first ==m_active_collectors[j]->writeToString())
+		    isCollector=true; 
+	    }        
+           if (!isCollector)
            {
    		std::string prtName = "infection_" + boost::lexical_cast<std::string>(nb);
    		addOutputPort("transmission", prtName);
@@ -83,7 +88,7 @@ namespace model {
 		nb++;
 	    }        
         }
-        m_phase=INITIALIZED;
+        m_phase=INITIALIZED; 
     }
     devs::Time VertexExecutive::timeAdvance() const
     {
@@ -93,5 +98,5 @@ namespace model {
 }
 
 
-DECLARE_NAMED_EXECUTIVE(dyn_vertexExecutive, model::VertexExecutive)
+DECLARE_NAMED_EXECUTIVE_DBG(dyn_vertexExecutive, model::VertexExecutive)
 }

@@ -77,7 +77,7 @@ namespace model {
           connectionRequest << vd::attribute("modelName", 
                                              std::string (getModelName()));
           connectionRequest << vd::attribute("linkTo", linkTo);
-          connectionRequest << vd::attribute("unlink", unlink);
+          //connectionRequest << vd::attribute("unlink", unlink);
           output.addEvent(connectionRequest);
       }
   }
@@ -156,8 +156,12 @@ namespace model {
   }
 
   vv::Value* DataCollector::observation(
-                       const vd::ObservationEvent& /*event*/) const
+                       const vd::ObservationEvent& event) const
   {
+      if(event.onPort("prevalence")) {
+          return buildDouble(((double)mInfectedResult)/mNbModel);
+      }
+	    
       vv::Tuple* result = new vv::Tuple();
       result -> add(mSainResult);
       result -> add(mInfectedResult);

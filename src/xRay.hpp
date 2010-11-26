@@ -68,14 +68,19 @@ public:
     virtual vv::Value* observation(const vd::ObservationEvent& /*event*/) const;
     virtual void finish();  
 private:
-    enum PHASE {SEND, RECEIVE};
+    enum PHASE {SEND, RECEIVE, INIT};
     PHASE mPhase;
     vd::Time mLastRequestTime;
     vd::Time mCurrentTime;
     double mObservationTimeStep;
     double mProbabilityRightSR;
-    double mProbabilityRightI;    
+    double mProbabilityRightI;
+    int mSampleSize;    
+    int mNbModel;
+    std::string mPrefix;
     std::map<std::string, std::string> mapResult;
+    double mPrevalence;
+    double mIncidence;
 };
 
 } // namespace model
