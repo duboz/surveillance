@@ -108,7 +108,7 @@ namespace model {
                                     const vd::Time& /*time*/)
     {
         if (mPhase == S || mPhase == R)
-        {mPhase = SI; unsigned tmax = 1; sleep(tmax);}
+        {mPhase = SI;}
 
     }
 

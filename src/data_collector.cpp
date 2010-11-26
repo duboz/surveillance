@@ -26,6 +26,10 @@
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
 #include "data_collector.hpp"
+extern "C"{
+    #include <unistd.h>
+}
+
 
 namespace vd = vle::devs;
 namespace vv = vle::value;
@@ -93,9 +97,11 @@ namespace model {
 
   void DataCollector::internalTransition(const vd::Time& time)
   {
+      //  unsigned tmax = 1; sleep(tmax);
       switch (mPhase) {
       case INIT:
         mPhase = SEND;
+          mCurrentTime = vd::Time(time);
         break;
       case SEND:
           mPhase = RECEIVE;
