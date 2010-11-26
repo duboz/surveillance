@@ -41,7 +41,7 @@ namespace model {
     mPrefix = events.getMap("graphInfo").getString("prefix");
     mObservationTimeStep =  vv::toDouble(events.get("timeStep"));
     mSampleSize = /*boost::lexical_cast<int>*/ (vv::toDouble(events.get("echProp")) * mNbModel);
-    std::cout<<"smplesize= "<<mSampleSize<<"\n";
+    //std::cout<<"smplesize= "<<mSampleSize<<"\n";
     mPrevalence=0.; mIncidence=0.;
       }
 
@@ -168,7 +168,7 @@ namespace model {
               nbInfected++;
       }
       double tempPrev = ((double) nbInfected) / mSampleSize;
-      std::cout<<"tempPrev: "<<tempPrev<<"\n";
+      //std::cout<<"tempPrev: "<<tempPrev<<"\n";
       mIncidence = (tempPrev - mPrevalence)/mObservationTimeStep;
       mPrevalence = tempPrev;
   }
@@ -205,11 +205,11 @@ namespace model {
         return tmpResult;
     }
     if (event.onPort("prevalence")){
-        std::cout<<"Prev is "<<mPrevalence<<"\n";
+        //std::cout<<"Prev is "<<mPrevalence<<"\n";
         return buildDouble(mPrevalence);
     }
     if (event.onPort("incidence")){
-        std::cout<<"incidence is "<<mIncidence<<"\n";
+        //std::cout<<"incidence is "<<mIncidence<<"\n";
         return buildDouble(mIncidence);
     }
     else return 0;
