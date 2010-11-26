@@ -20,6 +20,13 @@ ADD_LIBRARY(sir SHARED	infection.cpp
 			transmission.hpp
 			SirDifferentialEquation.cpp
 			SirDifferentialEquation.hpp
+			SDess.cpp
+			SDess.hpp
+			RDess.cpp
+			RDess.hpp
+			IDess.cpp
+			IDess.hpp
+			DessExec.cpp
       			data_collector.hpp
       			data_collector.cpp
       			collector_test.cpp)

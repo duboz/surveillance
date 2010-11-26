@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
+<vle_project version="1.0.0" date="ven., 26 nov. 2010" author="Vivien Massart">
+<structures>
+<model name="Top model" type="coupled" x="0" y="0" width="878" height="416"  >
+<submodels>
+</submodels>
+<connections>
+</connections>
+</model>
+</structures>
+<experiment name="exp" duration="1.000000000000000" begin="0.000000000000000" combination="linear" seed="1" >
+<replicas seed="3499211612" number="1" />
+<views>
+</views>
+</experiment>
+</vle_project>

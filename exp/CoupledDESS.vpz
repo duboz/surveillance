@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
+<vle_project version="1.0.0" date="ven., 19 nov. 2010" author="vivien">
+<structures>
+<model name="Top model" type="coupled" x="0" y="0" width="934" height="416"  >
+<submodels>
+<model name="I1" type="atomic" conditions="cond_I,cond_I1,cond_a,cond_m,cond_r" dynamics="IDESS" observables="obs_I1" x="48" y="149" width="100" height="45" >
+<in>
+ <port name="update" />
+</in>
+<out>
+ <port name="update" />
+</out>
+</model>
+<model name="I2" type="atomic" conditions="cond_I,cond_I2,cond_a,cond_m,cond_r" dynamics="IDESS" observables="obs_I" x="448" y="148" width="100" height="45" >
+<in>
+ <port name="update" />
+</in>
+<out>
+ <port name="update" />
+</out>
+</model>
+<model name="R1" type="atomic" conditions="cond_R,cond_R1,cond_a,cond_m,cond_r" dynamics="RDESS" observables="obs_R1" x="39" y="262" width="100" height="45" >
+<in>
+ <port name="update" />
+</in>
+<out>
+ <port name="update" />
+</out>
+</model>
+<model name="R2" type="atomic" conditions="cond_R,cond_R2,cond_a,cond_m,cond_r" dynamics="RDESS" observables="obs_R" x="478" y="268" width="100" height="45" >
+<in>
+ <port name="update" />
+</in>
+</model>
+<model name="S1" type="atomic" conditions="cond_S,cond_S1,cond_a,cond_m,cond_r" dynamics="SDESS" observables="obs_S1" x="27" y="24" width="100" height="45" >
+<in>
+ <port name="update" />
+</in>
+<out>
+ <port name="update" />
+</out>
+</model>
+<model name="S2" type="atomic" conditions="cond_S,cond_S2,cond_a,cond_m,cond_r" dynamics="SDESS" observables="obs_S" x="471" y="22" width="100" height="45" >
+<in>
+ <port name="update" />
+</in>
+<out>
+ <port name="update" />
+</out>
+</model>
+</submodels>
+<connections>
+<connection type="internal">
+ <origin model="I1" port="update" />
+ <destination model="S1" port="update" />
+</connection>
+<connection type="internal">
+ <origin model="I1" port="update" />
+ <destination model="R1" port="update" />
+</connection>
+<connection type="internal">
+ <origin model="I1" port="update" />
+ <destination model="I2" port="update" />
+</connection>
+<connection type="internal">
+ <origin model="I2" port="update" />
+ <destination model="S2" port="update" />
+</connection>
+<connection type="internal">
+ <origin model="I2" port="update" />
+ <destination model="R2" port="update" />
+</connection>
+<connection type="internal">
+ <origin model="R1" port="update" />
+ <destination model="R2" port="update" />
+</connection>
+<connection type="internal">
+ <origin model="S1" port="update" />
+ <destination model="I1" port="update" />
+</connection>
+<connection type="internal">
+ <origin model="S1" port="update" />
+ <destination model="S2" port="update" />
+</connection>
+<connection type="internal">
+ <origin model="S2" port="update" />
+ <destination model="I2" port="update" />
+</connection>
+</connections>
+</model>
+</structures>
+<dynamics>
+<dynamic name="IDESS" library="sir" model="iDess" package="surveillance" type="local"  />
+<dynamic name="RDESS" library="sir" model="rDess" package="surveillance" type="local"  />
+<dynamic name="SDESS" library="sir" model="sDess" package="surveillance" type="local"  />
+</dynamics>
+<experiment name="exp" duration="60.000000000000000" begin="0.000000000000000" combination="linear" seed="3499211612" >
+<replicas seed="581869302" number="1" />
+<conditions>
+<condition name="cond_I" >
+ <port name="active" >
+<boolean>true</boolean>
+</port>
+ <port name="timeStep" >
+<double>0.001000000000000</double>
+</port>
+ <port name="value" >
+<double>10.000000000000000</double>
+</port>
+</condition>
+<condition name="cond_I1" >
+ <port name="ext" >
+<string>S1</string>
+</port>
+ <port name="int" >
+<string>I1</string>
+</port>
+ <port name="name" >
+<string>I1</string>
+</port>
+</condition>
+<condition name="cond_I2" >
+ <port name="ext" >
+<string>S2,I1</string>
+</port>
+ <port name="int" >
+<string>I2</string>
+</port>
+ <port name="name" >
+<string>I2</string>
+</port>
+</condition>
+<condition name="cond_R" >
+ <port name="timeStep" >
+<double>0.001000000000000</double>
+</port>
+ <port name="value" >
+<double>0.000000000000000</double>
+</port>
+</condition>
+<condition name="cond_R1" >
+ <port name="active" >
+<boolean>true</boolean>
+</port>
+ <port name="ext" >
+<string>I1</string>
+</port>
+ <port name="int" >
+<string>R1</string>
+</port>
+ <port name="name" >
+<string>R1</string>
+</port>
+</condition>
+<condition name="cond_R2" >
+ <port name="active" >
+<boolean>false</boolean>
+</port>
+ <port name="ext" >
+<string>I2,R1</string>
+</port>
+ <port name="int" >
+<string>R2</string>
+</port>
+ <port name="name" >
+<string>R2</string>
+</port>
+</condition>
+<condition name="cond_S" >
+ <port name="N" >
+<double>100000.000000000000000</double>
+</port>
+ <port name="active" >
+<boolean>true</boolean>
+</port>
+ <port name="timeStep" >
+<double>0.001000000000000</double>
+</port>
+ <port name="value" >
+<double>500000.000000000000000</double>
+</port>
+</condition>
+<condition name="cond_S1" >
+ <port name="ext" >
+<string>I1</string>
+</port>
+ <port name="int" >
+<string>S1</string>
+</port>
+ <port name="name" >
+<string>S1</string>
+</port>
+</condition>
+<condition name="cond_S2" >
+ <port name="ext" >
+<string>I2,S1</string>
+</port>
+ <port name="int" >
+<string>S2</string>
+</port>
+ <port name="name" >
+<string>S2</string>
+</port>
+</condition>
+<condition name="cond_a" >
+ <port name="a" >
+<double>0.100000000000000</double>
+</port>
+</condition>
+<condition name="cond_b" >
+ <port name="b0" >
+<double>0.001000000000000</double>
+</port>
+ <port name="b1" >
+<double>0.280000000000000</double>
+</port>
+</condition>
+<condition name="cond_g" >
+ <port name="g" >
+<double>55.000000000000000</double>
+</port>
+</condition>
+<condition name="cond_m" >
+ <port name="m" >
+<double>0.002000000000000</double>
+</port>
+</condition>
+<condition name="cond_r" >
+ <port name="r" >
+<double>0.000010000000000</double>
+</port>
+</condition>
+</conditions>
+<views>
+<outputs>
+<output name="o4" location="" format="local" plugin="file" />
+
+</outputs>
+<observables>
+<observable name="cnt" >
+<port name="c" >
+ <attachedview name="dessview" />
+</port>
+
+</observable>
+
+<observable name="obs_I" >
+<port name="I2" >
+ <attachedview name="dessview" />
+</port>
+
+</observable>
+
+<observable name="obs_I1" >
+<port name="I1" >
+ <attachedview name="dessview" />
+</port>
+
+</observable>
+
+<observable name="obs_R" >
+<port name="R2" >
+ <attachedview name="dessview" />
+</port>
+
+</observable>
+
+<observable name="obs_R1" >
+<port name="R1" >
+ <attachedview name="dessview" />
+</port>
+
+</observable>
+
+<observable name="obs_S" >
+<port name="S2" >
+ <attachedview name="dessview" />
+</port>
+
+</observable>
+
+<observable name="obs_S1" >
+<port name="S1" >
+ <attachedview name="dessview" />
+</port>
+
+</observable>
+
+</observables>
+<view name="dessview" output="o4" type="timed" timestep="0.001000000000000" />
+
+</views>
+</experiment>
+</vle_project>
