@@ -97,7 +97,7 @@ namespace model {
 
   void DataCollector::internalTransition(const vd::Time& time)
   {
-      //  unsigned tmax = 1; sleep(tmax);
+      //unsigned tmax = 1; sleep(tmax);
       switch (mPhase) {
       case INIT:
         mPhase = SEND;

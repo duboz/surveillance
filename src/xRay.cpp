@@ -72,19 +72,20 @@ namespace model {
                 new vd::ExternalEvent("connectTo");
           vv::Set linkTo;
           std::vector <int> sample;
-          while (sample.size()<mSampleSize)
-          { 
-              bool exist=true;
-              int i;
-              while (exist){
-                  exist=false;
-                i =rand().getInt(0,mNbModel-1);
-                for (int j = 0; j < sample.size(); j++)
-                    if (i==sample[j])
-                        exist=true;
-              }
+          int i=0;
+          while (sample.size()<mNbModel) { 
               sample.push_back(i);
+              i++;
           }
+          for (int j = 0; j < sample.size(); j++) {
+              int k = rand().getInt(0,sample.size()-1);
+              int temp = sample[j];
+              sample[j]=sample[k];
+              sample[k]=temp;
+          }
+          while (sample.size()>mSampleSize)
+              sample.pop_back();
+
           for (std::vector<int>::iterator i = sample.begin(); i!=sample.end(); ++i) {
             std::string vetName = 
               mPrefix + "-" + boost::lexical_cast<std::string>(*i);
