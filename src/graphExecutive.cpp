@@ -138,15 +138,47 @@ public:
           removeConnection(unlink[i]->writeToString(), modelName,
                            modelName, "status");
         }*/
-        removeOutputPort(modelName, "status?");
-        addOutputPort(modelName, "status?");
+        //removeOutputPort(modelName, "status?");
+        //addOutputPort(modelName, "status?");
+
+        //Old connections
+        vle::graph:: ModelPortList connectedModels
+            = coupledmodel().findModel(modelName)->getOutputPortList().find(std::string("status?"))->second;
+        std::cout<<modelName<<" is connected to: "<<connectedModels.size() <<" models\n";
+        //Remove old connections that are not in the new set.
         
-        for (unsigned int i = 0; i < linkTo.size(); i++) {
-          addConnection(modelName, "status?", 
-                           linkTo[i]->writeToString(), "status?");
-          addConnection(linkTo[i]->writeToString(), modelName,
-                           modelName, "status");
+        vle::graph:: ModelPortList::iterator node;
+        int disco=0;
+        for (node = connectedModels.begin(); node !=connectedModels.end(); node++) {
+            bool unConnect = true;
+            for (unsigned int i = 0; i < linkTo.size(); i++) {
+                if (node->first->getName() == linkTo[i]->writeToString())
+                    unConnect = false;
+            }
+            if (unConnect) {
+                removeConnection(modelName, "status?", 
+                                  node->first->getName(), "status?");
+                disco++;
+            }
         }
+        std::cout<<modelName<<" is disconnected to: "<<disco <<" models\n";
+        
+        //Create connections that are in the new set but were not in the old
+        //set
+        int reco=0;
+        for (unsigned int i = 0; i < linkTo.size(); i++) {
+            if (!coupledmodel().existInternalConnection(
+                    modelName, "status?",linkTo[i]->writeToString(), "status?")) {
+                  addConnection(modelName, "status?", 
+                                linkTo[i]->writeToString(), "status?");
+                  reco++;
+            }
+            if (!coupledmodel().existInternalConnection(
+                  linkTo[i]->writeToString(), modelName,modelName, "status"))
+                  addConnection(linkTo[i]->writeToString(), modelName,
+                                modelName, "status");
+        }
+        std::cout<<modelName<<" is reconnected to: "<<reco <<" models\n";
       }
     }
 
