@@ -162,12 +162,17 @@ namespace model {
           }
           mCurrentTime = vd::Time(time);
       }
-      int nbInfected=0;
+      int nbInfected = 0;
+      //int nbNonInfected = 0;
       std::map<std::string, std::string>::iterator node;
       for (node=mapResult.begin(); node!=mapResult.end();node++){
           if (node->second == "I")
               nbInfected++;
+          //else
+          //    nbNonInfected++;
       }
+      //std::cout<<"xray recieve: "<<nbNonInfected<<" non infecteds and: "<< nbInfected
+      //    <<" infecteds at time: "<<time.getValue()<<"\n";
       double tempPrev = ((double) nbInfected) / mSampleSize;
       //std::cout<<"tempPrev: "<<tempPrev<<"\n";
       mIncidence = (tempPrev - mPrevalence)/mObservationTimeStep;

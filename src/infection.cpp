@@ -161,14 +161,14 @@ namespace model {
                 responseValue = std::string("S");
                 break;
             case SI:
+                responseValue = std::string("I");
+                break;
             case I:
                 responseValue = std::string("I");
                 break;
-
             case R:
                 responseValue = std::string("R");
                 break;
-
             }
             vd::ExternalEvent * response = 
                 new vd::ExternalEvent (event.getStringAttributeValue("modelName"));

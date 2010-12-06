@@ -81,7 +81,7 @@
             </model>
         </class>
     </classes>
-    <experiment name="test_translator" duration="80.000000000000000" begin="0.000000000000000" combination="linear" seed="3890346734" >
+    <experiment name="phitsaTest" duration="80.000000000000000" begin="0.000000000000000" combination="total" seed="3890346734" >
         <replicas seed="3499211612" number="1" />
         <conditions>
             <condition name="collector" >
@@ -159,17 +159,20 @@
                     <double>1.000000000000000</double>
                 </port>
                 <port name="probabilityRightI" >
-                    <double>1.000000000000000</double>
+                    <double>0.750000000000000</double>
                 </port>
                 <port name="probabilityRightSR" >
-                    <double>1.000000000000000</double>
+                    <double>0.750000000000000</double>
                 </port>
                 <port name="timeStep" >
-                    <double>50.000000000000000</double>
+                    <double>5.000000000000000</double>
                 </port>
             </condition>
             <condition name="xRay_1" >
                 <port name="echProp" >
+                    <double>0.500000000000000</double>
+                    <double>0.400000000000000</double>
+                    <double>0.300000000000000</double>
                     <double>0.200000000000000</double>
                 </port>
                 <port name="probabilityRightI" >
@@ -179,7 +182,7 @@
                     <double>1.000000000000000</double>
                 </port>
                 <port name="timeStep" >
-                    <double>50.000000000000000</double>
+                    <double>5.000000000000000</double>
                 </port>
             </condition>
         </conditions>
@@ -257,11 +260,11 @@
 
                 <observable name="xRay" >
                     <port name="incidence" >
-                        <attachedview name="analyse" />
+                        <attachedview name="analyse-5" />
                     </port>
 
                     <port name="prevalence" >
-                        <attachedview name="analyse" />
+                        <attachedview name="analyse-5" />
                     </port>
 
                     <port name="xrayview" >
@@ -272,10 +275,11 @@
 
             </observables>
             <view name="analyse" output="analyse" type="timed" timestep="1.000000000000000" />
+            <view name="analyse-5" output="analyse" type="timed" timestep="5.000000000000000" />
 
             <view name="data_collector_view" output="data_collector_view" type="timed" timestep="1.000000000000000" />
 
-            <view name="graphview" output="o2" type="timed" timestep="0.500000000000000" />
+            <view name="graphview" output="o2" type="timed" timestep="25.00000000000000" />
 
             <view name="infection" output="infection" type="timed" timestep="0.100000000000000" />
 

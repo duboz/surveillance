@@ -24,7 +24,7 @@
 
 #include "vertexExecutive.hpp"
 #include <vle/graph/CoupledModel.hpp>
-#include <vle/devs/ExecutiveDbg.hpp>
+#include <vle/devs/Executive.hpp>
 using namespace vle;
 
 namespace model {
@@ -98,5 +98,5 @@ namespace model {
 }
 
 
-DECLARE_NAMED_EXECUTIVE_DBG(dyn_vertexExecutive, model::VertexExecutive)
+DECLARE_NAMED_EXECUTIVE(dyn_vertexExecutive, model::VertexExecutive)
 }

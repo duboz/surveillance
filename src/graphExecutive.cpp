@@ -24,7 +24,6 @@
 
 
 #include <vle/devs/Executive.hpp>
-#include <vle/devs/ExecutiveDbg.hpp>
 #include <vle/translator/GraphTranslator.hpp>
 #include <vle/value/Map.hpp>
 #include <boost/lexical_cast.hpp>
@@ -144,7 +143,7 @@ public:
         //Old connections
         vle::graph:: ModelPortList connectedModels
             = coupledmodel().findModel(modelName)->getOutputPortList().find(std::string("status?"))->second;
-        std::cout<<modelName<<" is connected to: "<<connectedModels.size() <<" models\n";
+        //std::cout<<modelName<<" is connected to: "<<connectedModels.size() <<" models\n";
         //Remove old connections that are not in the new set.
         
         vle::graph:: ModelPortList::iterator node;
@@ -161,7 +160,7 @@ public:
                 disco++;
             }
         }
-        std::cout<<modelName<<" is disconnected to: "<<disco <<" models\n";
+        //std::cout<<modelName<<" is disconnected to: "<<disco <<" models\n";
         
         //Create connections that are in the new set but were not in the old
         //set
@@ -178,7 +177,7 @@ public:
                   addConnection(linkTo[i]->writeToString(), modelName,
                                 modelName, "status");
         }
-        std::cout<<modelName<<" is reconnected to: "<<reco <<" models\n";
+        //std::cout<<modelName<<" is reconnected to: "<<reco <<" models\n";
       }
     }
 
@@ -192,4 +191,4 @@ private:
 
 } // namespace model
  
-DECLARE_NAMED_EXECUTIVE_DBG(dyn_graphExecutive, model::GraphExecutive)
+DECLARE_NAMED_EXECUTIVE(dyn_graphExecutive, model::GraphExecutive)
