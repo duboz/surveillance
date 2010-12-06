@@ -38,6 +38,7 @@ namespace model {
         : vd::Dynamics(init, events)
     {
         mInfectiousPeriod = vv::toDouble(events.get("infectiousPeriod"));
+        mSecuredPeriod = vv::toDouble(events.get("securedPeriod"));
         mAutoInfect = vv::toDouble(events.get("autoInfect"));
     }
 
@@ -79,14 +80,15 @@ namespace model {
         case I :
             return vd::Time(mInfectiousPeriod);
         case R :
-            return vd::Time::infinity;
+            return vd::Time(
+                mSecuredPeriod - (mCurrentTime - mCleaningTime));
         case SI :
             return 0;
         }
         return vd::Time::infinity;
     }
 
-    void Infection::internalTransition(const vd::Time& /*time*/)
+    void Infection::internalTransition(const vd::Time& time)
     {
         switch (mPhase) {
         case INIT :
@@ -98,18 +100,23 @@ namespace model {
             break;
         case I:
             mPhase = R;
+            mCleaningTime = time;
+            mCurrentTime = time;
             break;
         case R:
+            mPhase = S;
+            mAutoInfect = 0;
             break;
         }
     }
 
     void Infection::externalTransition(const vd::ExternalEventList& /*event*/,
-                                    const vd::Time& /*time*/)
+                                    const vd::Time& time)
     {
-        if (mPhase == S || mPhase == R)
-        {mPhase = SI;}
-
+        if (mPhase == S)
+            mPhase = SI;
+        
+        mCurrentTime = time;
     }
 
     void Infection::confluentTransitions(const vd::Time& time,

@@ -71,6 +71,9 @@ private:
     enum PHASE {INIT, S, I, R, SI};
     PHASE mPhase;
     double mInfectiousPeriod;
+    double mSecuredPeriod;
+    double mCleaningTime;
+    double mCurrentTime;
     double mAutoInfect;
     
 };
