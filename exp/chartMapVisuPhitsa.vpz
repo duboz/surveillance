@@ -192,7 +192,30 @@
                 <output name="analyse" location="" format="local" plugin="file" />
                 <output name="analyse-5" location="" format="local" plugin="file" />
                 <output name="o1" location="localhost:8001:." format="distant" package="CairoPlugins"  plugin="cairoplot" >
-                    <map><key name="curves"><set><map><key name="color_blue"><integer>0</integer></key><key name="color_green"><integer>65535</integer></key><key name="color_red"><integer>0</integer></key><key name="name"><string>prevalence</string></key><key name="type"><string>real</string></key></map></set></key><key name="limits"><set><map><key name="color_blue"><integer>0</integer></key><key name="color_green"><integer>0</integer></key><key name="color_red"><integer>65535</integer></key><key name="value"><double>2000.000000000000000</double></key></map></set></key><key name="scrolling"><boolean>false</boolean></key><key name="window"><double>1000.000000000000000</double></key></map>
+                    <map>
+                        <key name="curves">
+                            <set>
+                                <map>
+                                    <key name="color_blue"><integer>0</integer></key>
+                                    <key name="color_green"><integer>65535</integer></key>
+                                    <key name="color_red"><integer>0</integer></key>
+                                    <key name="name"><string>prevalence</string></key>
+                                    <key name="type"><string>real</string></key>
+                                </map>
+                            </set>
+                        </key>
+                        <key name="limits"><set>
+                                <map>
+                                    <key name="color_blue"><integer>0</integer></key>
+                                    <key name="color_green"><integer>0</integer></key>
+                                    <key name="color_red"><integer>65535</integer></key>
+                                    <key name="value"><double>1000.000000000000000</double></key>
+                                </map>
+                        </set></key>
+                        <key name="scrolling">
+                            <boolean>false</boolean></key>
+                        <key name="window"><double>1000.000000000000000</double></key>
+                    </map>
                 </output>
 
                 <output name="data_collector_view" location="" format="local" plugin="file" />
@@ -212,7 +235,7 @@
                           </key>
                           <key name="dimensions"><map>
                                   <key name="x"><double>185663.000000000000000</double></key>
-                                  <key name="y"><double>179417.000000000000000</double></key>
+                                  <key name="y"><double>185417.000000000000000</double></key>
                             </map>
                             <key name="background">
                                 <map>
@@ -258,7 +281,6 @@
                     </port>
 
                     <port name="prevalence" >
-                        <attachedview name="analyse" />
                         <attachedview name="chartView" />
                     </port>
 
@@ -285,7 +307,7 @@
 
             <view name="data_collector_view" output="data_collector_view" type="timed" timestep="1.000000000000000" />
 
-            <view name="graphview" output="o2" type="timed" timestep="0.500000000000000" />
+            <view name="graphview" output="o2" type="timed" timestep="1.000000000000000" />
 
             <view name="infection" output="infection" type="timed" timestep="0.100000000000000" />
             

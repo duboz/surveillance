@@ -165,7 +165,9 @@ namespace model {
                        const vd::ObservationEvent& event) const
   {
       if(event.onPort("prevalence")) {
-          return buildDouble(((double)mInfectedResult)/mNbModel);
+          vv::Double* prev = buildDouble(((double)mInfectedResult)/mNbModel);
+          std::cout<<"send prev info: "<<prev->value();
+          return prev;
       }
 	    
       vv::Tuple* result = new vv::Tuple();
