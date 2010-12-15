@@ -50,28 +50,30 @@
 <output name="o1" location="" format="local" plugin="default" />
 
 <output name="o2" location="localhost:8000:." format="distant" package="CairoPlugins"  plugin="cairoplot" >
-    <map><key name="curves"><set><map><key name="color_blue">
-                        <integer>0</integer>
-</key><key name="color_green">
-<integer>65535</integer>
-</key><key name="color_red">
-<integer>0</integer></key>
-<key name="name">
-    <string>I</string>
-    </key>
-    <key name="type">
-        <string>real</string></key>
-        </map></set></key><key name="limits">
-        <set>
-            <map><key name="color_blue">
-                    <integer>0</integer></key><key name="color_green"><integer>0</integer></key><key name="color_red"><integer>65535</integer></key>
-                <key name="value">
-                    <double>2000.000000000000000</double>
-                    </key></map></set>
-        </key><key name="scrolling">
-        <boolean>false</boolean></key>
-    <key name="window"><double>1000.000000000000000</double></key></map></output>
-
+    <map><key name="curves">
+            <set>
+                <map>
+                    <key name="color_blue"><integer>0</integer></key>
+                    <key name="color_green"><integer>65535</integer></key>
+                    <key name="color_red"><integer>0</integer></key>
+                    <key name="name"><string>I</string></key>
+                    <key name="type"><string>real</string></key>
+                </map>
+            </set>
+            </key>
+            <key name="limits"><set>
+                    <map>
+                        <key name="color_blue"><integer>0</integer></key>
+                        <key name="color_green"><integer>0</integer></key>
+                        <key name="color_red"><integer>65535</integer></key>
+                        <key name="value"><double>5.000000000000000</double></key>
+                </map>
+            </set>
+            </key>
+            <key name="scrolling"><boolean>false</boolean></key>
+            <key name="window"><double>100.000000000000000</double></key>
+    </map>
+</output>
 </outputs>
 <observables>
 <observable name="obs_sir" >

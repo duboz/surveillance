@@ -199,9 +199,25 @@
                                     <key name="color_blue"><integer>0</integer></key>
                                     <key name="color_green"><integer>65535</integer></key>
                                     <key name="color_red"><integer>0</integer></key>
-                                    <key name="name"><string>prevalence</string></key>
+                                    <key name="name"><string>xRaySample_prevalence</string></key>
                                     <key name="type"><string>real</string></key>
                                 </map>
+
+                                <map>
+                                    <key name="color_blue"><integer>65535</integer></key>
+                                    <key name="color_green"><integer>0</integer></key>
+                                    <key name="color_red"><integer>0</integer></key>
+                                    <key name="name"><string>data_collector_prevalence</string></key>
+                                    <key name="type"><string>real</string></key>
+                                </map>
+                                <map>
+                                    <key name="color_blue"><integer>65535</integer></key>
+                                    <key name="color_green"><integer>0</integer></key>
+                                    <key name="color_red"><integer>65535</integer></key>
+                                    <key name="name"><string>xRayTotal_prevalence</string></key>
+                                    <key name="type"><string>real</string></key>
+                                </map>
+
                             </set>
                         </key>
                         <key name="limits"><set>
@@ -209,12 +225,17 @@
                                     <key name="color_blue"><integer>0</integer></key>
                                     <key name="color_green"><integer>0</integer></key>
                                     <key name="color_red"><integer>65535</integer></key>
-                                    <key name="value"><double>1000.000000000000000</double></key>
+                                    <key name="value"><double>1.000000000000000</double></key>
                                 </map>
                         </set></key>
-                        <key name="scrolling">
-                            <boolean>false</boolean></key>
-                        <key name="window"><double>1000.000000000000000</double></key>
+                        <key name="scrolling"><boolean>false</boolean></key>
+                        <key name="window"><double>80.000000000000000</double></key>
+                        <key name="value">
+                            <map>
+                                <key name="min"><double>0.000000000000000</double></key>
+                                <key name="max"><double>1.000000000000000</double></key>
+                            </map>
+                        </key>
                     </map>
                 </output>
 
@@ -281,6 +302,7 @@
                     </port>
 
                     <port name="prevalence" >
+                        <attachedview name="analyse" />
                         <attachedview name="chartView" />
                     </port>
 
@@ -293,6 +315,7 @@
 
                     <port name="prevalence" >
                         <attachedview name="analyse-5" />
+                        <attachedview name="chartView" />
                     </port>
 
                     <port name="xrayview" >
@@ -311,7 +334,7 @@
 
             <view name="infection" output="infection" type="timed" timestep="0.100000000000000" />
             
-            <view name="chartView" output="o1" type="timed" timestep="1.000000000000000" />
+            <view name="chartView" output="o1" type="timed" timestep="1.000000000" />
 
         </views>
     </experiment>
