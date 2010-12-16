@@ -197,23 +197,23 @@
                             <set>
                                 <map>
                                     <key name="color_blue"><integer>0</integer></key>
-                                    <key name="color_green"><integer>65535</integer></key>
-                                    <key name="color_red"><integer>0</integer></key>
+                                    <key name="color_green"><integer>0</integer></key>
+                                    <key name="color_red"><integer>50000</integer></key>
                                     <key name="name"><string>xRaySample_prevalence</string></key>
                                     <key name="type"><string>real</string></key>
                                 </map>
 
                                 <map>
-                                    <key name="color_blue"><integer>65535</integer></key>
+                                    <key name="color_blue"><integer>0</integer></key>
                                     <key name="color_green"><integer>0</integer></key>
-                                    <key name="color_red"><integer>0</integer></key>
+                                    <key name="color_red"><integer>65535</integer></key>
                                     <key name="name"><string>data_collector_prevalence</string></key>
                                     <key name="type"><string>real</string></key>
                                 </map>
                                 <map>
-                                    <key name="color_blue"><integer>65535</integer></key>
-                                    <key name="color_green"><integer>0</integer></key>
-                                    <key name="color_red"><integer>65535</integer></key>
+                                    <key name="color_blue"><integer>500</integer></key>
+                                    <key name="color_green"><integer>500</integer></key>
+                                    <key name="color_red"><integer>500</integer></key>
                                     <key name="name"><string>xRayTotal_prevalence</string></key>
                                     <key name="type"><string>real</string></key>
                                 </map>
@@ -229,7 +229,7 @@
                                 </map>
                         </set></key>
                         <key name="scrolling"><boolean>false</boolean></key>
-                        <key name="window"><double>80.000000000000000</double></key>
+                        <key name="window"><double>85.000000000000000</double></key>
                         <key name="value">
                             <map>
                                 <key name="min"><double>0.000000000000000</double></key>
