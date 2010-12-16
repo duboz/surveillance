@@ -131,7 +131,7 @@
                     <double>10.000000000000000</double>
                     </port>
                     <port name="securedPeriod" >
-                    <double>5.000000000000000</double>
+                    <double>10.000000000000000</double>
                 </port>
 
             </condition>
@@ -143,7 +143,7 @@
                     <double>10.000000000000000</double>
                 </port>
                 <port name="securedPeriod" >
-                    <double>5.000000000000000</double>
+                    <double>10.000000000000000</double>
                 </port>
             </condition>
             <condition name="transmission" >
@@ -151,7 +151,7 @@
                     <string>infection</string>
                 </port>
                 <port name="rate" >
-                    <double>0.100000000000000</double>
+                    <double>0.200000000000000</double>
                 </port>
             </condition>
             <condition name="xRay" >
