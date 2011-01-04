@@ -23,11 +23,12 @@ return(initStates)
 #SIMULATION
 simulate<-function(sampleSize,duration,replicats){
 dir<-getwd()
+diff=c()
 pcent=sampleSize*100
 main=paste("RVLE-surveillance-output(sample ",pcent," pct)",sep="") 
-x11(title=main)
+    x11(title=main)
+    layout(matrix(1:replicats,min(replicats,10)/2,2))
 f = rvle.open("init-R-surveillance.vpz", "surveillance")
-    layout(matrix(1:replicats,replicats/2,2))
 	rvle.setDuration(f,duration)
  	rvle.setRealCondition(f,"xRay_1","echProp", sampleSize)
     for (r in 1:replicats){
@@ -37,7 +38,9 @@ f = rvle.open("init-R-surveillance.vpz", "surveillance")
         xlab="time",ylab="prevalence",main=paste("replicat:",r,sep=" "),ylim=c(0,1))
         points(result[[2]][,1],result[[2]][,4], col="red")
         lines(result[[2]][,1],result[[2]][,4], col="red")
+        diff<-c(diff, mean(abs(result[[2]][,4]-result[[2]][,2])))
     }
+    print(paste("mean difference is: ",mean(diff)))
 setwd(dir)
 return (result)
 }
