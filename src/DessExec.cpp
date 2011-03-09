@@ -140,10 +140,10 @@ private:
     int m_nb_model;
     std::string m_model_prefix;
     std::vector < std::string > m_inputs;
-     std::vector < std::string > m_outputs;
-     std::string m_dynamics;
-     std::vector< std::string > m_conditions;
-     std::string m_observable;
+    std::vector < std::string > m_outputs;
+    std::string m_dynamics;
+    std::vector< std::string > m_conditions;
+    std::string m_observable;
 };
 
 } // namespace model
