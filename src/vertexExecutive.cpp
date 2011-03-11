@@ -33,6 +33,7 @@ namespace model {
     devs::Executive(mdl,evList)
     {
       m_active_collectors.value() = value::toSet(evList.get("activeCollectors")->clone());
+      m_passive_collectors.value() = value::toSet(evList.get("passiveCollectors")->clone());
  
     }
 
@@ -71,15 +72,22 @@ namespace model {
       for (unsigned int j = 0; j < m_active_collectors.size(); j++) {
         addOutputPort("infection", m_active_collectors[j]->writeToString());
         addConnection("infection", m_active_collectors[j]->writeToString(),
-                  coupledmodelName(),m_active_collectors[j]->writeToString());
+                      coupledmodelName(),m_active_collectors[j]->writeToString());
+        addConnection("infection","state",coupledmodelName(),"passiveCollectors");
       }
         int nb = 0;
         for (it = list.begin(); it != list.end(); ++it) {
 	    bool isCollector=false;
 	    for (unsigned int j = 0; j < m_active_collectors.size(); j++){
 	    if (it->first ==m_active_collectors[j]->writeToString())
-		    isCollector=true; 
-	    }        
+                isCollector=true;
+            }
+                    
+            if (!isCollector) {
+	    if (it->first == "passiveCollectors")
+                isCollector=true;
+            }
+
            if (!isCollector)
            {
    		std::string prtName = "infection_" + boost::lexical_cast<std::string>(nb);

@@ -82,13 +82,12 @@ namespace model {
                                   const vd::Time&  /*time*/)
   {
           
-          mapResult.clear();
+          //mapResult.clear();
           for (vd::ExternalEventList::const_iterator it = event.begin();
                       it != event.end(); ++it) {
 
               double randValue = rand().getDouble();
               if ((*it) -> getPortName() == "status") {
-
                   std::string value = 
                         (*it)-> getStringAttributeValue ("value");
                   std::string modelName = 
@@ -125,14 +124,34 @@ namespace model {
   }
 
   vv::Value* PassiveCollector::observation(
-                       const vd::ObservationEvent& /*event*/) const
+                       const vd::ObservationEvent& event) const
   {
-   
     vv::Map* tmpResult = new vv::Map();
     std::map<std::string, std::string>::const_iterator it;
-
+    int Ss=0;
+    int Is=0;
+    int Rs=0;
     for ( it = mapResult.begin(); it != mapResult.end(); ++it ) {
-      tmpResult->addString(it->first, it->second);
+        tmpResult->addString(it->first, it->second);
+        if (it->second == "S") Ss++; 
+        else if (it->second == "I") Is++; 
+        else if (it->second == "R") Rs++;
+    }
+
+     
+    if (event.onPort("nbIs")){
+        //std::cout<<"Prev is "<<mPrevalence<<"\n";
+        return buildInteger(Is);
+    }
+
+    if (event.onPort("nbSs")){
+        //std::cout<<"Prev is "<<mPrevalence<<"\n";
+        return buildInteger(Ss);
+    }
+
+    if (event.onPort("nbRs")){
+        //std::cout<<"Prev is "<<mPrevalence<<"\n";
+        return buildInteger(Rs);
     }
 
     return tmpResult;

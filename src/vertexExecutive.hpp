@@ -49,6 +49,7 @@ namespace model {
         vle::devs::Time timeAdvance() const;
     private:
         vle::value::Set m_active_collectors;
+        vle::value::Set m_passive_collectors;
         enum PHASE {INIT,INITIALIZED};
         PHASE m_phase;
     };

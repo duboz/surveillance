@@ -26,7 +26,7 @@ ADD_LIBRARY(sir SHARED	infection.cpp
 			RDess.hpp
 			IDess.cpp
 			IDess.hpp
-			DessExec.cpp
+			#DessExec.cpp
       			data_collector.hpp
       			data_collector.cpp
       			collector_test.cpp)
