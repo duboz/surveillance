@@ -10,6 +10,8 @@
 </model>
 <model name="xRaySample" type="atomic" conditions="cond_graph,xRay_1" dynamics="dyn_xray" observables="xRay" x="239" y="163" width="100" height="30" >
 </model>
+<model name="passiveCollector" type="atomic" conditions="passiveCollector,xRay" dynamics="dyn_passive" observables="passive" x="114" y="259" width="100" height="30" >
+</model>
 <model name="xRayTotal" type="atomic" conditions="cond_graph,xRay" dynamics="dyn_xray" observables="xRay" x="79" y="33" width="100" height="30" >
 </model>
 </submodels>
@@ -132,6 +134,11 @@
 </port>
  <port name="securedPeriod" >
 <double>10.000000000000000</double>
+</port>
+</condition>
+<condition name="passiveCollector" >
+ <port name="probabilityDeclaration" >
+<double>0.200000000000000</double>
 </port>
 </condition>
 <condition name="susceptible" >

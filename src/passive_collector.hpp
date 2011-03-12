@@ -58,8 +58,9 @@ private:
     enum PHASE {IDLE, ACTIVE};
     PHASE mPhase;
     double mProbabilityRightSR;
-    double mProbabilityRightI;    
-    std::map<std::string, std::string> mapResult;
+    double mProbabilityRightI;
+    double mProbabilityDeclaration;
+    std::map<std::string, std::pair<std::string, vd::Time> > mapResult;
 };
 
 } // namespace model

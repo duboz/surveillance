@@ -38,6 +38,7 @@ namespace model {
   {
     mProbabilityRightSR = vv::toDouble(events.get("probabilityRightSR"));
     mProbabilityRightI = vv::toDouble(events.get("probabilityRightI"));
+    mProbabilityDeclaration = vv::toDouble(events.get("probabilityDeclaration"));
   }
 
   PassiveCollector::~PassiveCollector()
@@ -79,7 +80,7 @@ namespace model {
 
   void PassiveCollector::externalTransition(
                                   const vd::ExternalEventList& event,
-                                  const vd::Time&  /*time*/)
+                                  const vd::Time&  time)
   {
           
           //mapResult.clear();
@@ -98,12 +99,19 @@ namespace model {
                       if (randValue > mProbabilityRightSR) {
                         value = "I";
                       }
+                      mapResult[modelName] = 
+                          std::pair<std::string, vd::Time> (value, time);
+                  
                   } else if (value == "I") {
                       if (randValue > mProbabilityRightI) {
                         value = "S";
                       }
+                      randValue = rand().getDouble();
+                      if (randValue < mProbabilityDeclaration)
+                      mapResult[modelName] = 
+                          std::pair<std::string, vd::Time> (value, time);
+
                   }
-                  mapResult[modelName] = value;
               }
              
           }
@@ -127,15 +135,15 @@ namespace model {
                        const vd::ObservationEvent& event) const
   {
     vv::Map* tmpResult = new vv::Map();
-    std::map<std::string, std::string>::const_iterator it;
+    std::map<std::string, std::pair<std::string, vd::Time> >::const_iterator it;
     int Ss=0;
     int Is=0;
     int Rs=0;
     for ( it = mapResult.begin(); it != mapResult.end(); ++it ) {
-        tmpResult->addString(it->first, it->second);
-        if (it->second == "S") Ss++; 
-        else if (it->second == "I") Is++; 
-        else if (it->second == "R") Rs++;
+        tmpResult->addString(it->first, (it->second).first);
+        if ((it->second).first == "S") Ss++; 
+        else if ((it->second).first == "I") Is++; 
+        else if ((it->second).first == "R") Rs++;
     }
 
      
