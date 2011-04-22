@@ -54,7 +54,7 @@ namespace model {
       mPhase = INIT;
       mCurrentTime = vd::Time(time);
       mLastRequestTime = vd::Time(time);
-      return 0;
+      return vd::Time(0);
   }
 
   void XRay::output(const vd::Time& /*time*/,
@@ -65,6 +65,14 @@ namespace model {
           request << vd::attribute ("modelName", std::string (getModelName()));
           output.addEvent (request);
       }
+
+      if ((mPhase == RECEIVE)and 
+          (getModel().existOutputPort("observations"))) { 
+          vd::ExternalEvent * ev = new vd::ExternalEvent ("observations");
+          ev << vd::attribute ("value", buildDouble(mPrevalence));
+          output.addEvent (ev);
+      }
+
 
       if ((mPhase == RECEIVE or mPhase == INIT) 
           and getModel().existOutputPort("connectTo")) {
@@ -103,6 +111,11 @@ namespace model {
       if (mPhase == SEND) {
           return 0;
       }
+
+      if (mPhase == RECEIVE) {
+          return vd::Time(0.001);
+      }
+
       return mObservationTimeStep - (mCurrentTime.getValue() 
              - mLastRequestTime.getValue());
   }
@@ -116,7 +129,11 @@ namespace model {
           mCurrentTime = vd::Time(time);
           break;
       case RECEIVE:
-          mPhase = SEND;
+          mPhase = SEND_OBS;
+          mCurrentTime = vd::Time(time);
+          break;
+      case SEND_OBS:
+          mPhase = SEND; 
           mCurrentTime = vd::Time(time);
           break;
       case INIT:
@@ -161,7 +178,6 @@ namespace model {
               }
           }
           mCurrentTime = vd::Time(time);
-      }
       int nbInfected = 0;
       //int nbNonInfected = 0;
       std::map<std::string, std::string>::iterator node;
@@ -177,6 +193,7 @@ namespace model {
       //std::cout<<"tempPrev: "<<tempPrev<<"\n";
       mIncidence = (tempPrev - mPrevalence)/mObservationTimeStep;
       mPrevalence = tempPrev;
+      }
   }
 
   void XRay::confluentTransitions(const vd::Time& time,

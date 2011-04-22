@@ -68,7 +68,7 @@ public:
     virtual vv::Value* observation(const vd::ObservationEvent& /*event*/) const;
     virtual void finish();  
 private:
-    enum PHASE {SEND, RECEIVE, INIT};
+    enum PHASE {SEND, RECEIVE, SEND_OBS, INIT};
     PHASE mPhase;
     vd::Time mLastRequestTime;
     vd::Time mCurrentTime;
