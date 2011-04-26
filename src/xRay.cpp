@@ -72,6 +72,19 @@ namespace model {
           ev << vd::attribute ("value", buildDouble(mPrevalence));
           output.addEvent (ev);
       }
+ 
+      if ((mPhase == RECEIVE)and 
+          (getModel().existOutputPort("control"))) { 
+          vd::ExternalEvent * ev = new vd::ExternalEvent ("control");
+          vv::Map* nodeObservations = vv::Map::create();
+          typedef std::map<std::string, std::string>::const_iterator mapit;
+          for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
+              if (it->second == "I")
+                nodeObservations->addString(it->first, it->second);
+          }
+          ev << vd::attribute ("infectedNodes", nodeObservations);
+          output.addEvent (ev);
+      }
 
 
       if ((mPhase == RECEIVE or mPhase == INIT) 
