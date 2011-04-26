@@ -124,12 +124,21 @@ namespace model {
         }
     }
 
-    void Infection::externalTransition(const vd::ExternalEventList& /*event*/,
+    void Infection::externalTransition(const vd::ExternalEventList& event,
                                     const vd::Time& time)
     {
-        if (mPhase == S)
-            mPhase = SI;
-        
+        for (vd::ExternalEventList::const_iterator it = event.begin();
+             it != event.end(); ++it) {
+            if ((*it)->onPort("infection")) {
+                if (mPhase == S)
+                    mPhase = SI;
+            }
+
+            else if ((*it)->onPort("control")) {
+                if ((mPhase == I) or (mPhase == SI))
+                    mPhase = R;
+            }
+        }
         mCurrentTime = time;
     }
 

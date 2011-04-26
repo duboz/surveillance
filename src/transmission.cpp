@@ -96,6 +96,7 @@ namespace model {
     void Transmission::externalTransition(const vd::ExternalEventList& events,
                                     const vd::Time& /*time*/)
     {
+        bool cleaned = false;
         for (unsigned int i = 0; i < events.size(); i++) {
 
             if (events[i]->existAttributeValue("state")) {
@@ -107,7 +108,11 @@ namespace model {
                 } else
                     mPhase = IDLE;
             }
+            if (events[i]->onPort("control"))
+                cleaned = true;
         }
+        if (cleaned)
+            mPhase = IDLE;
     }
 
     void Transmission::confluentTransitions(const vd::Time& time,
