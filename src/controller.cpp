@@ -31,7 +31,7 @@ namespace model {
 class controler : public devs::Dynamics
     {
 private:
-    enum Phase {INIT, IDLE, CONTROL};
+    enum Phase {INIT, IDLE, CONTROL, DISABLED};
     Phase m_phase;
     std::map<std::string, std::string> m_nodeStates;
     typedef std::pair<double, std::vector<std::string> > Intervention;
@@ -39,6 +39,7 @@ private:
     InterventionPlan m_interventions;
     double m_delay;
     double m_current_time;
+    bool m_disabled;
 
 public:
     controler(
@@ -47,6 +48,7 @@ public:
         : devs::Dynamics(init, events)
     {
         m_delay = vv::toDouble(events.get("controlDelay"));
+        m_disabled = vv::toBoolean(events.get("disabled"));
     }
 
     virtual ~controler()
@@ -58,6 +60,8 @@ public:
     {   
         m_current_time = time.getValue();
         m_phase = INIT;
+        if (m_disabled)
+            m_phase = DISABLED;
         return 0;
     }
 

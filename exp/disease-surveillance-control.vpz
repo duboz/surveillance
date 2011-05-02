@@ -147,6 +147,9 @@
  <port name="controlDelay" >
 <double>0.050000000000000</double>
 </port>
+ <port name="disabled" >
+<boolean>false</boolean>
+</port>
 </condition>
 <condition name="controllers" >
  <port name="controllers" >
