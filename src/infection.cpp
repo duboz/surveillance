@@ -135,8 +135,10 @@ namespace model {
             }
 
             else if ((*it)->onPort("control")) {
-                if ((mPhase == I) or (mPhase == SI))
+                if ((mPhase == I) or (mPhase == SI)) {
                     mPhase = R;
+                    mCleaningTime = time;
+                }
             }
         }
         mCurrentTime = time;

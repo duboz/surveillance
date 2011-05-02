@@ -145,7 +145,7 @@
 </condition>
 <condition name="control" >
  <port name="controlDelay" >
-<double>0.000000000000000</double>
+<double>0.050000000000000</double>
 </port>
 </condition>
 <condition name="controllers" >

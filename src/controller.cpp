@@ -58,7 +58,7 @@ public:
     {   
         m_current_time = time.getValue();
         m_phase = INIT;
-        return devs::Time(0.);
+        return 0;
     }
 
     virtual void output(
@@ -81,7 +81,7 @@ public:
         if (m_phase == CONTROL)
             return devs::Time(m_interventions.begin()->first - m_current_time);
         if (m_phase == INIT)
-            return devs::Time(0.);
+            return 0;
 
         return devs::Time::infinity;
     }
@@ -115,12 +115,11 @@ public:
                 for (vv::MapValue::const_iterator node = infNodes.begin();
                      node != infNodes.end(); node++) {
                     m_nodeStates[node->first] = node->second->toString().value();
-                    newIntervention.first = time.getValue() + m_delay;
                     newIntervention.second.push_back(node->first);
                 }
+                newIntervention.first = time.getValue() + m_delay;
                 m_interventions.push_back(newIntervention);
-                if (m_phase == IDLE) 
-                    m_phase = CONTROL;
+                m_phase = CONTROL;
                 /*
                 else {
                     vle::utils::InternalError error(
