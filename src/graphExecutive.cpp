@@ -65,6 +65,8 @@ public:
       m_model_prefix = m_graphInfo.getString("prefix");
       m_active_collectors.value() = value::toSet(events.get("activeCollectors")->clone());
       m_passive_collectors.value() = value::toSet(events.get("passiveCollectors")->clone());
+      if (events.exist("controllers"))
+        m_controllers.value() = value::toSet(events.get("controllers")->clone());
     }
  
     virtual ~GraphExecutive()
@@ -96,7 +98,8 @@ public:
         for (unsigned int i = 0; i < m_passive_collectors.size(); i++) {
           addInputPort(m_passive_collectors[i]->writeToString(), "status");
         }
-
+        
+        //For each vertex:
         for (unsigned int i = 0; i < m_nb_model; i++) {
           /* Add an input port "status?" for vertex */
           std::string vetName = 
@@ -111,6 +114,15 @@ public:
           /* Add an output port "passiveCollectors" for the connection 
            * with passive collectors */
           addOutputPort(vetName, "passiveCollectors");
+
+          /*
+           * Connect all controllers to this vertex:
+           */
+
+          for (unsigned int j = 0; j < m_controllers.size(); j++) {
+              addOutputPort(m_controllers[j]->writeToString(), vetName);
+              addConnection(m_controllers[j]->writeToString(), vetName, vetName, "control");
+          }
 
           /* Connect the vertex to all passive collectors */
           for (unsigned int j = 0; j < m_passive_collectors.size(); j++) {
@@ -187,6 +199,7 @@ private:
     std::string m_model_prefix;
     value::Set m_active_collectors;
     value::Set m_passive_collectors;
+    value::Set m_controllers;
 };
 
 } // namespace model
