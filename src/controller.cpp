@@ -34,6 +34,11 @@ private:
     enum Phase {INIT, IDLE, CONTROL};
     Phase m_phase;
     std::map<std::string, std::string> m_nodeStates;
+    typedef std::pair<double, std::vector<std::string> > Intervention;
+    typedef std::vector<Intervention> InterventionPlan;
+    InterventionPlan m_interventions;
+    double m_delay;
+    double m_current_time;
 
 public:
     controler(
@@ -41,6 +46,7 @@ public:
         const devs::InitEventList& events)
         : devs::Dynamics(init, events)
     {
+        m_delay = vv::toDouble(events.get("controlDelay"));
     }
 
     virtual ~controler()
@@ -48,8 +54,9 @@ public:
     }
 
     virtual devs::Time init(
-        const devs::Time& /* time */)
+        const devs::Time& time)
     {   
+        m_current_time = time.getValue();
         m_phase = INIT;
         return devs::Time(0.);
     }
@@ -59,13 +66,12 @@ public:
         devs::ExternalEventList& output ) const
     {
         if (m_phase == CONTROL) {
-            typedef std::map<std::string, std::string>::const_iterator mapit;
-            for (mapit it = m_nodeStates.begin(); it != m_nodeStates.end(); it++) {
-                if (it->second == "I") {
-                    vd::ExternalEvent * ev = new vd::ExternalEvent (it->first);
-                    ev << vd::attribute ("type", buildString("clean"));
-                    output.addEvent (ev);
-                }
+            typedef std::vector<std::string>::const_iterator NodeIterator;
+            for (NodeIterator it = m_interventions.begin()->second.begin(); 
+                 it !=  m_interventions.begin()->second.end(); it++) {
+                vd::ExternalEvent * ev = new vd::ExternalEvent (*it);
+                ev << vd::attribute ("type", buildString("clean"));
+                output.addEvent (ev);
             }
         }
     }
@@ -73,7 +79,7 @@ public:
     virtual devs::Time timeAdvance() const
     {
         if (m_phase == CONTROL)
-            return devs::Time(0.);
+            return devs::Time(m_interventions.begin()->first - m_current_time);
         if (m_phase == INIT)
             return devs::Time(0.);
 
@@ -81,34 +87,50 @@ public:
     }
 
     virtual void internalTransition(
-        const devs::Time& /* time */)
+        const devs::Time& time)
     {
         if (m_phase == INIT)
             m_phase = IDLE;
-        else if (m_phase == CONTROL)
-            m_phase = IDLE;
+        else if (m_phase == CONTROL) {
+            for (std::vector<std::string>::iterator node = m_interventions.begin()->second.begin();
+                 node != m_interventions.begin()->second.end(); node++) {
+                m_nodeStates[*node] = "R";
+            }
+            m_interventions.erase(m_interventions.begin());
+            if (m_interventions.empty())
+                m_phase = IDLE;
+        }
+        m_current_time = time.getValue();
     }
 
     virtual void externalTransition(
         const devs::ExternalEventList&  event ,
-        const devs::Time& /* time */)
+        const devs::Time& time)
     {
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
             if ((*it)->onPort("surveillance")) {
+                Intervention newIntervention;
                 value::Map infNodes = (*it)->getMapAttributeValue("infectedNodes");
                 for (vv::MapValue::const_iterator node = infNodes.begin();
                      node != infNodes.end(); node++) {
                     m_nodeStates[node->first] = node->second->toString().value();
+                    newIntervention.first = time.getValue() + m_delay;
+                    newIntervention.second.push_back(node->first);
                 }
+                m_interventions.push_back(newIntervention);
                 if (m_phase == IDLE) 
                     m_phase = CONTROL;
+                /*
                 else {
-                    vle::utils::InternalError error("\nControler must recieve only one surveillance repport in this version\n");
+                    vle::utils::InternalError error(
+                        "\nControler must recieve only one surveillance repport in this version\n");
                     throw error;
-                }
+                    }
+                */
             }
         }
+        m_current_time = time.getValue();
     }
 
     virtual void confluentTransitions(
