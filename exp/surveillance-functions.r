@@ -1,10 +1,10 @@
 library(rvle)
 
-#Fonction de simulation
-VLEsimulate<-function(graph, infectedNodes, transmissionRate, 
+#Fonction de simulation sans contrôle..
+uncontroled_disease<-function(graph, infectedNodes, transmissionRate, 
                       duration, infPeriode, recovPeriode){
 dir<-getwd()
-  f = rvle.open("init-R-surveillance_1.vpz", pkg="surveillance")
+  f = rvle.open("init-R-surveillance.vpz", pkg="surveillance")
   setwd(dir)
   rvle.setDuration(f,duration)
 	rvle.setSeed(f,runif(1)*1000000)
@@ -29,13 +29,46 @@ dir<-getwd()
      else print("ERR mauvais formatage du graph")
     }
   }
+	rvle.setBooleanCondition(f,"cond_graph","R_INIT", TRUE)
 	rvle.setStringCondition(f,"cond_graph","graphInfo_adjacency_matrix", adj_matrix)
   rvle.setIntegerCondition(f,"cond_graph","graphInfo_number", length(infectedNodes))	
   result = rvle.runMatrix(f)#[[3]]
-  infectious=c()
-  for (t in 0:duration)
-  {infectious =c(infectious, length(which(result[[1]][t,2:length(infectedNodes)+1]==2)))}
-  plot(result[[1]][,1], infectious)
+return (result)
+}
+
+#Fonction de simulation AVEC contrôle..
+controled_disease<-function(graph, infectedNodes, transmissionRate, 
+                      duration, infPeriode, recovPeriode){
+dir<-getwd()
+  f = rvle.open("disease-surveillance-control-R.vpz", pkg="surveillance")
+  setwd(dir)
+  rvle.setDuration(f,duration)
+	rvle.setSeed(f,runif(1)*1000000)
+ 	rvle.setRealCondition(f,"susceptible","infectiousPeriod", infPeriode)
+	rvle.setRealCondition(f,"infected","infectiousPeriod", infPeriode)
+	rvle.setRealCondition(f,"susceptible","securedPeriod", recovPeriode)
+	rvle.setRealCondition(f,"infected","securedPeriod", recovPeriode)
+	rvle.setRealCondition(f,"transmission","rate", transmissionRate)
+	classes<- ""
+  for (node in infectedNodes) {
+  if (node == 1) classes <- paste(classes, "InfectedVertex ", sep="")
+  else if (node == 0) classes <- paste(classes, "Vertex ", sep="")
+  else print("ERROR!! Mauvais vecteur d'infection")
+  }
+	rvle.setStringCondition(f,"cond_graph","graphInfo_classes", classes)	
+	if (length(infectedNodes)^2 != length(graph)) print("ERROR: mauvais nombre de noeuds")
+	adj_matrix<-""
+	for (i in 1:length(graph[1,])) {
+	 for (j in 1:length(graph[,1])) {
+     if (graph[i,j] == 0) adj_matrix=paste(adj_matrix, "0 ", sep="")
+     else if (graph[i,j] == 1) adj_matrix=paste(adj_matrix, "1 ", sep="")
+     else print("ERR mauvais formatage du graph")
+    }
+  }
+	rvle.setBooleanCondition(f,"cond_graph","R_INIT", TRUE)
+	rvle.setStringCondition(f,"cond_graph","graphInfo_adjacency_matrix", adj_matrix)
+  rvle.setIntegerCondition(f,"cond_graph","graphInfo_number", length(infectedNodes))	
+  result = rvle.runMatrix(f)#[[3]]
 return (result)
 }
 
@@ -48,10 +81,8 @@ return (result)
 #graph<-sociomatrix_as_scale_free(nb,1)
 source("generate-graphs.r")
 
-
-#conditions initiales d'infection (exemple):
-x=2000
-g<-sociomatrix_as_rewired_lattice(20,100) #(x*x = nb)
+x=100
+g<-sociomatrix_as_rewired_lattice(10,10) #(x*x = nb)
 longueDist<-1
 for (i in 1:longueDist){
     g[runif(1)*x,runif(1)*x]<-1
@@ -64,7 +95,35 @@ infper=30
 recovper=30
 
 ##SIMULATION
-res<-VLEsimulate(g,initState, rate, duration,infper, recovper)
+test_uncontroled_disease<-function () 
+{
+#conditions initiales d'infection (exemple):
+
+res<-uncontroled_disease(g,initState, rate, duration,infper, recovper)
+infectious = c()
+for (t in 0:duration)
+  {
+	infectious =
+		c(infectious, length(which(res[[3]][t,2:length(initState)
+		+1]==2)))}
+  plot(res[[3]][,1], infectious)
+  return(res)
+}
+
+test_controled_disease<-function () 
+{
+res<-controled_disease(g,initState, rate, duration,infper, recovper)
+infectious = c()
+for (t in 0:duration)
+  {
+	infectious =
+		c(infectious, length(which(res[[3]][t,2:length(initState)
+		+1]==2)))}
+  plot(res[[3]][,1], infectious)
+  lines(res[[3]][,1], infectious)
+  return(res)
+}
+
 
 ##Analyse
 

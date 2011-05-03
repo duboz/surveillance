@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
 <structures>
-<model name="graph" type="coupled" width="642" height="396"  >
+<model name="graph" type="coupled" width="463" height="356"  >
 <submodels>
 <model name="control" type="atomic" conditions="control" dynamics="dyn_control" x="302" y="167" width="100" height="45" >
 <in>
@@ -40,7 +40,7 @@
 </dynamics>
 <classes>
 <class name="InfectedVertex" >
-<model name="vertex" type="coupled" width="464" height="320"  >
+<model name="vertex" type="coupled" width="464" height="356"  >
 <in>
  <port name="control" />
 </in>
@@ -80,7 +80,7 @@
 </model>
 </class>
 <class name="Vertex" >
-<model name="vertex" type="coupled" width="464" height="345"  >
+<model name="vertex" type="coupled" width="463" height="356"  >
 <in>
  <port name="control" />
 </in>
@@ -236,13 +236,13 @@
 </conditions>
 <views>
 <outputs>
-<output name="analyse" location="" format="local" plugin="file" />
+<output name="analyse" location="" format="local" plugin="storage" />
 
-<output name="analyse-5" location="" format="local" plugin="file" />
+<output name="analyse-5" location="" format="local" plugin="storage" />
 
 <output name="data_collector_view" location="" format="local" plugin="file" />
 
-<output name="infection" location="" format="local" plugin="file" />
+<output name="infection" location="" format="local" plugin="storage" />
 
 </outputs>
 <observables>
@@ -286,7 +286,7 @@
 
 <view name="data_collector_view" output="data_collector_view" type="timed" timestep="1.000000000000000" />
 
-<view name="infection" output="infection" type="timed" timestep="0.100000000000000" />
+<view name="infection" output="infection" type="timed" timestep="1.000000000000000" />
 
 </views>
 </experiment>

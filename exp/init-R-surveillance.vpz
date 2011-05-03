@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
+<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
 <structures>
 <model name="graph" type="coupled" width="577" height="438"  >
@@ -193,6 +193,8 @@
 
 <output name="infection" location="" format="local" plugin="file" />
 
+<output name="nodes_states" location="" format="local" plugin="storage" />
+
 <output name="o1" location="" format="local" package="CairoPlugins"  plugin="cairoplot" >
 <map><key name="curves"><set><map><key name="color_blue"><integer>0</integer></key><key name="color_green"><integer>65535</integer></key><key name="color_red"><integer>0</integer></key><key name="name"><string>xRaySample_prevalence</string></key><key name="type"><string>real</string></key></map><map><key name="color_blue"><integer>65535</integer></key><key name="color_green"><integer>0</integer></key><key name="color_red"><integer>0</integer></key><key name="name"><string>data_collector_prevalence</string></key><key name="type"><string>real</string></key></map><map><key name="color_blue"><integer>65535</integer></key><key name="color_green"><integer>0</integer></key><key name="color_red"><integer>65535</integer></key><key name="name"><string>xRayTotal_prevalence</string></key><key name="type"><string>real</string></key></map></set></key><key name="limits"><set><map><key name="color_blue"><integer>0</integer></key><key name="color_green"><integer>0</integer></key><key name="color_red"><integer>65535</integer></key><key name="value"><double>1.000000000000000</double></key></map></set></key><key name="scrolling"><boolean>false</boolean></key><key name="value"><map><key name="max"><double>1.000000000000000</double></key><key name="min"><double>0.000000000000000</double></key></map></key><key name="window"><double>90.000000000000000</double></key></map></output>
 
@@ -202,7 +204,9 @@
 </outputs>
 <observables>
 <observable name="infectionState" >
-<port name="state" />
+<port name="state" >
+ <attachedview name="nodes_states" />
+</port>
 
 </observable>
 
@@ -239,6 +243,8 @@
 <view name="analyse-5" output="analyse-5" type="timed" timestep="5.000000000000000" />
 
 <view name="data_collector_view" output="data_collector_view" type="timed" timestep="1.000000000000000" />
+
+<view name="nodes_states" output="nodes_states" type="timed" timestep="1.000000000000000" />
 
 </views>
 </experiment>
