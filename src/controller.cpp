@@ -123,7 +123,8 @@ public:
                 }
                 newIntervention.first = time.getValue() + m_delay;
                 m_interventions.push_back(newIntervention);
-                m_phase = CONTROL;
+                if (m_phase == IDLE)
+                    m_phase = CONTROL;
                 /*
                 else {
                     vle::utils::InternalError error(
