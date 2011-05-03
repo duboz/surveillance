@@ -60,7 +60,21 @@ public:
        const devs::InitEventList& events)
         : devs::Executive(mdl, events)
     {
-      m_graphInfo.value() = value::toMap(events.get("graphInfo")->clone());
+        if (events.exist("R_INIT") and 
+            (value::toBoolean(events.get("R_INIT")))) {
+        m_graphInfo.addString("adjacency matrix",
+                              value::toString(
+                                  events.get("graphInfo_adjacency_matrix")->clone()));
+        m_graphInfo.addString("classes",
+                              value::toString(events.get("graphInfo_classes")->clone()));
+        m_graphInfo.addInt("number",
+                              value::toInteger(events.get("graphInfo_number")->clone()));
+        m_graphInfo.addString("prefix",
+                              value::toString(events.get("graphInfo_prefix")->clone()));
+        } else 
+            m_graphInfo.value() = value::toMap(events.get("graphInfo")->clone());
+
+
       m_nb_model = m_graphInfo.getInt("number");
       m_model_prefix = m_graphInfo.getString("prefix");
       m_active_collectors.value() = value::toSet(events.get("activeCollectors")->clone());

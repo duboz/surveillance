@@ -40,9 +40,15 @@ namespace model {
                                   const vd::InitEventList& events)
       : vd::Dynamics(init, events)
   {
-      mObservationTimeStep = vv::toDouble(events.get("timeStep"));
-      mNbModel = events.getMap("graphInfo").getInt("number");
-      mPrefix = events.getMap("graphInfo").getString("prefix");
+    mObservationTimeStep = vv::toDouble(events.get("timeStep"));
+    if (events.exist("R_INIT") and 
+        (vv::toBoolean(events.get("R_INIT")))) {
+        mNbModel =vv::toInteger(events.get("graphInfo_number"));
+        mPrefix =vv::toString(events.get("graphInfo_prefix"));
+    } else {
+        mNbModel = events.getMap("graphInfo").getInt("number");
+        mPrefix = events.getMap("graphInfo").getString("prefix");
+    }
   }
 
   DataCollector::~DataCollector()

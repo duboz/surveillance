@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
 <structures>
-<model name="graph" type="coupled" width="519" height="470"  >
+<model name="graph" type="coupled" width="642" height="396"  >
 <submodels>
 <model name="control" type="atomic" conditions="control" dynamics="dyn_control" x="302" y="167" width="100" height="45" >
 <in>
@@ -66,11 +66,11 @@
 <connections>
 <connection type="input">
  <origin model="vertex" port="control" />
- <destination model="transmission" port="control" />
+ <destination model="infection" port="control" />
 </connection>
 <connection type="input">
  <origin model="vertex" port="control" />
- <destination model="infection" port="control" />
+ <destination model="transmission" port="control" />
 </connection>
 <connection type="internal">
  <origin model="infection" port="state" />
@@ -106,11 +106,11 @@
 <connections>
 <connection type="input">
  <origin model="vertex" port="control" />
- <destination model="transmission" port="control" />
+ <destination model="infection" port="control" />
 </connection>
 <connection type="input">
  <origin model="vertex" port="control" />
- <destination model="infection" port="control" />
+ <destination model="transmission" port="control" />
 </connection>
 <connection type="internal">
  <origin model="infection" port="state" />
@@ -120,7 +120,7 @@
 </model>
 </class>
 </classes>
-<experiment name="disease-surveillance-control" duration="80.000000000000000" begin="0.000000000000000" combination="total" seed="3890346734" >
+<experiment name="disease-surveillance-control-R" duration="80.000000000000000" begin="0.000000000000000" combination="total" seed="3890346734" >
 <replicas seed="3499211612" number="1" />
 <conditions>
 <condition name="collector" >
@@ -137,10 +137,29 @@
 </port>
 </condition>
 <condition name="cond_graph" >
- <port name="graphInfo" >
-<map><key name="adjacency matrix file"><map><key name="file"><string>proxy_graph_1044.dat</string></key><key name="package"><string>surveillance</string></key></map></key><key name="classes file"><map><key name="file"><string>init-state-Phitsa.dat</string></key><key name="package"><string>surveillance</string></key></map></key><key name="number"><integer>1044</integer></key><key name="port"><string>
-                                in
-                    </string></key><key name="prefix"><string>vertex</string></key></map>
+ <port name="R_INIT" >
+<boolean>true</boolean>
+</port>
+ <port name="graphInfo_adjacency_matrix" >
+<string>1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1</string>
+</port>
+ <port name="graphInfo_classes" >
+<string>Vertex Vertex Vertex Vertex Vertex Vertex Vertex InfectedVertex </string>
+</port>
+ <port name="graphInfo_number" >
+<integer>8</integer>
+</port>
+ <port name="graphInfo_port" >
+<string>in</string>
+</port>
+ <port name="graphInfo_prefix" >
+<string>vertex</string>
+</port>
+ <port name="nodes_positions" >
+<string>
+                  10 2
+                  10 10
+              </string>
 </port>
 </condition>
 <condition name="control" >

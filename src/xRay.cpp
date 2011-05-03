@@ -37,9 +37,15 @@ namespace model {
   {
     mProbabilityRightSR = vv::toDouble(events.get("probabilityRightSR"));
     mProbabilityRightI = vv::toDouble(events.get("probabilityRightI"));
-    mNbModel = events.getMap("graphInfo").getInt("number");
-    mPrefix = events.getMap("graphInfo").getString("prefix");
     mObservationTimeStep =  vv::toDouble(events.get("timeStep"));
+    if (events.exist("R_INIT") and 
+        (vv::toBoolean(events.get("R_INIT")))) {
+        mNbModel =vv::toInteger(events.get("graphInfo_number"));
+        mPrefix =vv::toString(events.get("graphInfo_prefix"));
+    } else {
+        mNbModel = events.getMap("graphInfo").getInt("number");
+        mPrefix = events.getMap("graphInfo").getString("prefix");
+    }
     mSampleSize = /*boost::lexical_cast<int>*/ (vv::toDouble(events.get("echProp")) * mNbModel);
     //std::cout<<"smplesize= "<<mSampleSize<<"\n";
     mPrevalence=0.; mIncidence=0.;

@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
 <structures>
-<model name="graph" type="coupled" width="464" height="416"  >
+<model name="graph" type="coupled" width="492" height="416"  >
 <submodels>
 <model name="control" type="atomic" conditions="control" dynamics="dyn_control" x="302" y="167" width="100" height="45" >
 <in>
@@ -202,7 +202,7 @@
 </condition>
 <condition name="xRay_1" >
  <port name="echProp" >
-<double>0.100000000000000</double>
+<double>0.900000000000000</double>
 </port>
  <port name="probabilityRightI" >
 <double>1.000000000000000</double>
@@ -211,7 +211,7 @@
 <double>1.000000000000000</double>
 </port>
  <port name="timeStep" >
-<double>5.000000000000000</double>
+<double>10.000000000000000</double>
 </port>
 </condition>
 </conditions>
