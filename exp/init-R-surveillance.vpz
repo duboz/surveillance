@@ -98,10 +98,29 @@
 </port>
 </condition>
 <condition name="cond_graph" >
- <port name="graphInfo" >
-<map><key name="adjacency matrix file"><map><key name="file"><string>scale_free_100.dat</string></key><key name="package"><string>surveillance</string></key></map></key><key name="classes file"><map><key name="file"><string>init-state-100.dat</string></key><key name="package"><string>surveillance</string></key></map></key><key name="number"><integer>100</integer></key><key name="port"><string>
-                                in
-                    </string></key><key name="prefix"><string>vertex</string></key></map>
+ <port name="R_INIT" >
+<boolean>true</boolean>
+</port>
+ <port name="graphInfo_adjacency_matrix" >
+<string>1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1 1	1	1	1	1	1	1	1</string>
+</port>
+ <port name="graphInfo_classes" >
+<string>Vertex Vertex Vertex Vertex Vertex Vertex Vertex InfectedVertex </string>
+</port>
+ <port name="graphInfo_number" >
+<integer>8</integer>
+</port>
+ <port name="graphInfo_port" >
+<string>in</string>
+</port>
+ <port name="graphInfo_prefix" >
+<string>vertex</string>
+</port>
+ <port name="nodes_positions" >
+<string>
+                  10 2
+                  10 10
+              </string>
 </port>
 </condition>
 <condition name="infected" >
