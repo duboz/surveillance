@@ -49,7 +49,9 @@ namespace model {
     vd::Time Infection::init(const vd::Time& /*time*/)
     {
         mPhase = INIT;
-        return 0;
+        //Need post initialisation in order to wait for the vertexExecutive
+        //to draw the connections with the passive_collecctor..
+        return vd::Time(0.000001);
     }
 
 
@@ -64,28 +66,35 @@ namespace model {
                                        getModel().getParent()->getName());
 
             output.addEvent(event);
-        }else if (mPhase == I) {
+        } else if (mPhase == I) {
             vd::ExternalEvent* event = new vd::ExternalEvent("state");
             event << vd::attribute("state", false);
             event << vd::attribute ("value",std::string("R"));
             event << vd::attribute ("modelName", 
                                        getModel().getParent()->getName());
             output.addEvent(event);
-        }else if (mPhase == R) {
+        } else if (mPhase == R) {
             vd::ExternalEvent* event = new vd::ExternalEvent("state");
             event << vd::attribute("state", true);
             event << vd::attribute ("value", std::string("S"));
             event << vd::attribute ("modelName", 
                                        getModel().getParent()->getName());
             output.addEvent(event);
+        } else if (mPhase == INIT) {
+            vd::ExternalEvent* event = new vd::ExternalEvent("state");
+            event << vd::attribute ("value", std::string("S"));
+            event << vd::attribute ("modelName", 
+                                       getModel().getParent()->getName());
+            output.addEvent(event);
         }
+
     }
 
     vd::Time Infection::timeAdvance() const
     {
         switch (mPhase) {
         case INIT :
-            return vd::Time(0);
+            return vd::Time(0.);
         case S:
             if (mAutoInfect > 0)
                 return vd::Time(mAutoInfect);

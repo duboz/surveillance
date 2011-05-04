@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
 <structures>
-<model name="graph" type="coupled" width="519" height="470"  >
+<model name="graph" type="coupled" width="539" height="352"  >
 <submodels>
 <model name="control" type="atomic" conditions="control" dynamics="dyn_control" x="302" y="167" width="100" height="45" >
 <in>
@@ -13,12 +13,12 @@
 </model>
 <model name="gen_network" type="atomic" conditions="collectors,cond_graph,controllers" dynamics="dyn_network" x="291" y="72" width="100" height="30" >
 </model>
+<model name="passiveCollector" type="atomic" conditions="xRay_1,passive_surv" dynamics="dyn_passive" observables="passive" x="266" y="269" width="100" height="30" >
+</model>
 <model name="xRaySample" type="atomic" conditions="cond_graph,xRay_1" dynamics="dyn_xray" observables="xRay" x="68" y="209" width="100" height="45" >
 <out>
  <port name="control" />
 </out>
-</model>
-<model name="passiveCollector" type="atomic" conditions="xRay" dynamics="dyn_passive" observables="passive" x="114" y="259" width="100" height="30" >
 </model>
 <model name="xRayTotal" type="atomic" conditions="cond_graph,xRay" dynamics="dyn_xray" observables="xRay" x="79" y="33" width="100" height="30" >
 </model>
@@ -69,11 +69,11 @@
 <connections>
 <connection type="input">
  <origin model="vertex" port="control" />
- <destination model="transmission" port="control" />
+ <destination model="infection" port="control" />
 </connection>
 <connection type="input">
  <origin model="vertex" port="control" />
- <destination model="infection" port="control" />
+ <destination model="transmission" port="control" />
 </connection>
 <connection type="internal">
  <origin model="infection" port="state" />
@@ -109,11 +109,11 @@
 <connections>
 <connection type="input">
  <origin model="vertex" port="control" />
- <destination model="transmission" port="control" />
+ <destination model="infection" port="control" />
 </connection>
 <connection type="input">
  <origin model="vertex" port="control" />
- <destination model="infection" port="control" />
+ <destination model="transmission" port="control" />
 </connection>
 <connection type="internal">
  <origin model="infection" port="state" />
@@ -151,7 +151,7 @@
 <double>0.050000000000000</double>
 </port>
  <port name="disabled" >
-<boolean>false</boolean>
+<boolean>true</boolean>
 </port>
 </condition>
 <condition name="controllers" >
@@ -168,6 +168,11 @@
 </port>
  <port name="securedPeriod" >
 <double>10.000000000000000</double>
+</port>
+</condition>
+<condition name="passive_surv" >
+ <port name="probabilityDeclaration" >
+<double>1.000000000000000</double>
 </port>
 </condition>
 <condition name="susceptible" >
@@ -287,7 +292,7 @@
 
 <view name="data_collector_view" output="data_collector_view" type="timed" timestep="1.000000000000000" />
 
-<view name="infection" output="infection" type="timed" timestep="0.100000000000000" />
+<view name="infection" output="infection" type="timed" timestep="100.000000000000000" />
 
 </views>
 </experiment>

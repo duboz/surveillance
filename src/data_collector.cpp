@@ -132,6 +132,9 @@ namespace model {
   {
       
       if (mPhase == RECEIVE) {
+          mInfectedResult = 0;
+          mSainResult = 0;
+          mRecoveredResult;
           for (vd::ExternalEventList::const_iterator it = event.begin();
                       it != event.end(); ++it) {
                     std::string value = 

@@ -82,7 +82,6 @@ namespace model {
                                   const vd::ExternalEventList& event,
                                   const vd::Time&  time)
   {
-          
           //mapResult.clear();
           for (vd::ExternalEventList::const_iterator it = event.begin();
                       it != event.end(); ++it) {
