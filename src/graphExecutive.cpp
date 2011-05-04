@@ -24,7 +24,7 @@
 
 
 #include <vle/devs/Executive.hpp>
-#include <vle/translator/GraphTranslator.hpp>
+#include <GraphTranslator.hpp>
 #include <vle/value/Map.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -88,7 +88,7 @@ public:
  
     virtual devs::Time init(const devs::Time& /* time */)
     {
-        translator::GraphTranslator tr(*this); 
+        vlebased::translator::GraphTranslator tr(*this); 
         tr.translate(m_graphInfo);
 
         /* Add a port to the executive to listen for connection requests */

@@ -27,7 +27,9 @@ ADD_LIBRARY(sir SHARED	infection.cpp
 ADD_LIBRARY(graph SHARED	
 			vertexExecutive.cpp
 			vertexExecutive.hpp
-			graphExecutive.cpp)
+			graphExecutive.cpp
+			GraphTranslator.cpp
+			GraphTranslator.hpp)
 
 TARGET_LINK_LIBRARIES(surveillance
   ${VLE_LIBRARIES}
