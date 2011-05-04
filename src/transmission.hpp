@@ -75,7 +75,7 @@ private:
     
     void randomizeOrder();    
     void randomizeInfectionTime();
-    std::vector<std::string> getPortNames(std::string pattern);
+    std::vector<std::string> getNeighboursNames();
         
 };
 
