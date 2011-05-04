@@ -12,7 +12,8 @@ ADD_LIBRARY(surveillance SHARED
                 	xRay.hpp
 			controller.cpp
                 	passive_collector.cpp
-                	passive_collector.hpp)
+                	passive_collector.hpp
+			information_center.cpp)
 
 ADD_LIBRARY(sir SHARED	infection.cpp
 			infection.hpp

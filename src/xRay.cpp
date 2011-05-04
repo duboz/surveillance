@@ -92,6 +92,18 @@ namespace model {
           output.addEvent (ev);
       }
 
+ 
+      if ((mPhase == RECEIVE)and 
+          (getModel().existOutputPort("info_center"))) { 
+          vd::ExternalEvent * ev = new vd::ExternalEvent ("info_center");
+          vv::Map* nodeObservations = vv::Map::create();
+          typedef std::map<std::string, std::string>::const_iterator mapit;
+          for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
+                nodeObservations->addString(it->first, it->second);
+          }
+          ev << vd::attribute ("nodesStates", nodeObservations);
+          output.addEvent (ev);
+      }
 
       if ((mPhase == RECEIVE or mPhase == INIT) 
           and getModel().existOutputPort("connectTo")) {

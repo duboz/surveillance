@@ -71,13 +71,19 @@ public:
     {
         if (m_phase == CONTROL) {
             typedef std::vector<std::string>::const_iterator NodeIterator;
+
+            vd::ExternalEvent * evInfo = new vd::ExternalEvent ("info_center");
+            vv::Map* nodeObservations = vv::Map::create();
             for (NodeIterator it = m_interventions.begin()->second.begin(); 
                  it !=  m_interventions.begin()->second.end(); it++) {
+                nodeObservations->addString(*it, "R");
                 vd::ExternalEvent * ev = new vd::ExternalEvent (*it);
                 ev << vd::attribute ("type", buildString("clean"));
                 output.addEvent (ev);
             }
+            output.addEvent(evInfo);
         }
+
     }
 
     virtual devs::Time timeAdvance() const

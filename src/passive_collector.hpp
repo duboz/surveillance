@@ -55,7 +55,7 @@ public:
     virtual vv::Value* observation(const vd::ObservationEvent& /*event*/) const;
     virtual void finish();  
 private:
-    enum PHASE {IDLE, ACTIVE};
+    enum PHASE {IDLE, SEND_RESULT};
     PHASE mPhase;
     double mProbabilityRightSR;
     double mProbabilityRightI;

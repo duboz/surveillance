@@ -52,13 +52,33 @@ namespace model {
   }
 
   void PassiveCollector::output(const vd::Time& /*time*/,
-                      vd::ExternalEventList& /*output*/) const
+                      vd::ExternalEventList& output) const
   {
-    //    if (mPhase == ACTIVE) {
- //         vd::ExternalEvent * map = new vd::ExternalEvent ("status?");
-       //   request << vd::attribute ("modelName",  std::string (getModelName()));
-      //    output.addEvent (request);
-  //    }
+      if ((mPhase == SEND_RESULT)and 
+          (getModel().existOutputPort("control"))) {
+          vd::ExternalEvent * ev = new vd::ExternalEvent ("control");
+          vv::Map* nodeObservations = vv::Map::create();
+          typedef std::map<std::string, std::pair<std::string, vd::Time> >::const_iterator mapit;
+          for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
+              if (it->second.first == "I")
+                nodeObservations->addString(it->first, it->second.first);
+          }
+          ev << vd::attribute ("infectedNodes", nodeObservations);
+          output.addEvent (ev);
+      }
+     
+      if ((mPhase == SEND_RESULT)and 
+          (getModel().existOutputPort("info_center"))) {
+          vd::ExternalEvent * ev = new vd::ExternalEvent ("info_center");
+          vv::Map* nodeObservations = vv::Map::create();
+          typedef std::map<std::string, std::pair<std::string, vd::Time> >::const_iterator mapit;
+          for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
+                nodeObservations->addString(it->first, it->second.first);
+          }
+          ev << vd::attribute ("nodesStates", nodeObservations);
+          output.addEvent (ev);
+      }
+
   }
 
   vd::Time PassiveCollector::timeAdvance() const
@@ -66,14 +86,16 @@ namespace model {
       if (mPhase == IDLE) {
           return vd::Time::infinity;
       }
-      else {
+      else if (mPhase == SEND_RESULT) {
         return 0;
       }
+      else 
+          return vd::Time::infinity;
   }
 
   void PassiveCollector::internalTransition(const vd::Time& /*time*/)
   {
-      if (mPhase == ACTIVE) {
+      if (mPhase == SEND_RESULT) {
           mPhase = IDLE;
       }
   }
@@ -114,7 +136,7 @@ namespace model {
               }
              
           }
-          mPhase = ACTIVE;
+          mPhase = SEND_RESULT;
   }
 
   void PassiveCollector::confluentTransitions(const vd::Time& time,
@@ -145,7 +167,6 @@ namespace model {
         else if ((it->second).first == "R") Rs++;
     }
 
-     
     if (event.onPort("nbIs")){
         //std::cout<<"Prev is "<<mPrevalence<<"\n";
         return buildInteger(Is);
