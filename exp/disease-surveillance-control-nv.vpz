@@ -4,7 +4,7 @@
 <structures>
 <model name="graph" type="coupled" width="634" height="481"  >
 <submodels>
-<model name="control" type="atomic" conditions="control" dynamics="dyn_control" x="259" y="137" width="100" height="45" >
+<model name="control" type="atomic" conditions="control" dynamics="dyn_control" observables="control" x="259" y="137" width="100" height="45" >
 <in>
  <port name="surveillance" />
 </in>
@@ -21,8 +21,9 @@
  <port name="information" />
 </in>
 </model>
-<model name="passiveCollector" type="atomic" conditions="passive_surv,xRay_1" dynamics="dyn_passive" observables="passive" x="55" y="311" width="100" height="45" >
+<model name="passiveCollector" type="atomic" conditions="passive_surv,xRay_1" dynamics="dyn_passive" observables="passive" x="55" y="311" width="100" height="60" >
 <out>
+ <port name="control" />
  <port name="info_center" />
 </out>
 </model>
@@ -39,6 +40,10 @@
 <connection type="internal">
  <origin model="control" port="info_center" />
  <destination model="information_center" port="information" />
+</connection>
+<connection type="internal">
+ <origin model="passiveCollector" port="control" />
+ <destination model="control" port="surveillance" />
 </connection>
 <connection type="internal">
  <origin model="passiveCollector" port="info_center" />
@@ -173,7 +178,7 @@
 </condition>
 <condition name="control" >
  <port name="controlDelay" >
-<double>0.050000000000000</double>
+<double>0.500000000000000</double>
 </port>
  <port name="disabled" >
 <boolean>false</boolean>
@@ -235,7 +240,7 @@
 </condition>
 <condition name="xRay_1" >
  <port name="echProp" >
-<double>0.900000000000000</double>
+<double>0.000000000000000</double>
 </port>
  <port name="probabilityRightI" >
 <double>1.000000000000000</double>
@@ -260,6 +265,13 @@
 
 </outputs>
 <observables>
+<observable name="control" >
+<port name="nb_interventions" >
+ <attachedview name="analyse" />
+</port>
+
+</observable>
+
 <observable name="infectionState" >
 <port name="state" >
  <attachedview name="infection" />

@@ -40,6 +40,7 @@ private:
     double m_delay;
     double m_current_time;
     bool m_disabled;
+    long m_nbInterventions;
 
 public:
     controler(
@@ -49,6 +50,7 @@ public:
     {
         m_delay = vv::toDouble(events.get("controlDelay"));
         m_disabled = vv::toBoolean(events.get("disabled"));
+        m_nbInterventions = 0;
     }
 
     virtual ~controler()
@@ -71,8 +73,7 @@ public:
     {
         if (m_phase == CONTROL) {
             typedef std::vector<std::string>::const_iterator NodeIterator;
-
-            vd::ExternalEvent * evInfo = new vd::ExternalEvent ("info_center");
+    
             vv::Map* nodeObservations = vv::Map::create();
             for (NodeIterator it = m_interventions.begin()->second.begin(); 
                  it !=  m_interventions.begin()->second.end(); it++) {
@@ -81,8 +82,13 @@ public:
                 ev << vd::attribute ("type", buildString("clean"));
                 output.addEvent (ev);
             }
-            evInfo << vd::attribute("nodesStates", nodeObservations);
-            output.addEvent(evInfo);
+            if (getModel().existOutputPort("info_center")) {
+                vd::ExternalEvent * evInfo = new vd::ExternalEvent ("info_center");
+                evInfo << vd::attribute("nodesStates", nodeObservations);
+                output.addEvent(evInfo);
+            } else {
+                delete nodeObservations;
+            }
         }
 
     }
@@ -106,6 +112,7 @@ public:
             for (std::vector<std::string>::iterator node = m_interventions.begin()->second.begin();
                  node != m_interventions.begin()->second.end(); node++) {
                 m_nodeStates[*node] = "R";
+                m_nbInterventions++;
             }
             m_interventions.erase(m_interventions.begin());
             if (m_interventions.empty())
@@ -162,7 +169,7 @@ public:
     virtual value::Value* observation(
         const devs::ObservationEvent& /* event */) const
     {
-        return 0;
+        return buildInteger(m_nbInterventions);
     }
 
     virtual void finish()

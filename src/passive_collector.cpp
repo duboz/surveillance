@@ -60,7 +60,7 @@ namespace model {
           vv::Map* nodeObservations = vv::Map::create();
           typedef std::map<std::string, std::pair<std::string, vd::Time> >::const_iterator mapit;
           for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
-              if (it->second.first == "I")
+              if ((it->second.first == "I") and (time == it->second.second))
                 nodeObservations->addString(it->first, it->second.first);
           }
           ev << vd::attribute ("infectedNodes", nodeObservations);
