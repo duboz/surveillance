@@ -51,7 +51,7 @@ namespace model {
       return 0;
   }
 
-  void PassiveCollector::output(const vd::Time& /*time*/,
+  void PassiveCollector::output(const vd::Time& time,
                       vd::ExternalEventList& output) const
   {
       if ((mPhase == SEND_RESULT)and 
@@ -73,6 +73,7 @@ namespace model {
           vv::Map* nodeObservations = vv::Map::create();
           typedef std::map<std::string, std::pair<std::string, vd::Time> >::const_iterator mapit;
           for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
+              if (time == it->second.second)
                 nodeObservations->addString(it->first, it->second.first);
           }
           ev << vd::attribute ("nodesStates", nodeObservations);

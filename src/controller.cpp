@@ -81,6 +81,7 @@ public:
                 ev << vd::attribute ("type", buildString("clean"));
                 output.addEvent (ev);
             }
+            evInfo << vd::attribute("nodesStates", nodeObservations);
             output.addEvent(evInfo);
         }
 
