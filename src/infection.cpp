@@ -75,7 +75,7 @@ namespace model {
             output.addEvent(event);
         } else if (mPhase == R) {
             vd::ExternalEvent* event = new vd::ExternalEvent("state");
-            event << vd::attribute("state", true);
+            //event << vd::attribute("state", true);
             event << vd::attribute ("value", std::string("S"));
             event << vd::attribute ("modelName", 
                                        getModel().getParent()->getName());

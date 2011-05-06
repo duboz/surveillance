@@ -38,12 +38,16 @@ return (result)
 
 #Fonction de simulation AVEC contrôle..
 controled_disease<-function(graph, infectedNodes, transmissionRate, 
-                      duration, infPeriode, recovPeriode){
+                      duration, infPeriode, recovPeriode, probaDeclaration = 0.2){
 dir<-getwd()
   f = rvle.open("disease-surveillance-control-R.vpz", pkg="surveillance")
   setwd(dir)
   rvle.setDuration(f,duration)
 	rvle.setSeed(f,runif(1)*1000000)
+ 	rvle.setBooleanCondition(f,"control","disabled", FALSE)
+ 	rvle.setRealCondition(f,"control","controlDelay", 1)
+ 	rvle.setRealCondition(f,"passive_surv","probabilityDeclaration",
+probaDeclaration)
  	rvle.setRealCondition(f,"susceptible","infectiousPeriod", infPeriode)
 	rvle.setRealCondition(f,"infected","infectiousPeriod", infPeriode)
 	rvle.setRealCondition(f,"susceptible","securedPeriod", recovPeriode)
@@ -82,17 +86,17 @@ return (result)
 source("generate-graphs.r")
 
 x=100
-g<-sociomatrix_as_rewired_lattice(10,10) #(x*x = nb)
+g<-sociomatrix_as_rewired_lattice(10,10, p = 0.01) #(x*x = nb)
 longueDist<-1
 for (i in 1:longueDist){
     g[runif(1)*x,runif(1)*x]<-1
 }
 initState<-matrix(0,x,1)
 initState[1,1]<-1
-rate=0.1
-duration=200
-infper=30
-recovper=30
+rate=0.3
+duration=500
+infper=5
+recovper=5
 
 ##SIMULATION
 test_uncontroled_disease<-function () 
@@ -136,14 +140,14 @@ coordo=gplot.layout.fruchtermanreingold(graph,par)
 cols=heat.colors(4)
 nbNodes<-length(graph[1,])
 colors<-matrix(0,1,nbNodes)
-infection<-r[[1]][1,2:(nbNodes+1)]
+infection<-r[[3]][1,2:(nbNodes+1)]
 for (i in 1:nbNodes){
 colors[1,i]<-cols[(4-infection[i])]
 }
-gplot(graph,coord=coordo,vertex.col=r[[1]][1,2:(nbNodes+1)],arrowhead.cex = 0.1)
+gplot(graph,coord=coordo,vertex.col=r[[3]][1,2:(nbNodes+1)],arrowhead.cex = 0.1)
 gplot(graph,coord=coordo,vertex.col=colors,arrowhead.cex = 0.1)
-for (i in c(1:length(r[[1]][,1]))){
-infection<-r[[1]][i,2:(nbNodes+1)]
+for (i in c(1:length(r[[3]][,1]))){
+infection<-r[[3]][i,2:(nbNodes+1)]
 colors<-matrix(0,1,nbNodes)
 for (j in 1:nbNodes){
 colors[1,j]<-cols[4-infection[j]]

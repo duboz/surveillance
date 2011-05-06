@@ -1,30 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
-<vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
+<vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
 <structures>
-<model name="graph" type="coupled" width="463" height="356"  >
+<model name="graph" type="coupled" width="636" height="465"  >
 <submodels>
-<model name="control" type="atomic" conditions="control" dynamics="dyn_control" x="302" y="167" width="100" height="45" >
+<model name="control" type="atomic" conditions="control" dynamics="dyn_control" observables="control" x="299" y="105" width="100" height="45" >
 <in>
  <port name="surveillance" />
 </in>
-</model>
-<model name="data_collector" type="atomic" conditions="collector,cond_graph" dynamics="collector" observables="observer" x="53" y="113" width="100" height="30" >
-</model>
-<model name="gen_network" type="atomic" conditions="collectors,cond_graph,controllers" dynamics="dyn_network" x="291" y="72" width="100" height="30" >
-</model>
-<model name="xRaySample" type="atomic" conditions="cond_graph,xRay_1" dynamics="dyn_xray" observables="xRay" x="68" y="209" width="100" height="45" >
 <out>
- <port name="control" />
+ <port name="info_center" />
 </out>
 </model>
-<model name="xRayTotal" type="atomic" conditions="cond_graph,xRay" dynamics="dyn_xray" observables="xRay" x="79" y="33" width="100" height="30" >
+<model name="data_collector" type="atomic" conditions="collector,cond_graph" dynamics="collector" observables="observer" x="248" y="41" width="100" height="30" >
+</model>
+<model name="gen_network" type="atomic" conditions="collectors,cond_graph,controllers" dynamics="dyn_network" x="304" y="378" width="100" height="30" >
+</model>
+<model name="information_center" type="atomic" dynamics="info_center" observables="passive" x="381" y="222" width="100" height="45" >
+<in>
+ <port name="information" />
+</in>
+</model>
+<model name="passiveCollector" type="atomic" conditions="passive_surv,xRay_1" dynamics="dyn_passive" observables="passive" x="84" y="303" width="100" height="60" >
+<out>
+ <port name="control" />
+ <port name="info_center" />
+</out>
+</model>
+<model name="xRaySample" type="atomic" conditions="cond_graph,xRay_1" dynamics="dyn_xray" observables="xRay" x="31" y="165" width="100" height="60" >
+<out>
+ <port name="control" />
+ <port name="info_center" />
+</out>
+</model>
+<model name="xRayTotal" type="atomic" conditions="cond_graph,xRay" dynamics="dyn_xray" observables="xRay" x="37" y="96" width="100" height="30" >
 </model>
 </submodels>
 <connections>
 <connection type="internal">
+ <origin model="control" port="info_center" />
+ <destination model="information_center" port="information" />
+</connection>
+<connection type="internal">
+ <origin model="passiveCollector" port="control" />
+ <destination model="control" port="surveillance" />
+</connection>
+<connection type="internal">
+ <origin model="passiveCollector" port="info_center" />
+ <destination model="information_center" port="information" />
+</connection>
+<connection type="internal">
  <origin model="xRaySample" port="control" />
  <destination model="control" port="surveillance" />
+</connection>
+<connection type="internal">
+ <origin model="xRaySample" port="info_center" />
+ <destination model="information_center" port="information" />
 </connection>
 </connections>
 </model>
@@ -35,12 +66,14 @@
 <dynamic name="collector" library="sir" model="data_collector" package="surveillance" type="local"  />
 <dynamic name="dyn_control" library="surveillance" model="controler" package="surveillance" type="local"  />
 <dynamic name="dyn_network" library="graph" model="dyn_graphExecutive" package="surveillance" type="local"  />
+<dynamic name="dyn_passive" library="surveillance" model="passive_collector" package="surveillance" type="local"  />
 <dynamic name="dyn_vertexExecutive" library="graph" model="dyn_vertexExecutive" package="surveillance" type="local"  />
 <dynamic name="dyn_xray" library="surveillance" model="x_ray" package="surveillance" type="local"  />
+<dynamic name="info_center" library="surveillance" model="information_center" package="surveillance" type="local"  />
 </dynamics>
 <classes>
 <class name="InfectedVertex" >
-<model name="vertex" type="coupled" width="464" height="356"  >
+<model name="vertex" type="coupled" width="552" height="445"  >
 <in>
  <port name="control" />
 </in>
@@ -80,7 +113,7 @@
 </model>
 </class>
 <class name="Vertex" >
-<model name="vertex" type="coupled" width="463" height="356"  >
+<model name="vertex" type="coupled" width="464" height="345"  >
 <in>
  <port name="control" />
 </in>
@@ -120,7 +153,7 @@
 </model>
 </class>
 </classes>
-<experiment name="disease-surveillance-control-R" duration="80.000000000000000" begin="0.000000000000000" combination="total" seed="3890346734" >
+<experiment name="dsc-small-graph" duration="1000.000000000000000" begin="0.000000000000000" combination="total" seed="3890346734" >
 <replicas seed="3499211612" number="1" />
 <conditions>
 <condition name="collector" >
@@ -133,7 +166,7 @@
 <set><string>data_collector</string><string>xRayTotal</string><string>xRaySample</string></set>
 </port>
  <port name="passiveCollectors" >
-<set></set>
+<set><string>passiveCollector</string></set>
 </port>
 </condition>
 <condition name="cond_graph" >
@@ -164,10 +197,10 @@
 </condition>
 <condition name="control" >
  <port name="controlDelay" >
-<double>0.050000000000000</double>
+<double>5.000000000000000</double>
 </port>
  <port name="disabled" >
-<boolean>false</boolean>
+<boolean>true</boolean>
 </port>
 </condition>
 <condition name="controllers" >
@@ -180,10 +213,15 @@
 <double>3.000000000000000</double>
 </port>
  <port name="infectiousPeriod" >
-<double>10.000000000000000</double>
+<double>5.000000000000000</double>
 </port>
  <port name="securedPeriod" >
-<double>10.000000000000000</double>
+<double>5.000000000000000</double>
+</port>
+</condition>
+<condition name="passive_surv" >
+ <port name="probabilityDeclaration" >
+<double>0.200000000000000</double>
 </port>
 </condition>
 <condition name="susceptible" >
@@ -191,10 +229,10 @@
 <double>0.000000000000000</double>
 </port>
  <port name="infectiousPeriod" >
-<double>10.000000000000000</double>
+<double>5.000000000000000</double>
 </port>
  <port name="securedPeriod" >
-<double>10.000000000000000</double>
+<double>5.000000000000000</double>
 </port>
 </condition>
 <condition name="transmission" >
@@ -202,7 +240,7 @@
 <string>infection</string>
 </port>
  <port name="rate" >
-<double>0.200000000000000</double>
+<double>0.100000000000000</double>
 </port>
 </condition>
 <condition name="xRay" >
@@ -216,12 +254,12 @@
 <double>0.750000000000000</double>
 </port>
  <port name="timeStep" >
-<double>5.000000000000000</double>
+<double>100.000000000000000</double>
 </port>
 </condition>
 <condition name="xRay_1" >
  <port name="echProp" >
-<double>0.900000000000000</double>
+<double>0.000000000000000</double>
 </port>
  <port name="probabilityRightI" >
 <double>1.000000000000000</double>
@@ -246,6 +284,13 @@
 
 </outputs>
 <observables>
+<observable name="control" >
+<port name="nb_interventions" >
+ <attachedview name="analyse" />
+</port>
+
+</observable>
+
 <observable name="infectionState" >
 <port name="state" >
  <attachedview name="infection" />
@@ -264,6 +309,23 @@
 
 </observable>
 
+<observable name="passive" >
+<port name="nbIs" >
+ <attachedview name="analyse" />
+</port>
+
+<port name="nbRs" >
+ <attachedview name="analyse" />
+</port>
+
+<port name="nbSs" >
+ <attachedview name="analyse" />
+</port>
+
+<port name="noPort" />
+
+</observable>
+
 <observable name="xRay" >
 <port name="incidence" >
  <attachedview name="analyse-5" />
@@ -273,9 +335,7 @@
  <attachedview name="analyse-5" />
 </port>
 
-<port name="xrayview" >
- <attachedview name="data_collector_view" />
-</port>
+<port name="xrayview" />
 
 </observable>
 
