@@ -40,6 +40,10 @@ namespace model {
         mInfectiousPeriod = vv::toDouble(events.get("infectiousPeriod"));
         mSecuredPeriod = vv::toDouble(events.get("securedPeriod"));
         mAutoInfect = vv::toDouble(events.get("autoInfect"));
+        if (events.exist("constPeriods"))
+            mConstPeriods = vv::toBoolean(events.get("constPeriods"));
+        else 
+            mConstPeriods = true;
     }
 
     Infection::~Infection()
@@ -58,13 +62,12 @@ namespace model {
     void Infection::output(const vd::Time& /*time*/,
                         vd::ExternalEventList& output) const
     {
-        if (mPhase == S || mPhase == SI) {
+        if (mPhase == SI) {
             vd::ExternalEvent* event = new vd::ExternalEvent("state");
             event << vd::attribute("state", true);
             event << vd::attribute ("value", std::string("I"));
             event << vd::attribute ("modelName", 
                                        getModel().getParent()->getName());
-
             output.addEvent(event);
         } else if (mPhase == I) {
             vd::ExternalEvent* event = new vd::ExternalEvent("state");
@@ -101,10 +104,9 @@ namespace model {
             else
                 return vd::Time::infinity;
         case I :
-            return vd::Time(mInfectiousPeriod);
+            return vd::Time(mInfectiousTimeLeft);
         case R :
-            return vd::Time(
-                mSecuredPeriod - (mCurrentTime - mCleaningTime));
+            return vd::Time(mSecuredTimeLeft);
         case SI :
             return 0;
         }
@@ -118,19 +120,28 @@ namespace model {
             mPhase = S;
             break;
         case SI:
-        case S:
             mPhase = I;
+            break;
+        case S:
+            mPhase = SI;
+            if (mConstPeriods)
+                mInfectiousTimeLeft  = mInfectiousPeriod;
+            else
+                mInfectiousTimeLeft = rand().exponential(1/mInfectiousPeriod);
+            mAutoInfect = 0;
             break;
         case I:
             mPhase = R;
-            mCleaningTime = time;
-            mCurrentTime = time;
+             if (mConstPeriods)
+                 mSecuredTimeLeft  = mSecuredPeriod;
+            else
+                mSecuredTimeLeft = rand().exponential(1/mSecuredPeriod);
             break;
         case R:
             mPhase = S;
-            mAutoInfect = 0;
             break;
         }
+            mCurrentTime = time;
     }
 
     void Infection::externalTransition(const vd::ExternalEventList& event,
@@ -139,17 +150,28 @@ namespace model {
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
             if ((*it)->onPort("infection")) {
-                if (mPhase == S)
+                if (mPhase == S) {
                     mPhase = SI;
+                    if (mConstPeriods)
+                        mInfectiousTimeLeft  = mInfectiousPeriod;
+                    else
+                        mInfectiousTimeLeft = rand().exponential(1/mInfectiousPeriod);
+                }
             }
-
             else if ((*it)->onPort("control")) {
                 if ((mPhase == I) or (mPhase == SI)) {
                     mPhase = R;
-                    mCleaningTime = time;
+                    if (mConstPeriods)
+                        mSecuredTimeLeft  = mSecuredPeriod;
+                    else
+                        mSecuredTimeLeft = rand().exponential(1/mSecuredPeriod);
                 }
             }
         }
+        if (mPhase == I)
+            mInfectiousTimeLeft = mInfectiousTimeLeft - (time - mCurrentTime);
+        if (mPhase == R)
+            mSecuredTimeLeft = mSecuredTimeLeft - (time - mCurrentTime);
         mCurrentTime = time;
     }
 

@@ -1,3 +1,5 @@
+source("surveillance-functions.r")
+
 x=100
 g<-sociomatrix_as_rewired_lattice(10,10, p = 0.01) #(x*x = nb)
 longueDist<-1
@@ -10,7 +12,7 @@ rate=0.3
 duration=200
 infper=5
 recovper=5
-#x11(title=paste("rate=",rate,"infper=",infper, "recovper=", recovper, "delai d'intervention= 1"))
+x11(title=paste("rate=",rate,"infper=",infper, "recovper=", recovper, "delai d'intervention= 1"))
 layout(matrix(1:6,3,2))
 for (p in (0:5)/10) {
 plot(0,0, xlim=c(0,duration), ylim= c(0,100), 

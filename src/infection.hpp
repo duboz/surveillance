@@ -73,8 +73,11 @@ private:
     double mInfectiousPeriod;
     double mSecuredPeriod;
     double mCleaningTime;
+    double mInfectiousTimeLeft;
+    double mSecuredTimeLeft;
     double mCurrentTime;
     double mAutoInfect;
+    bool mConstPeriods;
     
 };
 
