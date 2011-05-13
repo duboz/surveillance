@@ -38,7 +38,8 @@ return (result)
 
 #Fonction de simulation AVEC contrôle..
 controled_disease<-function(graph, infectedNodes, transmissionRate, 
-                      duration, infPeriode, recovPeriode, probaDeclaration = 0.2){
+                      duration, infPeriode, recovPeriode, probaDeclaration =
+0.2, constPeriods = FALSE){
 dir<-getwd()
   f = rvle.open("disease-surveillance-control-R.vpz", pkg="surveillance")
   setwd(dir)
@@ -48,10 +49,9 @@ dir<-getwd()
  	rvle.setRealCondition(f,"control","controlDelay", 1)
  	rvle.setRealCondition(f,"passive_surv","probabilityDeclaration",
 probaDeclaration)
- 	rvle.setRealCondition(f,"susceptible","infectiousPeriod", infPeriode)
-	rvle.setRealCondition(f,"infected","infectiousPeriod", infPeriode)
-	rvle.setRealCondition(f,"susceptible","securedPeriod", recovPeriode)
-	rvle.setRealCondition(f,"infected","securedPeriod", recovPeriode)
+ 	rvle.setRealCondition(f,"disease","infectiousPeriod", infPeriode)
+	rvle.setRealCondition(f,"disease","securedPeriod", recovPeriode)
+	rvle.setBooleanCondition(f,"disease","constPeriods", constPeriods)
 	rvle.setRealCondition(f,"transmission","rate", transmissionRate)
 	classes<- ""
   for (node in infectedNodes) {
@@ -71,7 +71,8 @@ probaDeclaration)
   }
 	rvle.setBooleanCondition(f,"cond_graph","R_INIT", TRUE)
 	rvle.setStringCondition(f,"cond_graph","graphInfo_adjacency_matrix", adj_matrix)
-  rvle.setIntegerCondition(f,"cond_graph","graphInfo_number", length(infectedNodes))	
+  rvle.setIntegerCondition(f,"cond_graph","graphInfo_number", length(infectedNodes))
+ rvle.save(f,"rvle-running-exp.vpz")
   result = rvle.runMatrix(f)#[[3]]
 return (result)
 }

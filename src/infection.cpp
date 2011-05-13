@@ -147,6 +147,11 @@ namespace model {
     void Infection::externalTransition(const vd::ExternalEventList& event,
                                     const vd::Time& time)
     {
+        if (mPhase == I)
+            mInfectiousTimeLeft = mInfectiousTimeLeft - (time - mCurrentTime);
+        if (mPhase == R)
+            mSecuredTimeLeft = mSecuredTimeLeft - (time - mCurrentTime);
+
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
             if ((*it)->onPort("infection")) {
@@ -168,10 +173,6 @@ namespace model {
                 }
             }
         }
-        if (mPhase == I)
-            mInfectiousTimeLeft = mInfectiousTimeLeft - (time - mCurrentTime);
-        if (mPhase == R)
-            mSecuredTimeLeft = mSecuredTimeLeft - (time - mCurrentTime);
         mCurrentTime = time;
     }
 
