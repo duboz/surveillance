@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
+<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
 <structures>
-<model name="graph" type="coupled" width="634" height="481"  >
+<model name="graph" type="coupled" width="529" height="411"  >
 <submodels>
 <model name="control" type="atomic" conditions="control" dynamics="dyn_control" observables="control" x="259" y="137" width="100" height="45" >
 <in>
@@ -73,30 +73,53 @@
 </dynamics>
 <classes>
 <class name="InfectedVertex" >
-<model name="vertex" type="coupled" width="464" height="320"  >
-<in>
- <port name="control" />
-</in>
-<submodels>
-<model name="infection" type="atomic" conditions="infected" dynamics="Infection" observables="infectionState" x="70" y="171" width="100" height="60" >
+<model name="vertex" type="coupled" width="505" height="426"  >
 <in>
  <port name="control" />
  <port name="infection" />
+ <port name="status?" />
+</in>
+<out>
+ <port name="neighbor_i" />
+ <port name="neighbor_n" />
+ <port name="status" />
+</out>
+<submodels>
+<model name="infection" type="atomic" conditions="infected" dynamics="Infection" observables="infectionState" x="82" y="68" width="100" height="75" >
+<in>
+ <port name="control" />
+ <port name="infection" />
+ <port name="status?" />
 </in>
 <out>
  <port name="state" />
+ <port name="status" />
 </out>
 </model>
-<model name="transmission" type="atomic" conditions="transmission" dynamics="Transmission" x="228" y="108" width="100" height="60" >
+<model name="transmission" type="atomic" conditions="transmission" dynamics="Transmission" x="236" y="39" width="100" height="60" >
 <in>
  <port name="control" />
  <port name="state" />
 </in>
-</model>
-<model name="vertexExecutive" type="atomic" conditions="collectors" dynamics="dyn_vertexExecutive" x="140" y="25" width="100" height="30" >
+<out>
+ <port name="neighbor_i" />
+ <port name="neighbor_n" />
+</out>
 </model>
 </submodels>
 <connections>
+<connection type="output">
+ <origin model="transmission" port="neighbor_i" />
+ <destination model="vertex" port="neighbor_i" />
+</connection>
+<connection type="output">
+ <origin model="transmission" port="neighbor_n" />
+ <destination model="vertex" port="neighbor_n" />
+</connection>
+<connection type="output">
+ <origin model="infection" port="status" />
+ <destination model="vertex" port="status" />
+</connection>
 <connection type="input">
  <origin model="vertex" port="control" />
  <destination model="infection" port="control" />
@@ -104,6 +127,14 @@
 <connection type="input">
  <origin model="vertex" port="control" />
  <destination model="transmission" port="control" />
+</connection>
+<connection type="input">
+ <origin model="vertex" port="infection" />
+ <destination model="infection" port="infection" />
+</connection>
+<connection type="input">
+ <origin model="vertex" port="status?" />
+ <destination model="infection" port="status?" />
 </connection>
 <connection type="internal">
  <origin model="infection" port="state" />
