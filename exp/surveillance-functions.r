@@ -1,6 +1,6 @@
 library(rvle)
 
-#Fonction de simulation sans contrôle..
+#Fonction OBSOLETTE sans control..
 uncontroled_disease<-function(graph, infectedNodes, transmissionRate, 
                       duration, infPeriode, recovPeriode){
 dir<-getwd()
@@ -39,13 +39,13 @@ return (result)
 #Fonction de simulation AVEC contrôle..
 controled_disease<-function(graph, infectedNodes, transmissionRate, 
                       duration, infPeriode, recovPeriode, probaDeclaration =
-0.2, constPeriods = FALSE){
+0.2, constPeriods = FALSE, control = TRUE){
 dir<-getwd()
   f = rvle.open("disease-surveillance-control-R.vpz", pkg="surveillance")
   setwd(dir)
   rvle.setDuration(f,duration)
 	rvle.setSeed(f,runif(1)*1000000)
- 	rvle.setBooleanCondition(f,"control","disabled", FALSE)
+ 	rvle.setBooleanCondition(f,"control","disabled", !control)
  	rvle.setRealCondition(f,"control","controlDelay", 1)
  	rvle.setRealCondition(f,"passive_surv","probabilityDeclaration",
 probaDeclaration)

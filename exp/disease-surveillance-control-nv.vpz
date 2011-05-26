@@ -144,7 +144,7 @@
 </model>
 </class>
 <class name="Vertex" >
-<model name="vertex" type="coupled" width="464" height="345"  >
+<model name="vertex" type="coupled" width="569" height="411"  >
 <in>
  <port name="control" />
 </in>
@@ -184,7 +184,7 @@
 </model>
 </class>
 </classes>
-<experiment name="disease-surveillance-control" duration="80.000000000000000" begin="0.000000000000000" combination="total" seed="3890346734" >
+<experiment name="DSC_NV" duration="80.000000000000000" begin="0.000000000000000" combination="total" seed="3890346734" >
 <replicas seed="3499211612" number="1" />
 <conditions>
 <condition name="collector" >
