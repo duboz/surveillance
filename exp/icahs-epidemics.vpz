@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
+<vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
+<structures>
+<model name="graph" type="coupled" width="770" height="473"  >
+<submodels>
+<model name="control" type="atomic" conditions="control" dynamics="dyn_control" observables="control" x="281" y="139" width="100" height="45" >
+<in>
+ <port name="surveillance" />
+</in>
+<out>
+ <port name="info_center" />
+</out>
+</model>
+<model name="information_center" type="atomic" dynamics="info_center" observables="passive" x="411" y="245" width="100" height="45" >
+<in>
+ <port name="information" />
+</in>
+</model>
+<model name="surveillance" type="coupled" x="22" y="157" width="576" height="420"  >
+<out>
+ <port name="control" />
+ <port name="information" />
+</out>
+<submodels>
+<model name="passiveCollector" type="atomic" conditions="passive_surv,xRay_1" dynamics="dyn_passive" observables="passive" x="99" y="320" width="100" height="60" >
+<out>
+ <port name="control" />
+ <port name="info_center" />
+</out>
+</model>
+<model name="xRaySample" type="atomic" conditions="cond_graph,xRay_1" dynamics="dyn_xray" observables="xRay" x="38" y="218" width="100" height="60" >
+<out>
+ <port name="control" />
+ <port name="info_center" />
+</out>
+</model>
+<model name="xRayTotal" type="atomic" conditions="cond_graph,xRay" dynamics="dyn_xray" observables="xRay" x="19" y="144" width="100" height="30" >
+</model>
+</submodels>
+<connections>
+<connection type="output">
+ <origin model="passiveCollector" port="control" />
+ <destination model="surveillance" port="control" />
+</connection>
+<connection type="output">
+ <origin model="xRaySample" port="control" />
+ <destination model="surveillance" port="control" />
+</connection>
+<connection type="output">
+ <origin model="passiveCollector" port="info_center" />
+ <destination model="surveillance" port="information" />
+</connection>
+<connection type="output">
+ <origin model="xRaySample" port="info_center" />
+ <destination model="surveillance" port="information" />
+</connection>
+</connections>
+</model>
+<model name="epidemics" type="coupled" x="179" y="72" width="100" height="30"  >
+<submodels>
+<model name="data_collector" type="atomic" conditions="collector,cond_graph" dynamics="collector" observables="observer" x="375" y="84" width="100" height="30" >
+</model>
+<model name="gen_network" type="atomic" conditions="collectors,cond_graph,controllers" dynamics="dyn_network" x="393" y="291" width="100" height="30" >
+</model>
+</submodels>
+<connections>
+</connections>
+</model>
+</submodels>
+<connections>
+<connection type="internal">
+ <origin model="control" port="info_center" />
+ <destination model="information_center" port="information" />
+</connection>
+<connection type="internal">
+ <origin model="surveillance" port="control" />
+ <destination model="control" port="surveillance" />
+</connection>
+<connection type="internal">
+ <origin model="surveillance" port="information" />
+ <destination model="information_center" port="information" />
+</connection>
+</connections>
+</model>
+</structures>
+<dynamics>
+<dynamic name="Infection" library="sir" model="infection" package="surveillance" type="local"  />
+<dynamic name="Transmission" library="sir" model="transmission" package="surveillance" type="local"  />
+<dynamic name="collector" library="sir" model="data_collector" package="surveillance" type="local"  />
+<dynamic name="dyn_control" library="surveillance" model="controler" package="surveillance" type="local"  />
+<dynamic name="dyn_network" library="graph" model="dyn_graphExecutive" package="surveillance" type="local"  />
+<dynamic name="dyn_passive" library="surveillance" model="passive_collector" package="surveillance" type="local"  />
+<dynamic name="dyn_vertexExecutive" library="graph" model="dyn_vertexExecutive" package="surveillance" type="local"  />
+<dynamic name="dyn_xray" library="surveillance" model="x_ray" package="surveillance" type="local"  />
+<dynamic name="info_center" library="surveillance" model="information_center" package="surveillance" type="local"  />
+</dynamics>
+<classes>
+<class name="InfectedVertex" >
+<model name="vertex" type="coupled" width="576" height="333"  >
+<in>
+ <port name="control" />
+</in>
+<submodels>
+<model name="infection" type="atomic" conditions="infected" dynamics="Infection" observables="infectionState" x="70" y="171" width="100" height="60" >
+<in>
+ <port name="control" />
+ <port name="infection" />
+</in>
+<out>
+ <port name="state" />
+</out>
+</model>
+<model name="transmission" type="atomic" conditions="transmission" dynamics="Transmission" x="228" y="108" width="100" height="60" >
+<in>
+ <port name="control" />
+ <port name="state" />
+</in>
+</model>
+<model name="vertexExecutive" type="atomic" conditions="collectors" dynamics="dyn_vertexExecutive" x="140" y="25" width="100" height="30" >
+</model>
+</submodels>
+<connections>
+<connection type="input">
+ <origin model="vertex" port="control" />
+ <destination model="infection" port="control" />
+</connection>
+<connection type="input">
+ <origin model="vertex" port="control" />
+ <destination model="transmission" port="control" />
+</connection>
+<connection type="internal">
+ <origin model="infection" port="state" />
+ <destination model="transmission" port="state" />
+</connection>
+</connections>
+</model>
+</class>
+<class name="Vertex" >
+<model name="vertex" type="coupled" width="576" height="333"  >
+<in>
+ <port name="control" />
+</in>
+<submodels>
+<model name="infection" type="atomic" conditions="susceptible" dynamics="Infection" observables="infectionState" x="76" y="191" width="100" height="60" >
+<in>
+ <port name="control" />
+ <port name="infection" />
+</in>
+<out>
+ <port name="state" />
+</out>
+</model>
+<model name="transmission" type="atomic" conditions="transmission" dynamics="Transmission" x="236" y="108" width="100" height="60" >
+<in>
+ <port name="control" />
+ <port name="state" />
+</in>
+</model>
+<model name="vertexExecutive" type="atomic" conditions="collectors" dynamics="dyn_vertexExecutive" x="140" y="25" width="100" height="30" >
+</model>
+</submodels>
+<connections>
+<connection type="input">
+ <origin model="vertex" port="control" />
+ <destination model="infection" port="control" />
+</connection>
+<connection type="input">
+ <origin model="vertex" port="control" />
+ <destination model="transmission" port="control" />
+</connection>
+<connection type="internal">
+ <origin model="infection" port="state" />
+ <destination model="transmission" port="state" />
+</connection>
+</connections>
+</model>
+</class>
+</classes>
+<experiment name="disease-surveillance-control" duration="80.000000000000000" begin="0.000000000000000" combination="total" seed="3890346734" >
+<replicas seed="3499211612" number="1" />
+<conditions>
+<condition name="collector" >
+ <port name="timeStep" >
+<double>1.000000000000000</double>
+</port>
+</condition>
+<condition name="collectors" >
+ <port name="activeCollectors" >
+<set><string>data_collector</string><string>xRayTotal</string><string>xRaySample</string></set>
+</port>
+ <port name="passiveCollectors" >
+<set><string>passiveCollector</string></set>
+</port>
+</condition>
+<condition name="cond_graph" >
+ <port name="graphInfo" >
+<map><key name="adjacency matrix file"><map><key name="file"><string>proxy_graph_1044.dat</string></key><key name="package"><string>surveillance</string></key></map></key><key name="classes file"><map><key name="file"><string>init-state-Phitsa.dat</string></key><key name="package"><string>surveillance</string></key></map></key><key name="number"><integer>1044</integer></key><key name="port"><string>
+                                in
+                    </string></key><key name="prefix"><string>vertex</string></key></map>
+</port>
+</condition>
+<condition name="control" >
+ <port name="controlDelay" >
+<double>0.500000000000000</double>
+</port>
+ <port name="disabled" >
+<boolean>false</boolean>
+</port>
+</condition>
+<condition name="controllers" >
+ <port name="controllers" >
+<set><string>control</string></set>
+</port>
+</condition>
+<condition name="infected" >
+ <port name="autoInfect" >
+<double>3.000000000000000</double>
+</port>
+ <port name="infectiousPeriod" >
+<double>10.000000000000000</double>
+</port>
+ <port name="securedPeriod" >
+<double>10.000000000000000</double>
+</port>
+</condition>
+<condition name="passive_surv" >
+ <port name="probabilityDeclaration" >
+<double>1.000000000000000</double>
+</port>
+</condition>
+<condition name="susceptible" >
+ <port name="autoInfect" >
+<double>0.000000000000000</double>
+</port>
+ <port name="infectiousPeriod" >
+<double>10.000000000000000</double>
+</port>
+ <port name="securedPeriod" >
+<double>10.000000000000000</double>
+</port>
+</condition>
+<condition name="transmission" >
+ <port name="prefix" >
+<string>infection</string>
+</port>
+ <port name="rate" >
+<double>0.200000000000000</double>
+</port>
+</condition>
+<condition name="xRay" >
+ <port name="echProp" >
+<double>1.000000000000000</double>
+</port>
+ <port name="probabilityRightI" >
+<double>0.750000000000000</double>
+</port>
+ <port name="probabilityRightSR" >
+<double>0.750000000000000</double>
+</port>
+ <port name="timeStep" >
+<double>100.000000000000000</double>
+</port>
+</condition>
+<condition name="xRay_1" >
+ <port name="echProp" >
+<double>0.000000000000000</double>
+</port>
+ <port name="probabilityRightI" >
+<double>1.000000000000000</double>
+</port>
+ <port name="probabilityRightSR" >
+<double>1.000000000000000</double>
+</port>
+ <port name="timeStep" >
+<double>10.000000000000000</double>
+</port>
+</condition>
+</conditions>
+<views>
+<outputs>
+<output name="analyse" location="" format="local" plugin="file" />
+
+<output name="analyse-5" location="" format="local" plugin="file" />
+
+<output name="data_collector_view" location="" format="local" plugin="file" />
+
+<output name="infection" location="" format="local" plugin="file" />
+
+</outputs>
+<observables>
+<observable name="control" >
+<port name="nb_interventions" >
+ <attachedview name="analyse" />
+</port>
+
+</observable>
+
+<observable name="infectionState" >
+<port name="state" >
+ <attachedview name="infection" />
+</port>
+
+</observable>
+
+<observable name="observer" >
+<port name="noPort" >
+ <attachedview name="data_collector_view" />
+</port>
+
+<port name="prevalence" >
+ <attachedview name="analyse" />
+</port>
+
+</observable>
+
+<observable name="passive" >
+<port name="nbIs" >
+ <attachedview name="analyse" />
+</port>
+
+<port name="nbRs" >
+ <attachedview name="analyse" />
+</port>
+
+<port name="nbSs" >
+ <attachedview name="analyse" />
+</port>
+
+<port name="noPort" />
+
+</observable>
+
+<observable name="xRay" >
+<port name="incidence" >
+ <attachedview name="analyse-5" />
+</port>
+
+<port name="prevalence" >
+ <attachedview name="analyse-5" />
+</port>
+
+<port name="xrayview" />
+
+</observable>
+
+</observables>
+<view name="analyse" output="analyse" type="timed" timestep="1.000000000000000" />
+
+<view name="analyse-5" output="analyse-5" type="timed" timestep="5.000000000000000" />
+
+<view name="data_collector_view" output="data_collector_view" type="timed" timestep="1.000000000000000" />
+
+<view name="infection" output="infection" type="timed" timestep="100.000000000000000" />
+
+</views>
+</experiment>
+</vle_project>
