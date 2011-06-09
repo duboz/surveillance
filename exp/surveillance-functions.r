@@ -1,41 +1,5 @@
 library(rvle)
 
-#Fonction OBSOLETTE sans control..
-uncontroled_disease<-function(graph, infectedNodes, transmissionRate, 
-                      duration, infPeriode, recovPeriode){
-dir<-getwd()
-  f = rvle.open("init-R-surveillance.vpz", pkg="surveillance")
-  setwd(dir)
-  rvle.setDuration(f,duration)
-	rvle.setSeed(f,runif(1)*1000000)
- 	rvle.setRealCondition(f,"susceptible","infectiousPeriod", infPeriode)
-	rvle.setRealCondition(f,"infected","infectiousPeriod", infPeriode)
-	rvle.setRealCondition(f,"susceptible","securedPeriod", recovPeriode)
-	rvle.setRealCondition(f,"infected","securedPeriod", recovPeriode)
-	rvle.setRealCondition(f,"transmission","rate", transmissionRate)
-	classes<- ""
-  for (node in infectedNodes) {
-  if (node == 1) classes <- paste(classes, "InfectedVertex ", sep="")
-  else if (node == 0) classes <- paste(classes, "Vertex ", sep="")
-  else print("ERROR!! Mauvais vecteur d'infection")
-  }
-	rvle.setStringCondition(f,"cond_graph","graphInfo_classes", classes)	
-	if (length(infectedNodes)^2 != length(graph)) print("ERROR: mauvais nombre de noeuds")
-	adj_matrix<-""
-	for (i in 1:length(graph[1,])) {
-	 for (j in 1:length(graph[,1])) {
-     if (graph[i,j] == 0) adj_matrix=paste(adj_matrix, "0 ", sep="")
-     else if (graph[i,j] == 1) adj_matrix=paste(adj_matrix, "1 ", sep="")
-     else print("ERR mauvais formatage du graph")
-    }
-  }
-	rvle.setBooleanCondition(f,"cond_graph","R_INIT", TRUE)
-	rvle.setStringCondition(f,"cond_graph","graphInfo_adjacency_matrix", adj_matrix)
-  rvle.setIntegerCondition(f,"cond_graph","graphInfo_number", length(infectedNodes))	
-  result = rvle.runMatrix(f)#[[3]]
-return (result)
-}
-
 #Fonction de simulation AVEC contrôle..
 controled_disease<-function(graph, infectedNodes, transmissionRate, 
                       duration, infPeriode, recovPeriode, probaDeclaration =
