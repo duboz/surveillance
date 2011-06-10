@@ -23,27 +23,13 @@
  */
 
 #include <vle/devs/Dynamics.hpp>
+#include <controller.hpp>
 namespace vd = vle::devs;
 namespace vv = vle::value;
 using namespace vle;
 namespace model {
-
-class controler : public devs::Dynamics
-    {
-private:
-    enum Phase {INIT, IDLE, CONTROL, DISABLED};
-    Phase m_phase;
-    std::map<std::string, std::string> m_nodeStates;
-    typedef std::pair<double, std::vector<std::string> > Intervention;
-    typedef std::vector<Intervention> InterventionPlan;
-    InterventionPlan m_interventions;
-    double m_delay;
-    double m_current_time;
-    bool m_disabled;
-    long m_nbInterventions;
-
-public:
-    controler(
+    
+    controler::controler(
         const devs::DynamicsInit& init,
         const devs::InitEventList& events)
         : devs::Dynamics(init, events)
@@ -53,11 +39,11 @@ public:
         m_nbInterventions = 0;
     }
 
-    virtual ~controler()
+    controler::~controler()
     {
     }
 
-    virtual devs::Time init(
+    devs::Time controler::init(
         const devs::Time& time)
     {   
         m_current_time = time.getValue();
@@ -67,7 +53,7 @@ public:
         return 0;
     }
 
-    virtual void output(
+    void controler::output(
         const devs::Time& /* time */,
         devs::ExternalEventList& output ) const
     {
@@ -93,7 +79,7 @@ public:
 
     }
 
-    virtual devs::Time timeAdvance() const
+    devs::Time controler::timeAdvance() const
     {
         if (m_phase == CONTROL)
             return devs::Time(m_interventions.begin()->first - m_current_time);
@@ -103,7 +89,7 @@ public:
         return devs::Time::infinity;
     }
 
-    virtual void internalTransition(
+   void controler::internalTransition(
         const devs::Time& time)
     {
         if (m_phase == INIT)
@@ -121,7 +107,7 @@ public:
         m_current_time = time.getValue();
     }
 
-    virtual void externalTransition(
+    void controler::externalTransition(
         const devs::ExternalEventList&  event ,
         const devs::Time& time)
     {
@@ -151,7 +137,7 @@ public:
         m_current_time = time.getValue();
     }
 
-    virtual void confluentTransitions(
+    void controler::confluentTransitions(
         const devs::Time& time,
         const devs::ExternalEventList& events)
     {
@@ -159,23 +145,22 @@ public:
         externalTransition(events, time);
     }
 
-    virtual void request(
+    void controler::request(
         const devs::RequestEvent& /* event */,
         const devs::Time& /* time */,
         devs::ExternalEventList& /* output */) const
     {
     }
 
-    virtual value::Value* observation(
+    value::Value* controler::observation(
         const devs::ObservationEvent& /* event */) const
     {
         return buildInteger(m_nbInterventions);
     }
 
-    virtual void finish()
+    void controler::finish()
     {
     }
-};
 
 } // namespace model
 

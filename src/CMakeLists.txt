@@ -10,6 +10,7 @@ LINK_DIRECTORIES(
 ADD_LIBRARY(surveillance SHARED
                         xRay.cpp
                 	xRay.hpp
+			controller.hpp
 			controller.cpp
                 	passive_collector.cpp
                 	passive_collector.hpp
