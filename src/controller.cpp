@@ -37,6 +37,7 @@ namespace model {
         m_delay = vv::toDouble(events.get("controlDelay"));
         m_disabled = vv::toBoolean(events.get("disabled"));
         m_nbInterventions = 0;
+        loadSpatialParameters(events);
     }
 
     controler::~controler()
@@ -76,7 +77,6 @@ namespace model {
                 delete nodeObservations;
             }
         }
-
     }
 
     devs::Time controler::timeAdvance() const
@@ -159,6 +159,10 @@ namespace model {
     }
 
     void controler::finish()
+    {
+    }
+    
+    void controler::loadSpatialParameters(const devs::InitEventList& /*events*/)
     {
     }
 

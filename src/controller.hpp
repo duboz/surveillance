@@ -34,8 +34,8 @@ using namespace vle;
 
 namespace model {
 class controler : public devs::Dynamics
-{
-private:
+    {
+protected:
     enum Phase {INIT, IDLE, CONTROL, DISABLED};
     Phase m_phase;
     std::map<std::string, std::string> m_nodeStates;
@@ -83,6 +83,9 @@ public:
         const devs::ObservationEvent& /* event */) const;
         
         virtual void finish();
+
+        //Generic functions for controllers.
+        void loadSpatialParameters(const devs::InitEventList& events);
 };
 }
 

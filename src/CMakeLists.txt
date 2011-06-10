@@ -12,6 +12,7 @@ ADD_LIBRARY(surveillance SHARED
                 	xRay.hpp
 			controller.hpp
 			controller.cpp
+			spatialController.cpp
                 	passive_collector.cpp
                 	passive_collector.hpp
 			information_center.cpp)
