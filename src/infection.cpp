@@ -139,9 +139,9 @@ namespace model {
         case I:
             mPhase = R;
              if (mConstPeriods)
-                 mSecuredTimeLeft  = mSecuredPeriod;
+                 mSecuredTimeLeft  = mRestockingPeriod;
             else
-                mSecuredTimeLeft = rand().exponential(1/mSecuredPeriod);
+                mSecuredTimeLeft = rand().exponential(1/mRestockingPeriod);
             break;
         case R:
             mPhase = S;
@@ -176,9 +176,9 @@ namespace model {
                 if ((mPhase == I) or (mPhase == SI)) {
                     mPhase = SECURED;
                     if (mConstPeriods)
-                        mSecuredTimeLeft  = mRestockingPeriod;
+                        mSecuredTimeLeft  = mSecuredPeriod;
                     else
-                        mSecuredTimeLeft = rand().exponential(1/mRestockingPeriod);
+                        mSecuredTimeLeft = rand().exponential(1/mSecuredPeriod);
                 }
             }
         }
