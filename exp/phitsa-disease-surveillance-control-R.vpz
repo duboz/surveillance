@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
 <structures>
-<model name="graph" type="coupled" width="597" height="448"  >
+<model name="graph" type="coupled" width="528" height="481"  >
 <submodels>
 <model name="control" type="atomic" conditions="control" dynamics="dyn_control" observables="control" x="299" y="105" width="100" height="45" >
 <in>
@@ -213,6 +213,9 @@
 <boolean>true</boolean>
 </port>
  <port name="infectiousPeriod" >
+<double>0.500000000000000</double>
+</port>
+ <port name="restockingPeriod" >
 <double>0.500000000000000</double>
 </port>
  <port name="securedPeriod" >
