@@ -39,6 +39,10 @@ namespace model {
     {
         mInfectiousPeriod = vv::toDouble(events.get("infectiousPeriod"));
         mSecuredPeriod = vv::toDouble(events.get("securedPeriod"));
+        if (events.exist("restockingPeriod"))
+            mRestockingPeriod = vv::toDouble(events.get("restockingPeriod"));
+        else 
+            mRestockingPeriod = mSecuredPeriod;
         mAutoInfect = vv::toDouble(events.get("autoInfect"));
         if (events.exist("constPeriods"))
             mConstPeriods = vv::toBoolean(events.get("constPeriods"));
@@ -107,6 +111,8 @@ namespace model {
             return vd::Time(mInfectiousTimeLeft);
         case R :
             return vd::Time(mSecuredTimeLeft);
+        case SECURED :
+            return vd::Time(mSecuredTimeLeft);
         case SI :
             return 0;
         }
@@ -140,6 +146,9 @@ namespace model {
         case R:
             mPhase = S;
             break;
+        case SECURED:
+            mPhase = S;
+            break;
         }
             mCurrentTime = time;
     }
@@ -165,11 +174,11 @@ namespace model {
             }
             else if ((*it)->onPort("control")) {
                 if ((mPhase == I) or (mPhase == SI)) {
-                    mPhase = R;
+                    mPhase = SECURED;
                     if (mConstPeriods)
-                        mSecuredTimeLeft  = mSecuredPeriod;
+                        mSecuredTimeLeft  = mRestockingPeriod;
                     else
-                        mSecuredTimeLeft = rand().exponential(1/mSecuredPeriod);
+                        mSecuredTimeLeft = rand().exponential(1/mRestockingPeriod);
                 }
             }
         }
@@ -224,6 +233,9 @@ namespace model {
                 responseValue = std::string("I");
                 break;
             case R:
+                responseValue = std::string("R");
+                break;
+            case SECURED:
                 responseValue = std::string("R");
                 break;
             }

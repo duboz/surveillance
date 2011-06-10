@@ -68,10 +68,11 @@ public:
                          vd::ExternalEventList& output) const;
 
 private:
-    enum PHASE {INIT, S, I, R, SI};
+    enum PHASE {INIT, S, I, R, SECURED, SI};
     PHASE mPhase;
     double mInfectiousPeriod;
     double mSecuredPeriod;
+    double mRestockingPeriod;
     double mCleaningTime;
     double mInfectiousTimeLeft;
     double mSecuredTimeLeft;
