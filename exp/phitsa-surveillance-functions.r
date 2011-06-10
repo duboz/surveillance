@@ -5,7 +5,7 @@ controled_disease<-function(graph, infectedNodes, transmissionRate,
                       duration, infPeriode, recovPeriode, probaDeclaration =
 0.2, constPeriods = FALSE, control = TRUE){
 dir<-getwd()
-  f = rvle.open("disease-surveillance-control-R.vpz", pkg="surveillance")
+  f = rvle.open("phitsa-disease-surveillance-control-R.vpz", pkg="surveillance")
   setwd(dir)
   rvle.setDuration(f,duration)
 	rvle.setSeed(f,runif(1)*1000000)
@@ -129,3 +129,49 @@ gplot(graph,coord=coordo,vertex.col=colors,arrowhead.cex = 0.1,new=TRUE,
 main=paste("Epidemic at time",i))
 }
 }
+
+#Fonction pour phitsanuloc
+
+create_phitsa_graph <-function(inf_distance) {
+#Génération du graphe par proximité
+inf_graph <- matrix(0, 1044, 1044)
+dist_matrix <- matrix(0, 1044, 1044)
+for (i in 1:1044) {
+for (j in 1:1044){
+dist <- sqrt((villages$XX[i] - villages$XX[j])^2 +
+	(villages$YY[i] - villages$YY[j])^2)
+dist_matrix[i,j]<-dist
+if (dist < inf_distance) {inf_graph[i,j]=1}
+}}
+
+#Connectage du réseau (ie. faire en sorte qu'il n'y ait plus qu'un seul
+#compostant)
+
+node_components <- component.dist(inf_graph)$membership
+nb_components <- max(component.dist(inf_graph)$membership)
+while (nb_components > 1) {
+	node_components <- component.dist(inf_graph)$membership
+	nb_components <- max(component.dist(inf_graph)$membership)
+	print(paste("Moui c'est un peu long.. Il reste: ",nb_components,
+"composants"))
+	comp_nodes <- which(node_components == 1)
+	other_nodes <- which(node_components != 1)
+	mindist <- 1000000
+	node_i<-0
+	node_j<-0
+	for (i in comp_nodes) {
+	for (j in other_nodes) {
+	  distij <- dist_matrix[i,j] 
+	  if (distij < mindist) {
+	    mindist <- distij
+	    node_i <- i
+	    node_j <- j
+  	  }
+	}}
+	inf_graph[node_i,node_j] <-1
+	inf_graph[node_j,node_i] <-1
+}
+return(inf_graph)
+}
+
+
