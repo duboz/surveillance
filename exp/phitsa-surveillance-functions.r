@@ -4,7 +4,8 @@ library(rvle)
 controled_disease<-function(graph, infectedNodes, transmissionRate, 
                       duration, infPeriode, securedPeriode, restockPeriode,
 controlDelay, probaDeclaration =
-0.2, constPeriods = TRUE, control = TRUE){
+0.2, constPeriods = TRUE, control = TRUE, controlRadius = 0, nodes_positions =
+runif(length(infectedNodes))){
 dir<-getwd()
   f = rvle.open("phitsa-disease-surveillance-control-R.vpz", pkg="surveillance")
   setwd(dir)
@@ -12,6 +13,10 @@ dir<-getwd()
 	rvle.setSeed(f,runif(1)*1000000)
  	rvle.setBooleanCondition(f,"control","disabled", !control)
  	rvle.setRealCondition(f,"control","controlDelay", controlDelay)
+	if (controlRadius > 0)
+		rvle.setRealCondition(f, "control", "controlRadius",
+controlRadius)
+	rvle.setTupleCondition(f,"cond_graph","nodes_positions", nodes_positions)	
  	rvle.setRealCondition(f,"passive_surv","probabilityDeclaration",
 probaDeclaration)
  	rvle.setRealCondition(f,"disease","infectiousPeriod", infPeriode)
@@ -51,30 +56,28 @@ return (result)
 
 ##Fonctions de visualisation
 library(sna)
-show_epidemic<-function(r,graph, coordo = FALSE, date = 1){
+show_epidemic<-function(r,graph, coordo = FALSE, date = 1, vertex =c()){
 if (coordo == FALSE) {
 par<-list(niter=1000)
 coordo=gplot.layout.fruchtermanreingold(graph,par)}
 cols=heat.colors(4)
 nbNodes<-length(graph[1,])
-colors<-matrix(0,1,nbNodes)
-infection<-r[[3]][1,2:(nbNodes+1)]
-for (i in 1:nbNodes){
-colors[1,i]<-cols[(4-infection[i])]
-}
-#gplot(graph,coord=coordo,vertex.col=r[[3]][1,2:(nbNodes+1)],arrowhead.cex = 0.1)
-#gplot(graph,coord=coordo,vertex.col=colors,arrowhead.cex = 0.1)
 for (i in c(date:length(r[[3]][,1]))){
 infection<-r[[3]][i,2:(nbNodes+1)]
 colors<-matrix(0,1,nbNodes)
 for (j in 1:nbNodes){
 colors[1,j]<-cols[4-infection[j]]
+if (paste("vertex-",j-1,sep="") %in% vertex)
+colors[1,j]<-3
 }
-scan()
 gplot(graph,coord=coordo,vertex.col=colors,arrowhead.cex = 0.1,new=TRUE,
 main=paste("Epidemic at time",i))
+scan()
 }
 }
+
+
+
 
 #Fonction pour phitsanuloc
 

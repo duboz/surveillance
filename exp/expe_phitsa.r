@@ -12,6 +12,7 @@ infper = 7
 restockper = 7
 securedper = 7
 controlDelay = 2
+controlRadius = 7000 #Distance en m.
 p = 0.01 #proba de déclaration
 
 #Données
@@ -30,4 +31,4 @@ initState[which(villages$VIL_CODE %in% infected_villages),1]<-1
 #simulation
 res= controled_disease(phitsa_netw,initState, 
 rate, duration,infper, securedper, restockper, probaDeclaration=p, controlDelay
-= controlDelay)
+= controlDelay, controlRadius = controlRadius, nodes_positions = c(rbind(villages$XX,villages$YY)))

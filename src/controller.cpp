@@ -37,7 +37,7 @@ namespace model {
         m_delay = vv::toDouble(events.get("controlDelay"));
         m_disabled = vv::toBoolean(events.get("disabled"));
         m_nbInterventions = 0;
-        loadSpatialParameters(events);
+        //loadSpatialParameters(events);
     }
 
     controler::~controler()

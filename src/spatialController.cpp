@@ -42,6 +42,7 @@ public:
         const devs::InitEventList& events)
         : controler(init, events)
     {
+        loadSpatialParameters(events);
     }
 
     virtual ~spatialControler()
@@ -60,10 +61,12 @@ public:
                  it !=  m_interventions.begin()->second.end(); it++) {
                 std::string spotedNode;
                 spotedNode = *it;
+                std::cout<<"intervention sur: "<<spotedNode<<std::endl;
                 std::vector<std::string> nodesToKill = mNodeNeighbors.at(spotedNode);
                 for (NodeIterator nodeToKill = nodesToKill.begin(); 
                      nodeToKill != nodesToKill.end(); nodeToKill++) {
                     nodeObservations->addString(*nodeToKill, "R");
+                std::cout<<*nodeToKill<<std::endl;
                     vd::ExternalEvent * ev = new vd::ExternalEvent (*nodeToKill);
                     ev << vd::attribute ("type", buildString("clean"));
                     output.addEvent (ev);
@@ -81,9 +84,10 @@ public:
 
 
     //Generic functions for controllers.
-    void loadSpatialParameters(const devs::InitEventList& events) {
+    virtual void loadSpatialParameters(const devs::InitEventList& events) {
+             std::cout<<"Loading paramters.."<<std::endl;
         mControlRadius = vv::toDouble(events.get("controlRadius"));
-        std::vector<double> positions= vv::toTuple(events.get("nodePositions"));
+        std::vector<double> positions= vv::toTuple(events.get("nodes_positions"));
         m_model_prefix = value::toString(events.get("graphInfo_prefix"));
         int nbNodes = positions.size()/2;
         double nodePositions[nbNodes][2];
@@ -98,6 +102,7 @@ public:
              std::string vetName = 
                  m_model_prefix + "-" + boost::lexical_cast<std::string>(node);
              std::vector<std::string> neighbors;
+             std::cout<<"key: "<<vetName<<std::endl;
              mNodeNeighbors[vetName] = neighbors;
              for (int node2 = 0; node2 < nbNodes; node2++) {
                  double dist = std::sqrt(std::pow((nodePositions[node][1] - nodePositions[node2][1]),2)

@@ -85,7 +85,7 @@ public:
         virtual void finish();
 
         //Generic functions for controllers.
-        void loadSpatialParameters(const devs::InitEventList& events);
+        virtual void loadSpatialParameters(const devs::InitEventList& events);
 };
 }
 
