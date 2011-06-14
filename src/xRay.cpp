@@ -33,215 +33,11 @@ namespace vv = vle::value;
 namespace model {
 
   XRay::XRay(const vd::DynamicsInit& init, const vd::InitEventList& events)
-      : vd::Dynamics(init, events)
+      : model::ActiveCollector(init, events)
   {
-    mProbabilityRightSR = vv::toDouble(events.get("probabilityRightSR"));
-    mProbabilityRightI = vv::toDouble(events.get("probabilityRightI"));
-    mObservationTimeStep =  vv::toDouble(events.get("timeStep"));
-    if (events.exist("R_INIT") and 
-        (vv::toBoolean(events.get("R_INIT")))) {
-        mNbModel =vv::toInteger(events.get("graphInfo_number"));
-        mPrefix =vv::toString(events.get("graphInfo_prefix"));
-    } else {
-        mNbModel = events.getMap("graphInfo").getInt("number");
-        mPrefix = events.getMap("graphInfo").getString("prefix");
-    }
-    mSampleSize = /*boost::lexical_cast<int>*/ (vv::toDouble(events.get("echProp")) * mNbModel);
-    //std::cout<<"smplesize= "<<mSampleSize<<"\n";
-    mPrevalence=0.; mIncidence=0.;
-      }
+  }
 
   XRay::~XRay()
-  {
-  }
-
-  vd::Time XRay::init(const vd::Time& time)
-  {
-      mPhase = INIT;
-      mCurrentTime = vd::Time(time);
-      mLastRequestTime = vd::Time(time);
-      return vd::Time(0);
-  }
-
-  void XRay::output(const vd::Time& /*time*/,
-                      vd::ExternalEventList& output) const
-  {
-      if (mPhase == SEND) {
-          vd::RequestEvent * request = new vd::RequestEvent ("status?");
-          request << vd::attribute ("modelName", std::string (getModelName()));
-          output.addEvent (request);
-      }
-
-      if ((mPhase == RECEIVE)and 
-          (getModel().existOutputPort("observations"))) { 
-          vd::ExternalEvent * ev = new vd::ExternalEvent ("observations");
-          ev << vd::attribute ("value", buildDouble(mPrevalence));
-          output.addEvent (ev);
-      }
- 
-      if ((mPhase == RECEIVE)and 
-          (getModel().existOutputPort("control"))) { 
-          vd::ExternalEvent * ev = new vd::ExternalEvent ("control");
-          vv::Map* nodeObservations = vv::Map::create();
-          typedef std::map<std::string, std::string>::const_iterator mapit;
-          for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
-              if (it->second == "I")
-                nodeObservations->addString(it->first, it->second);
-          }
-          ev << vd::attribute ("infectedNodes", nodeObservations);
-          output.addEvent (ev);
-      }
-
- 
-      if ((mPhase == RECEIVE)and 
-          (getModel().existOutputPort("info_center"))) { 
-          vd::ExternalEvent * ev = new vd::ExternalEvent ("info_center");
-          vv::Map* nodeObservations = vv::Map::create();
-          typedef std::map<std::string, std::string>::const_iterator mapit;
-          for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
-                nodeObservations->addString(it->first, it->second);
-          }
-          ev << vd::attribute ("nodesStates", nodeObservations);
-          output.addEvent (ev);
-      }
-
-      if ((mPhase == RECEIVE or mPhase == INIT) 
-          and getModel().existOutputPort("connectTo")) {
-          vd::ExternalEvent* connectionRequest = 
-                new vd::ExternalEvent("connectTo");
-          vv::Set linkTo;
-          std::vector <int> sample;
-          int i=0;
-          while (sample.size()<mNbModel) { 
-              sample.push_back(i);
-              i++;
-          }
-          for (int j = 0; j < sample.size(); j++) {
-              int k = rand().getInt(0,sample.size()-1);
-              int temp = sample[j];
-              sample[j]=sample[k];
-              sample[k]=temp;
-          }
-          while (sample.size()>mSampleSize)
-              sample.pop_back();
-
-          for (std::vector<int>::iterator i = sample.begin(); i!=sample.end(); ++i) {
-            std::string vetName = 
-              mPrefix + "-" + boost::lexical_cast<std::string>(*i);
-            linkTo.addString(vetName);
-          }
-          connectionRequest << vd::attribute("modelName", 
-                                             std::string (getModelName()));
-          connectionRequest << vd::attribute("linkTo", linkTo);
-          output.addEvent(connectionRequest);
-      }
-  }
-
-  vd::Time XRay::timeAdvance() const
-  {
-      if (mPhase == SEND) {
-          return 0;
-      }
-
-      if (mPhase == RECEIVE) {
-          return vd::Time(0.001);
-      }
-
-      return mObservationTimeStep - (mCurrentTime.getValue() 
-             - mLastRequestTime.getValue());
-  }
-
-  void XRay::internalTransition(const vd::Time& time)
-  {
-      switch (mPhase) {
-      case SEND:
-          mPhase = RECEIVE;
-          mLastRequestTime = vd::Time(time);
-          mCurrentTime = vd::Time(time);
-          break;
-      case RECEIVE:
-          mPhase = SEND_OBS;
-          mCurrentTime = vd::Time(time);
-          break;
-      case SEND_OBS:
-          mPhase = SEND; 
-          mCurrentTime = vd::Time(time);
-          break;
-      case INIT:
-          mPhase = SEND;
-          mCurrentTime = vd::Time(time);
-          break;
-      default:
-          std::cout << "bad state in XRay model !";
-      }
-  }
-
-  void XRay::externalTransition(
-                                  const vd::ExternalEventList& event,
-                                  const vd::Time& time)
-  {
-      
-      if (mPhase == RECEIVE) {
-          if (!mapResult.empty())
-              mapResult.clear();
-          for (vd::ExternalEventList::const_iterator it = event.begin();
-                      it != event.end(); ++it) {
-
-              double randValue = rand().getDouble();
-              if ((*it) -> getPortName() == "status") {
-
-                  std::string value = 
-                        (*it)-> getStringAttributeValue ("value");
-                  std::string modelName = 
-	                      (*it)-> getStringAttributeValue ("modelName");
-
-                  if (value == "S" || value == "R") {
-                      // probability of a wrong interpretation
-                      if (randValue > mProbabilityRightSR) {
-                        value = "I";
-                      }
-                  } else if (value == "I") {
-                      if (randValue > mProbabilityRightI) {
-                        value = "S";
-                      }
-                  }
-                  mapResult[modelName] = value;
-              }
-          }
-          mCurrentTime = vd::Time(time);
-      int nbInfected = 0;
-      //int nbNonInfected = 0;
-      std::map<std::string, std::string>::iterator node;
-      for (node=mapResult.begin(); node!=mapResult.end();node++){
-          if (node->second == "I")
-              nbInfected++;
-          //else
-          //    nbNonInfected++;
-      }
-      //std::cout<<"xray recieve: "<<nbNonInfected<<" non infecteds and: "<< nbInfected
-      //    <<" infecteds at time: "<<time.getValue()<<"\n";
-      double tempPrev = ((double) nbInfected) / mSampleSize;
-      //std::cout<<"tempPrev: "<<tempPrev<<"\n";
-      mIncidence = (tempPrev - mPrevalence)/mObservationTimeStep;
-      mPrevalence = tempPrev;
-      }
-  }
-
-  void XRay::confluentTransitions(const vd::Time& time,
-                                    const vd::ExternalEventList& events)
-  {
-      if (mPhase == SEND) {
-          internalTransition(time);
-          externalTransition(events, time);
-      } else {
-          externalTransition(events, time);
-          internalTransition(time);
-      }
-  }
-
-  void XRay::request(const vd::RequestEvent& /*event*/,
-                       const vd::Time& /*time*/,
-                       vd::ExternalEventList& /*output*/) const
   {
   }
 
@@ -270,8 +66,37 @@ namespace model {
 
   }
 
-  void XRay::finish()
+  //Generic functions for active surveillance
+  void XRay::connectToNodes(vd::ExternalEventList& output) const 
   {
+          vd::ExternalEvent* connectionRequest = 
+                new vd::ExternalEvent("connectTo");
+          vv::Set linkTo;
+          std::vector <int> sample;
+          int i=0;
+          while (sample.size()<mNbModel) { 
+              sample.push_back(i);
+              i++;
+          }
+          for (int j = 0; j < sample.size(); j++) {
+              int k = rand().getInt(0,sample.size()-1);
+              int temp = sample[j];
+              sample[j]=sample[k];
+              sample[k]=temp;
+          }
+          while (sample.size()>mSampleSize)
+              sample.pop_back();
+
+          for (std::vector<int>::iterator i = sample.begin(); i!=sample.end(); ++i) {
+            std::string vetName = 
+              mPrefix + "-" + boost::lexical_cast<std::string>(*i);
+            linkTo.addString(vetName);
+          }
+          connectionRequest << vd::attribute("modelName", 
+                                             std::string (getModelName()));
+          connectionRequest << vd::attribute("linkTo", linkTo);
+          output.addEvent(connectionRequest);
+
   }
 
 } // namespace vle example

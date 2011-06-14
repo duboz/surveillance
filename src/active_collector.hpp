@@ -25,7 +25,6 @@
 
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
-#include <active_collector.hpp>
 
 namespace vd = vle::devs;
 namespace vv = vle::value;
@@ -49,13 +48,40 @@ namespace model {
  *   by the observation method.
  *
  */
-class XRay: public model::ActiveCollector
+class ActiveCollector : public vd::Dynamics
 {
 public:
-    XRay(const vd::DynamicsInit& init, const vd::InitEventList& events);
-    ~XRay();
-    vv::Value* observation(const vd::ObservationEvent& /*event*/) const;
-    virtual void connectToNodes(vd::ExternalEventList& output) const;
+    ActiveCollector(const vd::DynamicsInit& init, const vd::InitEventList& events);
+    virtual ~ActiveCollector();
+    virtual vd::Time init(const vd::Time& time);
+    virtual void output(const vd::Time& /*time*/,
+                        vd::ExternalEventList& output) const;
+    virtual vd::Time timeAdvance() const;
+    virtual void internalTransition(const vd::Time& time);
+    virtual void externalTransition(const vd::ExternalEventList& event,
+                                    const vd::Time& time);
+    virtual void confluentTransitions(const vd::Time& time,
+                                      const vd::ExternalEventList& events);
+    virtual void request(const vd::RequestEvent& /*event*/,
+                         const vd::Time& /*time*/,
+                         vd::ExternalEventList& /*output*/) const;
+    virtual vv::Value* observation(const vd::ObservationEvent& /*event*/) const;
+    virtual void connectToNodes(vd::ExternalEventList& output) const = 0;
+    virtual void finish();  
+protected:
+    enum PHASE {SEND, RECEIVE, SEND_OBS, INIT};
+    PHASE mPhase;
+    vd::Time mLastRequestTime;
+    vd::Time mCurrentTime;
+    double mObservationTimeStep;
+    double mProbabilityRightSR;
+    double mProbabilityRightI;
+    int mSampleSize;    
+    int mNbModel;
+    std::string mPrefix;
+    std::map<std::string, std::string> mapResult;
+    double mPrevalence;
+    double mIncidence;
 };
 
 } // namespace model

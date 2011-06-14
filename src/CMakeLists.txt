@@ -13,7 +13,9 @@ ADD_LIBRARY(surveillance SHARED
 			controller.hpp
 			controller.cpp
 			spatialController.cpp
-                	passive_collector.cpp
+                 	active_collector.cpp
+                	active_collector.hpp
+ 	              	passive_collector.cpp
                 	passive_collector.hpp
 			information_center.cpp)
 
