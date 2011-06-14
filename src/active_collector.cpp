@@ -106,7 +106,7 @@ namespace model {
           output.addEvent (ev);
       }
 
-      if ((mPhase == RECEIVE or mPhase == INIT) 
+      if ((mPhase == CHG_CONNECTION or mPhase == INIT) 
           and getModel().existOutputPort("connectTo")) {
         connectToNodes(output); 
       }
@@ -118,8 +118,16 @@ namespace model {
           return 0;
       }
 
+      if (mPhase == CHG_CONNECTION) {
+          return 0;
+      }
+
       if (mPhase == RECEIVE) {
-          return vd::Time(0.001);
+          return vd::Time(0.000001);
+      }
+
+      if (mPhase == IDLE) {
+          return vd::Time::infinity;
       }
 
       return mObservationTimeStep - (mCurrentTime.getValue() 
@@ -139,7 +147,11 @@ namespace model {
           mCurrentTime = vd::Time(time);
           break;
       case SEND_OBS:
-          mPhase = SEND; 
+          mPhase = CHG_CONNECTION; 
+          mCurrentTime = vd::Time(time);
+          break;
+      case CHG_CONNECTION:
+          mPhase = SEND;
           mCurrentTime = vd::Time(time);
           break;
       case INIT:
@@ -155,50 +167,9 @@ namespace model {
                                   const vd::ExternalEventList& event,
                                   const vd::Time& time)
   {
-      
-      if (mPhase == RECEIVE) {
-          if (!mapResult.empty())
-              mapResult.clear();
-          for (vd::ExternalEventList::const_iterator it = event.begin();
-                      it != event.end(); ++it) {
-
-              double randValue = rand().getDouble();
-              if ((*it) -> getPortName() == "status") {
-
-                  std::string value = 
-                        (*it)-> getStringAttributeValue ("value");
-                  std::string modelName = 
-	                      (*it)-> getStringAttributeValue ("modelName");
-
-                  if (value == "S" || value == "R") {
-                      // probability of a wrong interpretation
-                      if (randValue > mProbabilityRightSR) {
-                        value = "I";
-                      }
-                  } else if (value == "I") {
-                      if (randValue > mProbabilityRightI) {
-                        value = "S";
-                      }
-                  }
-                  mapResult[modelName] = value;
-              }
-          }
-          mCurrentTime = vd::Time(time);
-      int nbInfected = 0;
-      //int nbNonInfected = 0;
-      std::map<std::string, std::string>::iterator node;
-      for (node=mapResult.begin(); node!=mapResult.end();node++){
-          if (node->second == "I")
-              nbInfected++;
-          //else
-          //    nbNonInfected++;
-      }
-      //std::cout<<"xray recieve: "<<nbNonInfected<<" non infecteds and: "<< nbInfected
-      //    <<" infecteds at time: "<<time.getValue()<<"\n";
-      double tempPrev = ((double) nbInfected) / mSampleSize;
-      //std::cout<<"tempPrev: "<<tempPrev<<"\n";
-      mIncidence = (tempPrev - mPrevalence)/mObservationTimeStep;
-      mPrevalence = tempPrev;
+       if (mPhase == RECEIVE) {
+        receiveData(const vd::ExternalEventList& event,
+                                  const vd::Time& time)
       }
   }
 
@@ -247,6 +218,49 @@ namespace model {
 
   void ActiveCollector::finish()
   {
+  }
+  
+  //Generic functions for active collectors
+  
+  void receiveData(const vd::ExternalEventList& event,
+                   const vd::Time& time)
+  {
+      if (!mapResult.empty())
+          mapResult.clear();
+      for (vd::ExternalEventList::const_iterator it = event.begin();
+                  it != event.end(); ++it) {
+
+          double randValue = rand().getDouble();
+          if ((*it) -> getPortName() == "status") {
+
+              std::string value = 
+                    (*it)-> getStringAttributeValue ("value");
+              std::string modelName = 
+                          (*it)-> getStringAttributeValue ("modelName");
+
+              if (value == "S" || value == "R") {
+                  // probability of a wrong interpretation
+                  if (randValue > mProbabilityRightSR) {
+                    value = "I";
+                  }
+              } else if (value == "I") {
+                  if (randValue > mProbabilityRightI) {
+                    value = "S";
+                  }
+              }
+              mapResult[modelName] = value;
+          }
+      }
+      mCurrentTime = vd::Time(time);
+  int nbInfected = 0;
+  std::map<std::string, std::string>::iterator node;
+  for (node=mapResult.begin(); node!=mapResult.end();node++){
+      if (node->second == "I")
+          nbInfected++;
+  }
+  double tempPrev = ((double) nbInfected) / mSampleSize;
+  mIncidence = (tempPrev - mPrevalence)/mObservationTimeStep;
+  mPrevalence = tempPrev;
   }
 
 } // namespace vle example
