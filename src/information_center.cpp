@@ -118,7 +118,14 @@ public:
         else if ((it->second).first == "I") Is++; 
         else if ((it->second).first == "R") Rs++;
     }
-     
+    if (event.onPort("outbreakReport")) {
+        vv::Set* repport = new vv::Set();
+        for ( it = m_nodeStates.begin(); it != m_nodeStates.end(); ++it ) {
+            if ((it->second).second >= (event.getTime() - vd::Time(7))) 
+                repport->addString(it->first);
+        }
+        return repport;
+    }
     if (event.onPort("nbIs")) {
         //std::cout<<"Prev is "<<mPrevalence<<"\n";
         return buildInteger(Is);

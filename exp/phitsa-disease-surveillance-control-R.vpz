@@ -29,7 +29,7 @@
  <port name="information" />
 </in>
 </model>
-<model name="passiveCollector" type="atomic" conditions="passive_surv,xRay" dynamics="dyn_passive" observables="passive" x="23" y="180" width="100" height="60" >
+<model name="passiveCollector" type="atomic" conditions="passive_surv,xRay" dynamics="dyn_passive" observables="passive" x="18" y="147" width="100" height="60" >
 <out>
  <port name="control" />
  <port name="info_center" />
