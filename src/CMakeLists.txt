@@ -12,6 +12,8 @@ ADD_LIBRARY(surveillance SHARED
                 	xRay.hpp
 			controller.hpp
 			controller.cpp
+			delay.cpp
+			delay.hpp
 			targeted.cpp
 			targeted.hpp
 			spatialController.cpp

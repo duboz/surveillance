@@ -25,7 +25,7 @@
 
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
-#include "active_collector.hpp"
+#include <active_collector.hpp>
 #include <vle/devs/DynamicsDbg.hpp>
 
 namespace vd = vle::devs;
@@ -168,8 +168,7 @@ namespace model {
                                   const vd::Time& time)
   {
        if (mPhase == RECEIVE) {
-        receiveData(const vd::ExternalEventList& event,
-                                  const vd::Time& time)
+        receiveData(event, time);
       }
   }
 
@@ -222,7 +221,7 @@ namespace model {
   
   //Generic functions for active collectors
   
-  void receiveData(const vd::ExternalEventList& event,
+  void ActiveCollector::receiveData(const vd::ExternalEventList& event,
                    const vd::Time& time)
   {
       if (!mapResult.empty())

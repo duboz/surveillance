@@ -37,7 +37,7 @@ namespace model {
   {
         mControlRadius = vv::toDouble(events.get("targetedSurveillanceRadius"));
         std::vector<double> positions= vv::toTuple(events.get("nodes_positions"));
-        m_model_prefix = value::toString(events.get("graphInfo_prefix"));
+        mPrefix = vv::toString(events.get("graphInfo_prefix"));
         int nbNodes = positions.size()/2;
         double nodePositions[nbNodes][2];
         int c = 0;
@@ -49,7 +49,7 @@ namespace model {
         }
         for (int node = 0; node < nbNodes; node++) {
              std::string vetName = 
-                 m_model_prefix + "-" + boost::lexical_cast<std::string>(node);
+                 mPrefix + "-" + boost::lexical_cast<std::string>(node);
              std::vector<std::string> neighbors;
              std::cout<<"key: "<<vetName<<std::endl;
              mNodeNeighbors[vetName] = neighbors;
@@ -58,7 +58,7 @@ namespace model {
                                          + std::pow((nodePositions[node][2] - nodePositions[node2][2]),2));
                  if (dist <= mControlRadius) {
                 std::string vetName2 = 
-                    m_model_prefix + "-" + boost::lexical_cast<std::string>(node2);
+                    mPrefix + "-" + boost::lexical_cast<std::string>(node2);
                 mNodeNeighbors[vetName].push_back(vetName2);
                  }
             }
@@ -78,20 +78,19 @@ namespace model {
       return vd::Time::infinity;
   }
   
-  void ActiveCollector::externalTransition(
+  void Targeted::externalTransition(
                                   const vd::ExternalEventList& event,
                                   const vd::Time& time) 
   {
      if (mPhase == RECEIVE) {
-        receiveData(const vd::ExternalEventList& event,
-                                  const vd::Time& time)
+        receiveData(event, time);
      }
      else if (mPhase == SEND_OBS) {
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
-            if(it->onPort("newInfections")) {
+            if((*it)->onPort("newInfections")) {
                 mNewInfectedNodes.clear();
-                vv::Set newInfected = getSetAttributeValue("infectiousNodes");
+                vv::Set newInfected = (*it)->getSetAttributeValue("infectiousNodes");
                 for (int i = 0; i < newInfected.size(); i++) {
                     mNewInfectedNodes.push_back(newInfected.getString(i));
                 }

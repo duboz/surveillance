@@ -60,8 +60,13 @@ public:
     Targeted(const vd::DynamicsInit& init, const vd::InitEventList& events);
     ~Targeted();
     vv::Value* observation(const vd::ObservationEvent& /*event*/) const;
+virtual void externalTransition(const vd::ExternalEventList& event,
+                                    const vd::Time& time);
+virtual vd::Time init(const vd::Time& time);
+
+
+    //Generic active collector functions
     virtual void connectToNodes(vd::ExternalEventList& output) const;
-    virtual vd::Time init(const vd::Time& time);
 };
 
 } // namespace model

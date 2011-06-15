@@ -55,11 +55,11 @@ namespace model {
     {
         if (m_phase == WAITING) {
 
-            typedef std::vector<std::string>::const_iterator EvIterator;
+            typedef std::vector<vd::Event>::const_iterator EvIterator;
             for (EvIterator it = m_evBags.begin()->second.begin(); 
                  it !=  m_evBags.begin()->second.end(); it++) {
                 vd::ExternalEvent * ev = new vd::ExternalEvent ("output");
-                ev.putAttribute(it->getAttribute());
+                ev->putAttributes(it->getAttributes());
                 output.addEvent (ev);
             }
         }
@@ -96,7 +96,7 @@ namespace model {
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
             vd::ExternalEvent * ev = new vd::ExternalEvent ("output");
-            ev.putAttribute(it->getAttribute());
+            ev->putAttributes((*it)->getAttributes());
             newevBag.second.push_back(*ev);
             if (m_phase == IDLE)
             m_phase = WAITING;
