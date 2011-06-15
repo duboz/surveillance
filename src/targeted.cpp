@@ -135,12 +135,12 @@ namespace model {
          it !=  mNewInfectedNodes.end(); it++) {
         std::string spotedNode;
         spotedNode = *it;
-        std::vector<std::string> nodesToKill = mNodeNeighbors.at(spotedNode);
+        std::vector<std::string> nodesToInspect = mNodeNeighbors.at(spotedNode);
         vd::ExternalEvent* connectionRequest = new vd::ExternalEvent("connectTo");
         vv::Set linkTo;
-        for (NodeIterator nodeToKill = nodesToKill.begin(); 
-           nodeToKill != nodesToKill.end(); nodeToKill++) {
-           linkTo.addString(*nodeToKill);
+        for (NodeIterator nodeToInspect = nodesToInspect.begin(); 
+           nodeToInspect != nodesToInspect.end(); nodeToInspect++) {
+           linkTo.addString(*nodeToInspect);
         }
           connectionRequest << vd::attribute("modelName", 
                                              std::string (getModelName()));
