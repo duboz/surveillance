@@ -4,7 +4,7 @@
 <structures>
 <model name="graph" type="coupled" width="952" height="1007"  >
 <submodels>
-<model name="control" type="atomic" conditions="cond_graph,control" dynamics="dyn_spatial_control" observables="control" x="325" y="255" width="100" height="45" >
+<model name="control" type="atomic" conditions="cond_graph,control" dynamics="dyn_spatial_control" observables="control" x="321" y="201" width="100" height="45" >
 <in>
  <port name="surveillance" />
 </in>
@@ -35,15 +35,16 @@
  <port name="info_center" />
 </out>
 </model>
-<model name="targeted_surveillance" type="atomic" conditions="cond_graph,reactive_surv,xRay" dynamics="targeted_surv" x="365" y="343" width="100" height="45" >
+<model name="targeted_surveillance" type="atomic" conditions="cond_graph,reactive_surv,xRay" dynamics="targeted_surv" x="365" y="343" width="100" height="60" >
 <in>
  <port name="newInfections" />
 </in>
 <out>
+ <port name="control" />
  <port name="info_center" />
 </out>
 </model>
-<model name="xRay" type="atomic" conditions="cond_graph,xRay" dynamics="dyn_xray" observables="xRay" x="136" y="311" width="100" height="60" >
+<model name="xRay" type="atomic" conditions="cond_graph,xRay" dynamics="dyn_xray" observables="xRay" x="142" y="313" width="100" height="60" >
 <out>
  <port name="control" />
  <port name="info_center" />
@@ -66,6 +67,10 @@
 <connection type="internal">
  <origin model="passiveCollector" port="info_center" />
  <destination model="information_center" port="information" />
+</connection>
+<connection type="internal">
+ <origin model="targeted_surveillance" port="control" />
+ <destination model="control" port="surveillance" />
 </connection>
 <connection type="internal">
  <origin model="targeted_surveillance" port="info_center" />
