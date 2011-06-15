@@ -2,9 +2,9 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
 <structures>
-<model name="graph" type="coupled" width="759" height="500"  >
+<model name="graph" type="coupled" width="952" height="1007"  >
 <submodels>
-<model name="control" type="atomic" conditions="cond_graph,control" dynamics="dyn_spatial_control" observables="control" x="299" y="105" width="100" height="45" >
+<model name="control" type="atomic" conditions="cond_graph,control" dynamics="dyn_spatial_control" observables="control" x="325" y="255" width="100" height="45" >
 <in>
  <port name="surveillance" />
 </in>
@@ -14,47 +14,73 @@
 </model>
 <model name="data_collector" type="atomic" conditions="collector,cond_graph" dynamics="collector" observables="observer" x="248" y="41" width="100" height="30" >
 </model>
-<model name="gen_network" type="atomic" conditions="collectors,cond_graph,controllers" dynamics="dyn_network" x="304" y="378" width="100" height="30" >
+<model name="delay" type="atomic" conditions="reactive_surv" dynamics="delay" x="245" y="428" width="100" height="45" >
+<in>
+ <port name="input" />
+</in>
+<out>
+ <port name="output" />
+</out>
 </model>
-<model name="information_center" type="atomic" dynamics="info_center" observables="passive" x="381" y="222" width="100" height="45" >
+<model name="gen_network" type="atomic" conditions="collectors,cond_graph,controllers" dynamics="dyn_network" x="501" y="450" width="100" height="30" >
+</model>
+<model name="information_center" type="atomic" dynamics="info_center" observables="passive" x="483" y="120" width="100" height="45" >
 <in>
  <port name="information" />
 </in>
 </model>
-<model name="passiveCollector" type="atomic" conditions="passive_surv,xRay_1" dynamics="dyn_passive" observables="passive" x="84" y="303" width="100" height="60" >
+<model name="passiveCollector" type="atomic" conditions="passive_surv,xRay" dynamics="dyn_passive" observables="passive" x="23" y="180" width="100" height="60" >
 <out>
  <port name="control" />
  <port name="info_center" />
 </out>
 </model>
-<model name="xRaySample" type="atomic" conditions="cond_graph,xRay_1" dynamics="dyn_xray" observables="xRay" x="31" y="165" width="100" height="60" >
+<model name="targeted_surveillance" type="atomic" conditions="cond_graph,reactive_surv,xRay" dynamics="targeted_surv" x="365" y="343" width="100" height="45" >
+<in>
+ <port name="newInfections" />
+</in>
+<out>
+ <port name="info_center" />
+</out>
+</model>
+<model name="xRay" type="atomic" conditions="cond_graph,xRay" dynamics="dyn_xray" observables="xRay" x="136" y="311" width="100" height="60" >
 <out>
  <port name="control" />
  <port name="info_center" />
 </out>
-</model>
-<model name="xRayTotal" type="atomic" conditions="cond_graph,xRay" dynamics="dyn_xray" observables="xRay" x="37" y="96" width="100" height="30" >
 </model>
 </submodels>
 <connections>
 <connection type="internal">
- <origin model="control" port="info_center" />
- <destination model="information_center" port="information" />
+ <origin model="delay" port="output" />
+ <destination model="targeted_surveillance" port="newInfections" />
 </connection>
 <connection type="internal">
  <origin model="passiveCollector" port="control" />
  <destination model="control" port="surveillance" />
 </connection>
 <connection type="internal">
+ <origin model="passiveCollector" port="control" />
+ <destination model="delay" port="input" />
+</connection>
+<connection type="internal">
  <origin model="passiveCollector" port="info_center" />
  <destination model="information_center" port="information" />
 </connection>
 <connection type="internal">
- <origin model="xRaySample" port="control" />
+ <origin model="targeted_surveillance" port="info_center" />
+ <destination model="information_center" port="information" />
+</connection>
+<connection type="internal">
+ <origin model="xRay" port="control" />
  <destination model="control" port="surveillance" />
 </connection>
 <connection type="internal">
- <origin model="xRaySample" port="info_center" />
+ <origin model="xRay" port="control" />
+ <destination model="delay" port="input" />
+</connection>
+<connection type="internal">
+ <origin model="xRay" port="info_center" />
  <destination model="information_center" port="information" />
 </connection>
 </connections>
@@ -64,6 +90,7 @@
 <dynamic name="Infection" library="sir" model="infection" package="surveillance" type="local"  />
 <dynamic name="Transmission" library="sir" model="transmission" package="surveillance" type="local"  />
 <dynamic name="collector" library="sir" model="data_collector" package="surveillance" type="local"  />
+<dynamic name="delay" library="surveillance" model="delay" package="surveillance" type="local"  />
 <dynamic name="dyn_control" library="surveillance" model="controler" package="surveillance" type="local"  />
 <dynamic name="dyn_network" library="graph" model="dyn_graphExecutive" package="surveillance" type="local"  />
 <dynamic name="dyn_passive" library="surveillance" model="passive_collector" package="surveillance" type="local"  />
@@ -71,6 +98,7 @@
 <dynamic name="dyn_vertexExecutive" library="graph" model="dyn_vertexExecutive" package="surveillance" type="local"  />
 <dynamic name="dyn_xray" library="surveillance" model="x_ray" package="surveillance" type="local"  />
 <dynamic name="info_center" library="surveillance" model="information_center" package="surveillance" type="local"  />
+<dynamic name="targeted_surv" library="surveillance" model="targeted" package="surveillance" type="local"  />
 </dynamics>
 <classes>
 <class name="InfectedVertex" >
@@ -164,7 +192,7 @@
 </condition>
 <condition name="collectors" >
  <port name="activeCollectors" >
-<set><string>data_collector</string><string>xRayTotal</string><string>xRaySample</string></set>
+<set><string>data_collector</string><string>xRay</string><string>targeted_surveillance</string></set>
 </port>
  <port name="passiveCollectors" >
 <set><string>passiveCollector</string></set>
@@ -236,6 +264,14 @@
 <double>0.200000000000000</double>
 </port>
 </condition>
+<condition name="reactive_surv" >
+ <port name="targetedSurveillanceRadius" >
+<double>3.000000000000000</double>
+</port>
+ <port name="waitingDelay" >
+<double>3.000000000000000</double>
+</port>
+</condition>
 <condition name="susceptible" >
  <port name="autoInfect" >
 <double>0.000000000000000</double>
@@ -260,21 +296,7 @@
 <double>0.750000000000000</double>
 </port>
  <port name="timeStep" >
-<double>100.000000000000000</double>
-</port>
-</condition>
-<condition name="xRay_1" >
- <port name="echProp" >
-<double>0.000000000000000</double>
-</port>
- <port name="probabilityRightI" >
-<double>1.000000000000000</double>
-</port>
- <port name="probabilityRightSR" >
-<double>1.000000000000000</double>
-</port>
- <port name="timeStep" >
-<double>10.000000000000000</double>
+<double>30.000000000000000</double>
 </port>
 </condition>
 </conditions>

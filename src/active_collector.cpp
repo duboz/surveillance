@@ -123,7 +123,7 @@ namespace model {
       }
 
       if (mPhase == RECEIVE) {
-          return vd::Time(0.000001);
+          return vd::Time(0.00000001);
       }
 
       if (mPhase == IDLE) {

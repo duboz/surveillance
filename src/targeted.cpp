@@ -51,7 +51,7 @@ namespace model {
              std::string vetName = 
                  mPrefix + "-" + boost::lexical_cast<std::string>(node);
              std::vector<std::string> neighbors;
-             std::cout<<"key: "<<vetName<<std::endl;
+             //std::cout<<"key: "<<vetName<<std::endl;
              mNodeNeighbors[vetName] = neighbors;
              for (int node2 = 0; node2 < nbNodes; node2++) {
                  double dist = std::sqrt(std::pow((nodePositions[node][1] - nodePositions[node2][1]),2)
@@ -82,17 +82,26 @@ namespace model {
                                   const vd::ExternalEventList& event,
                                   const vd::Time& time) 
   {
-     if (mPhase == RECEIVE) {
-        receiveData(event, time);
+      if (mPhase == RECEIVE) {
+        for (vd::ExternalEventList::const_iterator it = event.begin();
+             it != event.end(); ++it) {
+          if ((*it)->onPort("status"))
+              receiveData(event, time);
+          if ((*it)->onPort("newInfections"))
+        vle::utils::ModellingError::ModellingError("Une approximation pour simplifier le code \na eu une mauvaise conséquence dans la classe targeted.cpp:\n Une surveillance de réaction a été oubliée..");
+        }
      }
      else if (mPhase == SEND_OBS) {
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
+            if ((*it)->onPort("status"))
+                vle::utils::ModellingError::ModellingError("This should not happen in this phase (in targeted.cpp)");
             if((*it)->onPort("newInfections")) {
                 mNewInfectedNodes.clear();
-                vv::Set newInfected = (*it)->getSetAttributeValue("infectiousNodes");
-                for (int i = 0; i < newInfected.size(); i++) {
-                    mNewInfectedNodes.push_back(newInfected.getString(i));
+                vv::Map infNodes = (*it)->getMapAttributeValue("infectedNodes");
+                for (vv::MapValue::const_iterator node = infNodes.begin();
+                     node != infNodes.end(); node++) {
+                    mNewInfectedNodes.push_back(node->first);
                 }
             }
             mPhase = SEND;

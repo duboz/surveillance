@@ -133,4 +133,4 @@ namespace model {
     
 } // namespace model
 
-DECLARE_NAMED_DYNAMICS(Delay, model::Delay)
+DECLARE_NAMED_DYNAMICS(delay, model::Delay)
