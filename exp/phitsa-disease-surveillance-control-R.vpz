@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
 <structures>
-<model name="graph" type="coupled" width="952" height="1007"  >
+<model name="graph" type="coupled" width="645" height="520"  >
 <submodels>
 <model name="control" type="atomic" conditions="cond_graph,control" dynamics="dyn_spatial_control" observables="control" x="321" y="201" width="100" height="45" >
 <in>
@@ -24,7 +24,7 @@
 </model>
 <model name="gen_network" type="atomic" conditions="collectors,cond_graph,controllers" dynamics="dyn_network" x="501" y="450" width="100" height="30" >
 </model>
-<model name="information_center" type="atomic" dynamics="info_center" observables="passive" x="483" y="120" width="100" height="45" >
+<model name="information_center" type="atomic" dynamics="info_center" observables="global" x="483" y="120" width="100" height="45" >
 <in>
  <port name="information" />
 </in>
@@ -35,7 +35,7 @@
  <port name="info_center" />
 </out>
 </model>
-<model name="targeted_surveillance" type="atomic" conditions="cond_graph,reactive_surv,xRay" dynamics="targeted_surv" x="365" y="343" width="100" height="60" >
+<model name="targeted_surveillance" type="atomic" conditions="cond_graph,reactive_surv,xRay" dynamics="targeted_surv" observables="react_surv" x="365" y="343" width="100" height="60" >
 <in>
  <port name="newInfections" />
 </in>
@@ -58,11 +58,11 @@
 </connection>
 <connection type="internal">
  <origin model="passiveCollector" port="control" />
- <destination model="control" port="surveillance" />
+ <destination model="delay" port="input" />
 </connection>
 <connection type="internal">
  <origin model="passiveCollector" port="control" />
- <destination model="delay" port="input" />
+ <destination model="control" port="surveillance" />
 </connection>
 <connection type="internal">
  <origin model="passiveCollector" port="info_center" />
@@ -78,11 +78,11 @@
 </connection>
 <connection type="internal">
  <origin model="xRay" port="control" />
- <destination model="control" port="surveillance" />
+ <destination model="delay" port="input" />
 </connection>
 <connection type="internal">
  <origin model="xRay" port="control" />
- <destination model="delay" port="input" />
+ <destination model="control" port="surveillance" />
 </connection>
 <connection type="internal">
  <origin model="xRay" port="info_center" />
@@ -307,19 +307,32 @@
 </conditions>
 <views>
 <outputs>
-<output name="analyse" location="" format="local" plugin="storage" />
+<output name="XRay" location="" format="local" plugin="storage" />
 
-<output name="analyse-5" location="" format="local" plugin="storage" />
+<output name="analyse" location="" format="local" plugin="file" />
+
+<output name="analyse-5" location="" format="local" plugin="file" />
 
 <output name="data_collector_view" location="" format="local" plugin="file" />
 
 <output name="infection" location="" format="local" plugin="storage" />
+
+<output name="react_surv" location="" format="local" plugin="storage" />
+
+<output name="surv_repport" location="" format="local" plugin="storage" />
 
 </outputs>
 <observables>
 <observable name="control" >
 <port name="nb_interventions" >
  <attachedview name="analyse" />
+</port>
+
+</observable>
+
+<observable name="global" >
+<port name="outbreakReport" >
+ <attachedview name="surv_repport" />
 </port>
 
 </observable>
@@ -343,36 +356,29 @@
 </observable>
 
 <observable name="passive" >
-<port name="nbIs" >
- <attachedview name="analyse" />
+<port name="outbreakReport" >
+ <attachedview name="surv_repport" />
 </port>
 
-<port name="nbRs" >
- <attachedview name="analyse" />
-</port>
+</observable>
 
-<port name="nbSs" >
- <attachedview name="analyse" />
+<observable name="react_surv" >
+<port name="targetedview" >
+ <attachedview name="react_surv" />
 </port>
-
-<port name="noPort" />
 
 </observable>
 
 <observable name="xRay" >
-<port name="incidence" >
- <attachedview name="analyse-5" />
+<port name="xrayview" >
+ <attachedview name="XRay" />
 </port>
-
-<port name="prevalence" >
- <attachedview name="analyse-5" />
-</port>
-
-<port name="xrayview" />
 
 </observable>
 
 </observables>
+<view name="XRay" output="XRay" type="event" />
+
 <view name="analyse" output="analyse" type="timed" timestep="1.000000000000000" />
 
 <view name="analyse-5" output="analyse-5" type="timed" timestep="5.000000000000000" />
@@ -380,6 +386,10 @@
 <view name="data_collector_view" output="data_collector_view" type="timed" timestep="1.000000000000000" />
 
 <view name="infection" output="infection" type="timed" timestep="1.000000000000000" />
+
+<view name="react_surv" output="react_surv" type="event" />
+
+<view name="surv_repport" output="surv_repport" type="timed" timestep="7.000000000000000" />
 
 </views>
 </experiment>

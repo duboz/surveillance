@@ -204,6 +204,9 @@ namespace model {
                 return new vv::Integer(2);
            case R :
                 return new vv::Integer(3);
+           case SECURED :
+                return new vv::Integer(4);
+
            default:
                 return new vv::Integer(0);
           }

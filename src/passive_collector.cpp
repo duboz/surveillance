@@ -168,6 +168,15 @@ namespace model {
         else if ((it->second).first == "R") Rs++;
     }
 
+   if (event.onPort("outbreakReport")) {
+        vv::Set* repport = new vv::Set();
+        for ( it = mapResult.begin(); it != mapResult.end(); ++it ) {
+            if ((it->second).second >= (event.getTime() - vd::Time(7))) 
+                repport->addString(it->first);
+        }
+        return repport;
+    }
+
     if (event.onPort("nbIs")){
         //std::cout<<"Prev is "<<mPrevalence<<"\n";
         return buildInteger(Is);
