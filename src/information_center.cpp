@@ -21,8 +21,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include <boost/tokenizer.hpp>
 #include <vle/devs/Dynamics.hpp>
+
 namespace vd = vle::devs;
 namespace vv = vle::value;
 using namespace vle;
@@ -48,7 +49,7 @@ public:
     }
 
     virtual devs::Time init(
-        const devs::Time& time)
+        const devs::Time& /*time*/)
     {   
         m_phase = INIT;
         return 0;
@@ -56,7 +57,7 @@ public:
 
     virtual void output(
         const devs::Time& /* time */,
-        devs::ExternalEventList& output ) const
+        devs::ExternalEventList& /*output*/ ) const
     {
     }
 
@@ -119,10 +120,21 @@ public:
         else if ((it->second).first == "R") Rs++;
     }
     if (event.onPort("outbreakReport")) {
+
+        typedef boost::tokenizer < boost::char_separator < char > > tokenizer;
+        boost::char_separator<char> sep("-");
+
         vv::Set* repport = new vv::Set();
         for ( it = m_nodeStates.begin(); it != m_nodeStates.end(); ++it ) {
-            if ((it->second).second >= (event.getTime() - vd::Time(7))) 
-                repport->addString(it->first);
+            if ((it->second).second >= (event.getTime() - vd::Time(7))) {
+                //std::cout<<"pour le noeud "<<it->first<<", que se passe-t-il?"<<std::endl;
+                std::string node = it->first;
+                tokenizer tok(node, sep);
+                boost::tokenizer<boost::char_separator < char > >::const_iterator i = tok.begin();
+                i++;
+                //std::cout<<*tok.begin()<<" et "<<*i<<std::endl;
+                repport->addInt(std::atoi(i->c_str()));
+            }
         }
         return repport;
     }

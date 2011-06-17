@@ -50,7 +50,7 @@ col.names = F)
 	rvle.setStringCondition(f,"cond_graph","graphInfo_adjacency_matrix", adj_matrix)
   rvle.setIntegerCondition(f,"cond_graph","graphInfo_number", length(infectedNodes))
  rvle.save(f,"rvle-running-exp.vpz")
-  result = rvle.runMatrix(f)#[[3]]
+  result = rvle.run(f)#[[3]]
 return (result)
 }
 
@@ -76,7 +76,20 @@ scan()
 }
 }
 
-
+plot_prev<-function(res,duration){
+times<-res[[2]][,1]
+SIRSec<-matrix(0,duration+1,4)
+for (i in 1:duration+1){
+SIRSec[i,1]<-length(which(res[[2]][i,] == 1))
+SIRSec[i,2]<-length(which(res[[2]][i,] == 2))
+SIRSec[i,3]<-length(which(res[[2]][i,] == 3))
+SIRSec[i,4]<-length(which(res[[2]][i,] == 4))
+}
+plot(times, SIRSec[,1], ylim=c(0,1044), type = "l",col="blue")
+lines(times, SIRSec[,2], ylim=c(0,1044), type = "l",col="red")
+lines(times, SIRSec[,3], ylim=c(0,1044), type = "l",col="green")
+lines(times, SIRSec[,4], ylim=c(0,1044), type = "l",col="black")
+}
 
 
 #Fonction pour phitsanuloc

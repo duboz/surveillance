@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
 <structures>
-<model name="graph" type="coupled" width="645" height="520"  >
+<model name="graph" type="coupled" width="640" height="520"  >
 <submodels>
 <model name="control" type="atomic" conditions="cond_graph,control" dynamics="dyn_spatial_control" observables="control" x="321" y="201" width="100" height="45" >
 <in>
@@ -24,7 +24,7 @@
 </model>
 <model name="gen_network" type="atomic" conditions="collectors,cond_graph,controllers" dynamics="dyn_network" x="501" y="450" width="100" height="30" >
 </model>
-<model name="information_center" type="atomic" dynamics="info_center" observables="global" x="483" y="120" width="100" height="45" >
+<model name="information_center" type="atomic" dynamics="info_center" observables="global" x="485" y="136" width="100" height="45" >
 <in>
  <port name="information" />
 </in>
@@ -187,7 +187,7 @@
 </model>
 </class>
 </classes>
-<experiment name="dsc-small-graph" duration="1000.000000000000000" begin="0.000000000000000" combination="total" seed="3890346734" >
+<experiment name="dsc-phitsa" duration="1000.000000000000000" begin="0.000000000000000" combination="total" seed="3890346734" >
 <replicas seed="3499211612" number="1" />
 <conditions>
 <condition name="collector" >
@@ -295,10 +295,10 @@
 <double>1.000000000000000</double>
 </port>
  <port name="probabilityRightI" >
-<double>0.750000000000000</double>
+<double>0.800000000000000</double>
 </port>
  <port name="probabilityRightSR" >
-<double>0.750000000000000</double>
+<double>1.000000000000000</double>
 </port>
  <port name="timeStep" >
 <double>30.000000000000000</double>
@@ -319,7 +319,7 @@
 
 <output name="react_surv" location="" format="local" plugin="storage" />
 
-<output name="surv_repport" location="" format="local" plugin="storage" />
+<output name="surv_repport" location="" format="local" plugin="file" />
 
 </outputs>
 <observables>

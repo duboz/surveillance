@@ -23,6 +23,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <boost/tokenizer.hpp>
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
 #include "passive_collector.hpp"
@@ -168,11 +169,22 @@ namespace model {
         else if ((it->second).first == "R") Rs++;
     }
 
-   if (event.onPort("outbreakReport")) {
+    if (event.onPort("outbreakReport")) {
+
+        typedef boost::tokenizer < boost::char_separator < char > > tokenizer;
+        boost::char_separator<char> sep("-");
+
         vv::Set* repport = new vv::Set();
         for ( it = mapResult.begin(); it != mapResult.end(); ++it ) {
-            if ((it->second).second >= (event.getTime() - vd::Time(7))) 
-                repport->addString(it->first);
+            if ((it->second).second >= (event.getTime() - vd::Time(7))) {
+               //std::cout<<"pour le noeud "<<it->first<<", que se passe-t-il?"<<std::endl;
+                std::string node = it->first;
+                tokenizer tok(node, sep);
+                boost::tokenizer<boost::char_separator < char > >::const_iterator i = tok.begin();
+                i++;
+                //std::cout<<*tok.begin()<<" et "<<*i<<std::endl;
+                repport->addInt(std::atoi(i->c_str()));
+            }
         }
         return repport;
     }
