@@ -39,4 +39,4 @@ rate, duration,infper, securedper, restockper, probaDeclaration=p, controlDelay
 #Puis:
 #report_semainei_total=test=eval(parse(text=paste("c(",A[i,2],")",sep="")))
 #report_semainei_passive=test=eval(parse(text=paste("c(",A[i,3],")",sep="")))
-
+#c1

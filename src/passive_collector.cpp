@@ -176,7 +176,7 @@ namespace model {
 
         vv::Set* repport = new vv::Set();
         for ( it = mapResult.begin(); it != mapResult.end(); ++it ) {
-            if ((it->second).second >= (event.getTime() - vd::Time(7))) {
+            if ((it->second).second >= (event.getTime() - vd::Time(7)) and ((it->second).first=="I")) {
                //std::cout<<"pour le noeud "<<it->first<<", que se passe-t-il?"<<std::endl;
                 std::string node = it->first;
                 tokenizer tok(node, sep);

@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
 <structures>
-<model name="graph" type="coupled" width="640" height="520"  >
+<model name="graph" type="coupled" width="616" height="520"  >
 <submodels>
 <model name="control" type="atomic" conditions="cond_graph,control" dynamics="dyn_spatial_control" observables="control" x="321" y="201" width="100" height="45" >
 <in>
@@ -301,13 +301,13 @@
 <double>1.000000000000000</double>
 </port>
  <port name="timeStep" >
-<double>30.000000000000000</double>
+<double>55.000000000000000</double>
 </port>
 </condition>
 </conditions>
 <views>
 <outputs>
-<output name="XRay" location="" format="local" plugin="storage" />
+<output name="XRay" location="" format="local" plugin="file" />
 
 <output name="analyse" location="" format="local" plugin="file" />
 
@@ -317,7 +317,7 @@
 
 <output name="infection" location="" format="local" plugin="storage" />
 
-<output name="react_surv" location="" format="local" plugin="storage" />
+<output name="react_surv" location="" format="local" plugin="file" />
 
 <output name="surv_repport" location="" format="local" plugin="file" />
 

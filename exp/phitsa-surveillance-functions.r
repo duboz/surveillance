@@ -77,13 +77,13 @@ scan()
 }
 
 plot_prev<-function(res,duration){
-times<-res[[2]][,1]
+times<-res[[1]][,1]
 SIRSec<-matrix(0,duration+1,4)
 for (i in 1:duration+1){
-SIRSec[i,1]<-length(which(res[[2]][i,] == 1))
-SIRSec[i,2]<-length(which(res[[2]][i,] == 2))
-SIRSec[i,3]<-length(which(res[[2]][i,] == 3))
-SIRSec[i,4]<-length(which(res[[2]][i,] == 4))
+SIRSec[i,1]<-length(which(res[[1]][i,] == 1))
+SIRSec[i,2]<-length(which(res[[1]][i,] == 2))
+SIRSec[i,3]<-length(which(res[[1]][i,] == 3))
+SIRSec[i,4]<-length(which(res[[1]][i,] == 4))
 }
 plot(times, SIRSec[,1], ylim=c(0,1044), type = "l",col="blue")
 lines(times, SIRSec[,2], ylim=c(0,1044), type = "l",col="red")
