@@ -3,7 +3,7 @@ source("phitsa-surveillance-functions.r")
 duration=60
 
 #État initial
-infected_villages<-c("650408_01")
+infected_villages<-c("650906_09")
 
 #Paramètres
 distance_infectieuse <- 4500 #Distance d'infection (En mètres donc)
@@ -33,10 +33,27 @@ res= controled_disease(phitsa_netw,initState,
 rate, duration,infper, securedper, restockper, probaDeclaration=p, controlDelay
 = controlDelay, controlRadius = controlRadius, nodes_positions = c(rbind(villages$XX,villages$YY)))
 
-#CODE POUR RECUPERER LA LISTE:
+#Code pour récupérer les données:
+data<-read.table("../data/date_code_village_phitsa.csv", sep =";", header=T)
+week_nb<-1
+week<-data$Semaine[1]
+nb<-0
+for (i in 1:length(data$Semaine)) {
+  if (data$Semaine[i]==week) {
+    data[i,5] <- nb
+  }
+  else {
+    week <- data$Semaine[i]
+    nb=nb+1
+    data[i,5] <- nb
+  }
+}
+nb_outb_per_week<-matrix(0,max(data[,5]),2)
 
-#A= read.table("dsc-phitsa_surv_repport.dat", sep="\t")
+#CODE POUR RECUPERER LA LISTE SIMULEE:
+A= read.table("dsc-phitsa_surv_repport.dat", sep="\t")
 #Puis:
+for (i in 1)
 #report_semainei_total=test=eval(parse(text=paste("c(",A[i,2],")",sep="")))
 #report_semainei_passive=test=eval(parse(text=paste("c(",A[i,3],")",sep="")))
 #c1
