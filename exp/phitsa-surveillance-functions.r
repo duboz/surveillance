@@ -158,4 +158,37 @@ while (nb_components > 1) {
 return(inf_graph)
 }
 
+generate_xRay_plan<-function(data)
+{
+#Première vague
+vague_start<-1
+vague_duration<-30
+nb_vill_per_day<-abs(length(data$VIL_CODE)/vague_duration)
+nb_village<-length(data$VIL_CODE)
+vague1<-matrix(NA,length(data$VIL_CODE),1)
+plan<-cbind(villages,vague1)
+today<-vague_start
+nb_vill_today<-0
+random_districts<-sample(levels(as.factor(data$VIL_LTD_DI)),replace=FALSE)
+no_sub_district<-1
+#tant qu'il reste des villages à inspecter
+for (district in random_districts) {
+
+#Tant qu'il reste des villages à inspecter dans le district..
+#while (length(which(is.na(plan$vague1[plan$VIL_LTD_DI == district]))) != 0) {
+random_sub_distr<-sample(levels(as.factor(data$VIL_LTS_SU[plan$VIL_LTD_DI == district])),replace=FALSE)
+for (sub_d in random_sub_distr){
+for (vill in sample(which(data$VIL_LTS_SU ==sub_d), replace = FALSE)){
+plan$vague1[vill]<-today
+if (nb_vill_today < nb_vill_per_day){
+nb_vill_today <- nb_vill_today + 1
+} else {
+nb_vill_today <- 0
+today <- today + 1
+}
+}
+}
+}
+return(plan)
+}
 

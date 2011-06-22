@@ -21,6 +21,7 @@ ADD_LIBRARY(surveillance SHARED
                 	active_collector.hpp
  	              	passive_collector.cpp
                 	passive_collector.hpp
+			surv_scheduler.cpp
 			information_center.cpp)
 
 ADD_LIBRARY(sir SHARED	infection.cpp

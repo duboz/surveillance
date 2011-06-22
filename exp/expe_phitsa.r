@@ -3,7 +3,7 @@ source("phitsa-surveillance-functions.r")
 duration=60
 
 #État initial
-infected_villages<-c("650504_1","650905_3","650117_9")
+infected_villages<-c("650504_01","650905_03","650117_09")
 
 #Paramètres
 distance_infectieuse <- 4500 #Distance d'infection (En mètres donc)
@@ -54,11 +54,22 @@ lines(nb_outb_per_week[,1], nb_outb_per_week[,2])
 points(nb_outb_per_week[,1], nb_outb_per_week[,3], col = 4)
 lines(nb_outb_per_week[,1], nb_outb_per_week[,3], col = 4)
 
-
+movie_all<-function(){
 for (i in 1:60){
 png(filename=paste("phitsa",i,".png",sep=""))
 show_epidemic(res, phitsa_netw, cbind(villages$XX, villages$YY), date =i,
 vertex=c(eval(parse(text=paste("c(",A[abs(i/7),2],")",sep="")))))
 dev.off(2)
 print(paste("image",i))
+}
+}
+
+movie_xRay<-function(data){
+for (i in min(data$vague1):max(data$vague1)){
+png(filename=paste("xRay",i,".png",sep=""))
+show_epidemic(res, phitsa_netw, cbind(villages$XX, villages$YY), date =3,
+vertex=c(which(data$vague1 == i)))
+dev.off(2)
+print(paste("image",i))
+}
 }
