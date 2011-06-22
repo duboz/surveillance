@@ -50,7 +50,7 @@ col.names = F)
 	rvle.setStringCondition(f,"cond_graph","graphInfo_adjacency_matrix", adj_matrix)
   rvle.setIntegerCondition(f,"cond_graph","graphInfo_number", length(infectedNodes))
  rvle.save(f,"rvle-running-exp.vpz")
-  result = rvle.run(f)#[[3]]
+  result = rvle.runMatrix(f)#[[3]]
 return (result)
 }
 
@@ -60,20 +60,24 @@ show_epidemic<-function(r,graph, coordo = FALSE, date = 1, vertex =c()){
 if (coordo == FALSE) {
 par<-list(niter=1000)
 coordo=gplot.layout.fruchtermanreingold(graph,par)}
-cols=heat.colors(4)
+cols=heat.colors(5)
 nbNodes<-length(graph[1,])
-for (i in c(date:length(r[[3]][,1]))){
-infection<-r[[3]][i,2:(nbNodes+1)]
+#for (i in c(date:length(r[[1]][,1]))){
+i=date
+infection<-r[[1]][i,2:(nbNodes+1)]
 colors<-matrix(0,1,nbNodes)
 for (j in 1:nbNodes){
-colors[1,j]<-cols[4-infection[j]]
-if (paste("vertex-",j-1,sep="") %in% vertex)
+colors[1,j]<-cols[5-infection[j]]
+if (infection[j] == 4) {colors[1,j]<-4}
+#else {colors[1,j]<-0}
+#if (paste("vertex-",j-1,sep="") %in% vertex)
+if (j %in% vertex)
 colors[1,j]<-3
 }
 gplot(graph,coord=coordo,vertex.col=colors,arrowhead.cex = 0.1,new=TRUE,
 main=paste("Epidemic at time",i))
-scan()
-}
+#scan()
+#}
 }
 
 plot_prev<-function(res,duration){
