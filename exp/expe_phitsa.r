@@ -21,6 +21,10 @@ villages <- read.table("../data/villages-data.csv", sep=";", header=TRUE)
 #Génération du réseau
 phitsa_netw<-create_phitsa_graph(distance_infectieuse)
 
+#Génération du planning de visite de villages pour la surveillance xRay
+villages<-generate_xRay_plan(villages, vague=1, vague_start=90)
+villages<-generate_xRay_plan(villages, vague=2, vague_start=213)
+
 #formatage de l'état initial
 initState<-matrix(0,length(phitsa_netw[1,]),1)
 if (length(which(villages$VIL_CODE %in% infected_villages)) == 0) {
@@ -31,7 +35,9 @@ initState[which(villages$VIL_CODE %in% infected_villages),1]<-1
 #simulation
 res= controled_disease(phitsa_netw,initState, 
 rate, duration,infper, securedper, restockper, probaDeclaration=p, controlDelay
-= controlDelay, controlRadius = controlRadius, nodes_positions = c(rbind(villages$XX,villages$YY)))
+= controlDelay, controlRadius = controlRadius, nodes_positions =
+c(rbind(villages$XX,villages$YY)), first_wave_sched = villages$V13,
+second_wave_sched = villages$V14)
 
 #Code pour récupérer les données:
 data<-read.table("../data/date_code_village_phitsa.csv", sep =";", header=T)
@@ -54,22 +60,3 @@ lines(nb_outb_per_week[,1], nb_outb_per_week[,2])
 points(nb_outb_per_week[,1], nb_outb_per_week[,3], col = 4)
 lines(nb_outb_per_week[,1], nb_outb_per_week[,3], col = 4)
 
-movie_all<-function(){
-for (i in 1:60){
-png(filename=paste("phitsa",i,".png",sep=""))
-show_epidemic(res, phitsa_netw, cbind(villages$XX, villages$YY), date =i,
-vertex=c(eval(parse(text=paste("c(",A[abs(i/7),2],")",sep="")))))
-dev.off(2)
-print(paste("image",i))
-}
-}
-
-movie_xRay<-function(data){
-for (i in min(data$vague1):max(data$vague1)){
-png(filename=paste("xRay",i,".png",sep=""))
-show_epidemic(res, phitsa_netw, cbind(villages$XX, villages$YY), date =3,
-vertex=c(which(data$vague1 == i)))
-dev.off(2)
-print(paste("image",i))
-}
-}

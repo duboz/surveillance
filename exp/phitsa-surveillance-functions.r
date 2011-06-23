@@ -5,7 +5,9 @@ controled_disease<-function(graph, infectedNodes, transmissionRate,
                       duration, infPeriode, securedPeriode, restockPeriode,
 controlDelay, probaDeclaration =
 0.2, constPeriods = TRUE, control = TRUE, controlRadius = 0, nodes_positions =
-runif(length(infectedNodes))){
+runif(length(infectedNodes)),first_wave_sched =
+runif(1)*duration*matrix(1,length(infectedNodes),1),
+second_wave_sched = runif(1)*duration*matrix(1,length(infectedNodes),1)){
 dir<-getwd()
   f = rvle.open("phitsa-disease-surveillance-control-R.vpz", pkg="surveillance")
   setwd(dir)
@@ -17,6 +19,8 @@ dir<-getwd()
 		rvle.setRealCondition(f, "control", "controlRadius",
 controlRadius)
 	rvle.setTupleCondition(f,"cond_graph","nodes_positions", nodes_positions)	
+	rvle.setTupleCondition(f,"xRay_surv","first_wave", first_wave_sched)	
+	rvle.setTupleCondition(f,"xRay_surv","second_wave", second_wave_sched)	
  	rvle.setRealCondition(f,"passive_surv","probabilityDeclaration",
 probaDeclaration)
  	rvle.setRealCondition(f,"disease","infectiousPeriod", infPeriode)
@@ -158,15 +162,14 @@ while (nb_components > 1) {
 return(inf_graph)
 }
 
-generate_xRay_plan<-function(data)
+generate_xRay_plan<-function(data,vague=1, vague_start=1, vague_duration=30)
 {
 #Première vague
-vague_start<-1
-vague_duration<-30
+
 nb_vill_per_day<-abs(length(data$VIL_CODE)/vague_duration)
 nb_village<-length(data$VIL_CODE)
-vague1<-matrix(NA,length(data$VIL_CODE),1)
-plan<-cbind(villages,vague1)
+#vaguei<-matrix(NA,length(data$VIL_CODE),1)
+plan<-data
 today<-vague_start
 nb_vill_today<-0
 random_districts<-sample(levels(as.factor(data$VIL_LTD_DI)),replace=FALSE)
@@ -179,7 +182,7 @@ for (district in random_districts) {
 random_sub_distr<-sample(levels(as.factor(data$VIL_LTS_SU[plan$VIL_LTD_DI == district])),replace=FALSE)
 for (sub_d in random_sub_distr){
 for (vill in sample(which(data$VIL_LTS_SU ==sub_d), replace = FALSE)){
-plan$vague1[vill]<-today
+plan[vill,12+vague]<-today
 if (nb_vill_today < nb_vill_per_day){
 nb_vill_today <- nb_vill_today + 1
 } else {
@@ -192,3 +195,22 @@ today <- today + 1
 return(plan)
 }
 
+movie_all<-function(){
+for (i in 1:60){
+png(filename=paste("phitsa",i,".png",sep=""))
+show_epidemic(res, phitsa_netw, cbind(villages$XX, villages$YY), date =i,
+vertex=c(eval(parse(text=paste("c(",A[abs(i/7),2],")",sep="")))))
+dev.off(2)
+print(paste("image",i))
+}
+}
+
+movie_xRay<-function(data){
+for (i in min(data$vague1):max(data$vague1)){
+png(filename=paste("xRay",i,".png",sep=""))
+show_epidemic(res, phitsa_netw, cbind(villages$XX, villages$YY), date =3,
+vertex=c(which(data$vague1 == i)))
+dev.off(2)
+print(paste("image",i))
+}
+}
