@@ -196,10 +196,10 @@ return(plan)
 }
 
 movie_all<-function(){
-for (i in 1:60){
-png(filename=paste("phitsa",i,".png",sep=""))
+for (i in 1:300){
+png(filename=paste("movies/phitsa",i,".png",sep=""))
 show_epidemic(res, phitsa_netw, cbind(villages$XX, villages$YY), date =i,
-vertex=c(eval(parse(text=paste("c(",A[abs(i/7),2],")",sep="")))))
+vertex=c(eval(parse(text=paste("c(",A[trunc(i/7)+1,2],")",sep="")))))
 dev.off(2)
 print(paste("image",i))
 }

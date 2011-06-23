@@ -86,8 +86,11 @@ namespace model {
           vv::Map* nodeObservations = vv::Map::create();
           typedef std::map<std::string, std::string>::const_iterator mapit;
           for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
-              if (it->second == "I")
-                nodeObservations->addString(it->first, it->second);
+              if (it->second == "I"){
+                  nodeObservations->addString(it->first, it->second);
+              std::cout<<"active coll: "<<getModelName()<<"told to control: "
+                  <<it->first<<" is "<<it->second<<std::endl;
+              }
           }
           ev << vd::attribute ("infectedNodes", nodeObservations);
           output.addEvent (ev);
@@ -100,7 +103,9 @@ namespace model {
           vv::Map* nodeObservations = vv::Map::create();
           typedef std::map<std::string, std::string>::const_iterator mapit;
           for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
-                nodeObservations->addString(it->first, it->second);
+              nodeObservations->addString(it->first, it->second);
+              std::cout<<"active coll: "<<getModelName()<<"told to info_center: "
+                  <<it->first<<" is "<<it->second<<std::endl;
           }
           ev << vd::attribute ("nodesStates", nodeObservations);
           output.addEvent (ev);
@@ -231,11 +236,13 @@ namespace model {
 
           double randValue = rand().getDouble();
           if ((*it) -> getPortName() == "status") {
-
+            
               std::string value = 
                     (*it)-> getStringAttributeValue ("value");
               std::string modelName = 
                           (*it)-> getStringAttributeValue ("modelName");
+              std::cout<<"active coll: "<<getModelName()<<"indeed recieved that: "
+                  <<modelName<<" is "<<value<<std::endl;
 
               if (value == "S" || value == "R") {
                   // probability of a wrong interpretation

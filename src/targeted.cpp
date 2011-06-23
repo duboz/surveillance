@@ -82,25 +82,35 @@ namespace model {
                                   const vd::ExternalEventList& event,
                                   const vd::Time& time) 
   {
+for (vd::ExternalEventList::const_iterator it = event.begin();
+             it != event.end(); ++it) {
+    if((*it)->onPort("newInfections")) {
+vv::Map infNodes = (*it)->getMapAttributeValue("infectedNodes");
+                for (vv::MapValue::const_iterator node = infNodes.begin();
+                     node != infNodes.end(); node++) {
+          std::cout<<time.getValue()<<"targeted coll: "<<getModelName()<<" at least recieved that: "
+                  <<node->first<<" is infected (in phase: "<<mPhase<<")"<<std::endl;
+                }}}
       if (mPhase == RECEIVE) {
+        receiveData(event, time);
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
-          if ((*it)->onPort("status"))
-              receiveData(event, time);
           if ((*it)->onPort("newInfections"))
-        vle::utils::ModellingError::ModellingError("Une approximation pour simplifier le code \na eu une mauvaise conséquence dans la classe targeted.cpp:\n Une surveillance de réaction a été oubliée..");
+        throw vle::utils::ModellingError::ModellingError("Une approximation pour simplifier le code \na eu une mauvaise conséquence dans la classe targeted.cpp:\n Une surveillance de réaction a été oubliée..");
         }
      }
-     else if (mPhase == SEND_OBS) {
+     else if ((mPhase == SEND_OBS)or (mPhase == IDLE)) {
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
             if ((*it)->onPort("status"))
-                vle::utils::ModellingError::ModellingError("This should not happen in this phase (in targeted.cpp)");
+                throw vle::utils::ModellingError::ModellingError("This should not happen in this phase (in targeted.cpp)");
             if((*it)->onPort("newInfections")) {
                 mNewInfectedNodes.clear();
                 vv::Map infNodes = (*it)->getMapAttributeValue("infectedNodes");
                 for (vv::MapValue::const_iterator node = infNodes.begin();
                      node != infNodes.end(); node++) {
+          std::cout<<"targeted coll: "<<getModelName()<<"at least recieved that: "
+                  <<node->first<<" is infected (ie must be observed)"<<std::endl;
                     mNewInfectedNodes.push_back(node->first);
                 }
             }

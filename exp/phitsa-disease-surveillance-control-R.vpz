@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
 <structures>
-<model name="graph" type="coupled" width="673" height="552"  >
+<model name="graph" type="coupled" width="616" height="586"  >
 <submodels>
 <model name="control" type="atomic" conditions="cond_graph,control" dynamics="dyn_spatial_control" observables="control" x="321" y="201" width="100" height="45" >
 <in>
@@ -44,12 +44,12 @@
  <port name="info_center" />
 </out>
 </model>
-<model name="xRay_scheduler" type="atomic" conditions="cond_graph,xRay_surv" dynamics="" x="71" y="39" width="100" height="45" >
+<model name="xRay_scheduler" type="atomic" conditions="cond_graph,xRay_surv" dynamics="surv_sched" x="71" y="39" width="100" height="45" >
 <out>
- <port name="surevillance" />
+ <port name="surveillance" />
 </out>
 </model>
-<model name="xRay_surveillance" type="atomic" conditions="cond_graph,xRay" dynamics="targeted_surv" observables="react_surv" x="259" y="35" width="100" height="60" >
+<model name="xRay_surveillance" type="atomic" conditions="cond_graph,xRay,xRay_surv" dynamics="targeted_surv" observables="react_surv" x="227" y="43" width="100" height="60" >
 <in>
  <port name="newInfections" />
 </in>
@@ -66,11 +66,11 @@
 </connection>
 <connection type="internal">
  <origin model="passiveCollector" port="control" />
- <destination model="control" port="surveillance" />
+ <destination model="delay" port="input" />
 </connection>
 <connection type="internal">
  <origin model="passiveCollector" port="control" />
- <destination model="delay" port="input" />
+ <destination model="control" port="surveillance" />
 </connection>
 <connection type="internal">
  <origin model="passiveCollector" port="info_center" />
@@ -85,16 +85,16 @@
  <destination model="information_center" port="information" />
 </connection>
 <connection type="internal">
- <origin model="xRay_scheduler" port="surevillance" />
+ <origin model="xRay_scheduler" port="surveillance" />
  <destination model="xRay_surveillance" port="newInfections" />
 </connection>
 <connection type="internal">
  <origin model="xRay_surveillance" port="control" />
- <destination model="control" port="surveillance" />
+ <destination model="delay" port="input" />
 </connection>
 <connection type="internal">
  <origin model="xRay_surveillance" port="control" />
- <destination model="delay" port="input" />
+ <destination model="control" port="surveillance" />
 </connection>
 <connection type="internal">
  <origin model="xRay_surveillance" port="info_center" />
@@ -115,6 +115,7 @@
 <dynamic name="dyn_vertexExecutive" library="graph" model="dyn_vertexExecutive" package="surveillance" type="local"  />
 <dynamic name="dyn_xray" library="surveillance" model="x_ray" package="surveillance" type="local"  />
 <dynamic name="info_center" library="surveillance" model="information_center" package="surveillance" type="local"  />
+<dynamic name="surv_sched" library="surveillance" model="SurvScheduler" package="surveillance" type="local"  />
 <dynamic name="targeted_surv" library="surveillance" model="targeted" package="surveillance" type="local"  />
 </dynamics>
 <classes>
@@ -313,7 +314,7 @@
 <double>1.000000000000000</double>
 </port>
  <port name="timeStep" >
-<double>55.000000000000000</double>
+<double>500.000000000000000</double>
 </port>
 </condition>
 <condition name="xRay_surv" >
@@ -410,7 +411,7 @@
 
 <view name="infection" output="infection" type="timed" timestep="1.000000000000000" />
 
-<view name="react_surv" output="react_surv" type="event" />
+<view name="react_surv" output="react_surv" type="timed" timestep="1.000000000000000" />
 
 <view name="surv_repport" output="surv_repport" type="timed" timestep="7.000000000000000" />
 

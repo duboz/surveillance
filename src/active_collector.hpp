@@ -54,7 +54,7 @@ public:
     ActiveCollector(const vd::DynamicsInit& init, const vd::InitEventList& events);
     virtual ~ActiveCollector();
     virtual vd::Time init(const vd::Time& time);
-    virtual void output(const vd::Time& /*time*/,
+    void output(const vd::Time& /*time*/,
                         vd::ExternalEventList& output) const;
     virtual vd::Time timeAdvance() const;
     virtual void internalTransition(const vd::Time& time);
