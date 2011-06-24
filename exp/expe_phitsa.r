@@ -1,7 +1,7 @@
 source("phitsa-surveillance-functions.r")
 #Général
 duration=333
-epidemic<-function(rate = 0.1, expe_num =1){
+epidemic<-function(rate = 0.1, expe_num =1, genNetw=TRUE){
 
 #État initial
 infected_villages<-c("650504_01","650905_03","650117_09")
@@ -19,8 +19,9 @@ p = 0.01 #proba de déclaration
 villages <- read.table("../data/villages-data.csv", sep=";", header=TRUE)
 
 #Génération du réseau
+if (genNetw) {
 phitsa_netw<-create_phitsa_graph(distance_infectieuse)
-
+}
 #Génération du planning de visite de villages pour la surveillance xRay
 villages<-generate_xRay_plan(villages, vague=1, vague_start=90)
 villages<-generate_xRay_plan(villages, vague=2, vague_start=213)

@@ -35,6 +35,7 @@ namespace model {
         : devs::Dynamics(init, events)
     {
         m_delay = vv::toDouble(events.get("waitingDelay"));
+        m_agreggationThreshold =  vv::toDouble(events.get("obsAggregationThreshold"));
     }
 
     Delay::~Delay()
@@ -54,13 +55,14 @@ namespace model {
         devs::ExternalEventList& output ) const
     {
         if (m_phase == WAITING) {
-
-            typedef std::vector<vd::Event>::const_iterator EvIterator;
+            typedef std::vector<vd::ExternalEvent>::const_iterator EvIterator;
             for (EvIterator it = m_evBags.begin()->second.begin(); 
                  it !=  m_evBags.begin()->second.end(); it++) {
                 vd::ExternalEvent * ev = new vd::ExternalEvent ("output");
                 ev->putAttributes(it->getAttributes());
                 output.addEvent (ev);
+                std::cout<<"evt got delayed at: "<<time<<
+                    " (first att being: "<< ev->getAttributes().begin()->first<<")"<<std::endl;
             }
         }
     }
@@ -92,17 +94,24 @@ namespace model {
         const devs::ExternalEventList&  event ,
         const devs::Time& time)
     {
-        evBag newevBag;
+        evBag *newevBag;
+        if ((m_phase == WAITING) and (time + vd::Time(m_delay) - m_evBags.back().first) <
+            m_agreggationThreshold) {
+            newevBag = &m_evBags.back();
+        } else {
+            m_phase = WAITING;
+            newevBag = new evBag();
+            newevBag->first = time + vd::Time(m_delay);
+            m_evBags.push_back(*newevBag);
+        }
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
             vd::ExternalEvent * ev = new vd::ExternalEvent ("output");
             ev->putAttributes((*it)->getAttributes());
-            newevBag.second.push_back(*ev);
-            if (m_phase == IDLE)
-            m_phase = WAITING;
+            newevBag->second.push_back(*ev);
+            std::cout<<"evt to be delayed to: "<<newevBag->first.getValue()<<
+                " (first att being: "<< ev->getAttributes().begin()->second<<")"<<std::endl;
         }
-        newevBag.first = time + vd::Time(m_delay);
-        m_evBags.push_back(newevBag);
         m_current_time = time.getValue();
     }
 
@@ -133,4 +142,4 @@ namespace model {
     
 } // namespace model
 
-DECLARE_NAMED_DYNAMICS(delay, model::Delay)
+DECLARE_NAMED_DYNAMICS_DBG(delay, model::Delay)

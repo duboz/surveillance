@@ -86,6 +86,7 @@ protected:
     std::map<std::string, std::string> mapResult;
     double mPrevalence;
     double mIncidence;
+    double mObsAggregationThreshold;
 };
 
 } // namespace model

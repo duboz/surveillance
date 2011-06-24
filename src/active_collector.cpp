@@ -39,6 +39,7 @@ namespace model {
     mProbabilityRightSR = vv::toDouble(events.get("probabilityRightSR"));
     mProbabilityRightI = vv::toDouble(events.get("probabilityRightI"));
     mObservationTimeStep =  vv::toDouble(events.get("timeStep"));
+    mObsAggregationThreshold =  vv::toDouble(events.get("obsAggregationThreshold"));
     if (events.exist("R_INIT") and 
         (vv::toBoolean(events.get("R_INIT")))) {
         mNbModel =vv::toInteger(events.get("graphInfo_number"));
@@ -128,7 +129,7 @@ namespace model {
       }
 
       if (mPhase == RECEIVE) {
-          return vd::Time(0.00000001);
+          return vd::Time(mObsAggregationThreshold/2);
       }
 
       if (mPhase == IDLE) {

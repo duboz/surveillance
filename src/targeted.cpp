@@ -85,6 +85,7 @@ namespace model {
 for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
     if((*it)->onPort("newInfections")) {
+        std::cout<<"received an empty infection node?"<<std::endl;
 vv::Map infNodes = (*it)->getMapAttributeValue("infectedNodes");
                 for (vv::MapValue::const_iterator node = infNodes.begin();
                      node != infNodes.end(); node++) {
@@ -114,11 +115,10 @@ vv::Map infNodes = (*it)->getMapAttributeValue("infectedNodes");
                     mNewInfectedNodes.push_back(node->first);
                 }
             }
-            mPhase = SEND;
+            mPhase = CHG_CONNECTION;
         }
       }
   }
-
 
   vv::Value* Targeted::observation(
                        const vd::ObservationEvent& event) const

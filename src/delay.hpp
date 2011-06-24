@@ -26,6 +26,7 @@
 
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
+#include <vle/devs/DynamicsDbg.hpp>
 
 namespace vd = vle::devs;
 namespace vv = vle::value;
@@ -38,11 +39,12 @@ class Delay : public devs::Dynamics
 protected:
     enum Phase {INIT, IDLE, WAITING, DISABLED};
     Phase m_phase;
-    typedef std::pair<vd::Time, std::vector<vd::Event> > evBag;
+    typedef std::pair<vd::Time, std::vector<vd::ExternalEvent> > evBag;
     typedef std::vector<evBag> evBagPlan;
     evBagPlan m_evBags;
     double m_delay;
     double m_current_time;
+    double m_agreggationThreshold;
 
 public:
     Delay(
