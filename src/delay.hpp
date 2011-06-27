@@ -39,7 +39,7 @@ class Delay : public devs::Dynamics
 protected:
     enum Phase {INIT, IDLE, WAITING, DISABLED};
     Phase m_phase;
-    typedef std::pair<vd::Time, std::vector<vd::ExternalEvent> > evBag;
+    typedef std::pair<vd::Time, std::vector<vv::Map*> > evBag;
     typedef std::vector<evBag> evBagPlan;
     evBagPlan m_evBags;
     double m_delay;

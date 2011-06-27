@@ -57,15 +57,22 @@ namespace model {
   {
       if ((mPhase == SEND_RESULT)and 
           (getModel().existOutputPort("control"))) {
-          vd::ExternalEvent * ev = new vd::ExternalEvent ("control");
           vv::Map* nodeObservations = vv::Map::create();
           typedef std::map<std::string, std::pair<std::string, vd::Time> >::const_iterator mapit;
+          bool detection = false;
           for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
-              if ((it->second.first == "I") and (time == it->second.second))
-                nodeObservations->addString(it->first, it->second.first);
+              if ((it->second.first == "I") and (time == it->second.second)) {
+                  nodeObservations->addString(it->first, it->second.first);
+                  detection = true;
+              }
           }
-          ev << vd::attribute ("infectedNodes", nodeObservations);
-          output.addEvent (ev);
+          if (detection) {
+              vd::ExternalEvent * ev = new vd::ExternalEvent ("control");
+              ev << vd::attribute ("infectedNodes", nodeObservations);
+              output.addEvent (ev);
+          } else {
+              delete nodeObservations;
+          }
       }
      
       if ((mPhase == SEND_RESULT)and 

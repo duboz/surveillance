@@ -55,11 +55,13 @@ namespace model {
         devs::ExternalEventList& output ) const
     {
         if (m_phase == WAITING) {
-            typedef std::vector<vd::ExternalEvent>::const_iterator EvIterator;
-            for (EvIterator it = m_evBags.begin()->second.begin(); 
+            typedef std::vector<vv::Map*>::const_iterator AttIterator;
+            std::cout<<(*m_evBags.begin()->second.begin())->begin()->first<<std::endl; 
+            for (AttIterator it = m_evBags.begin()->second.begin(); 
                  it !=  m_evBags.begin()->second.end(); it++) {
                 vd::ExternalEvent * ev = new vd::ExternalEvent ("output");
-                ev->putAttributes(it->getAttributes());
+                vv::Map attributes(*(*it));
+                ev->putAttributes(attributes);
                 output.addEvent (ev);
                 std::cout<<"evt got delayed at: "<<time<<
                     " (first att being: "<< ev->getAttributes().begin()->first<<")"<<std::endl;
@@ -98,6 +100,7 @@ namespace model {
         if ((m_phase == WAITING) and (time + vd::Time(m_delay) - m_evBags.back().first) <
             m_agreggationThreshold) {
             newevBag = &m_evBags.back();
+            std::cout<<"pas bon"<<std::endl;
         } else {
             m_phase = WAITING;
             newevBag = new evBag();
@@ -106,11 +109,15 @@ namespace model {
         }
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
-            vd::ExternalEvent * ev = new vd::ExternalEvent ("output");
-            ev->putAttributes((*it)->getAttributes());
-            newevBag->second.push_back(*ev);
-            std::cout<<"evt to be delayed to: "<<newevBag->first.getValue()<<
-                " (first att being: "<< ev->getAttributes().begin()->second<<")"<<std::endl;
+            vv::Map* evtAttributes = new vv::Map(vv::toMapValue(*(*it)->getAttributes().clone()));
+            //(*it)->getAttributes().writeFile(std::cout);
+            std::cout<<(*it)->getAttributes().begin()->first<<std::endl;
+            newevBag->second.push_back(evtAttributes);
+            //evtAttributes->writeFile(std::cout);
+            std::cout<<"at: "<<time.getValue()<<" evt to be delayed to: "<<newevBag->first.getValue()<<
+                " (lenght att is: "<<m_evBags.size() << std::endl;//(*m_evBags.back().second.begin())->begin()->first<<")"<<std::endl;
+            std::cout<<"and time is indeed:  "<<(m_evBags.begin()->first)<<std::endl; 
+            (*(m_evBags.begin()->second.begin()))->writeFile(std::cout); 
         }
         m_current_time = time.getValue();
     }
