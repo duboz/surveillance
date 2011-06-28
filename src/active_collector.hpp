@@ -73,7 +73,7 @@ public:
     virtual void receiveData(const vd::ExternalEventList& event,
                                   const vd::Time& time);
 protected:
-    enum PHASE {SEND, RECEIVE, SEND_OBS, INIT, IDLE, CHG_CONNECTION};
+    enum PHASE {SEND, RECEIVE, SEND_OBS, INIT, IDLE, CHG_CONNECTION, WAIT_CONNECTION};
     PHASE mPhase;
     vd::Time mLastRequestTime;
     vd::Time mCurrentTime;

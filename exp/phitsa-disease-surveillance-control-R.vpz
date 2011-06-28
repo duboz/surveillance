@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
 <structures>
-<model name="graph" type="coupled" width="636" height="520"  >
+<model name="graph" type="coupled" width="616" height="520"  >
 <submodels>
 <model name="control" type="atomic" conditions="cond_graph,control" dynamics="dyn_spatial_control" observables="control" x="321" y="201" width="100" height="45" >
 <in>
@@ -66,11 +66,11 @@
 </connection>
 <connection type="internal">
  <origin model="passiveCollector" port="control" />
- <destination model="control" port="surveillance" />
+ <destination model="delay" port="input" />
 </connection>
 <connection type="internal">
  <origin model="passiveCollector" port="control" />
- <destination model="delay" port="input" />
+ <destination model="control" port="surveillance" />
 </connection>
 <connection type="internal">
  <origin model="passiveCollector" port="info_center" />
@@ -90,11 +90,11 @@
 </connection>
 <connection type="internal">
  <origin model="xRay_surveillance" port="control" />
- <destination model="control" port="surveillance" />
+ <destination model="delay" port="input" />
 </connection>
 <connection type="internal">
  <origin model="xRay_surveillance" port="control" />
- <destination model="delay" port="input" />
+ <destination model="control" port="surveillance" />
 </connection>
 <connection type="internal">
  <origin model="xRay_surveillance" port="info_center" />
@@ -287,7 +287,7 @@
 <double>0.000000100000000</double>
 </port>
  <port name="targetedSurveillanceRadius" >
-<double>3.000000000000000</double>
+<double>4000.000000000000000</double>
 </port>
  <port name="waitingDelay" >
 <double>3.000000000000000</double>

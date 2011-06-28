@@ -148,23 +148,23 @@ vv::Map infNodes = (*it)->getMapAttributeValue("infectedNodes");
   //Generic functions for active surveillance
   void Targeted::connectToNodes(vd::ExternalEventList& output) const 
   {
-    typedef std::vector<std::string>::const_iterator NodeIterator;
-    for (NodeIterator it = mNewInfectedNodes.begin(); 
-         it !=  mNewInfectedNodes.end(); it++) {
+      typedef std::vector<std::string>::const_iterator NodeIterator;
+      vd::ExternalEvent* connectionRequest = new vd::ExternalEvent("connectTo");
+      vv::Set linkTo;
+      for (NodeIterator it = mNewInfectedNodes.begin(); 
+        it !=  mNewInfectedNodes.end(); it++) {
         std::string spotedNode;
         spotedNode = *it;
         std::vector<std::string> nodesToInspect = mNodeNeighbors.at(spotedNode);
-        vd::ExternalEvent* connectionRequest = new vd::ExternalEvent("connectTo");
-        vv::Set linkTo;
         for (NodeIterator nodeToInspect = nodesToInspect.begin(); 
            nodeToInspect != nodesToInspect.end(); nodeToInspect++) {
            linkTo.addString(*nodeToInspect);
         }
-          connectionRequest << vd::attribute("modelName", 
-                                             std::string (getModelName()));
-          connectionRequest << vd::attribute("linkTo", linkTo);
-          output.addEvent(connectionRequest);
-    }
+      }
+      connectionRequest << vd::attribute("modelName", 
+                                         std::string (getModelName()));
+      connectionRequest << vd::attribute("linkTo", linkTo);
+      output.addEvent(connectionRequest);
   }
 
 } // namespace vle example

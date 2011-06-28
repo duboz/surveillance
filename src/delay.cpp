@@ -107,17 +107,18 @@ namespace model {
             newevBag->first = time + vd::Time(m_delay);
             m_evBags.push_back(*newevBag);
         }
+        evBag& bag = m_evBags.back();
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
             vv::Map* evtAttributes = new vv::Map(vv::toMapValue(*(*it)->getAttributes().clone()));
             //(*it)->getAttributes().writeFile(std::cout);
             std::cout<<(*it)->getAttributes().begin()->first<<std::endl;
-            newevBag->second.push_back(evtAttributes);
+            bag.second.push_back(evtAttributes);
             //evtAttributes->writeFile(std::cout);
-            std::cout<<"at: "<<time.getValue()<<" evt to be delayed to: "<<newevBag->first.getValue()<<
+            std::cout<<"at: "<<time.getValue()<<" evt to be delayed to: "<<bag.first.getValue()<<
                 " (lenght att is: "<<m_evBags.size() << std::endl;//(*m_evBags.back().second.begin())->begin()->first<<")"<<std::endl;
             std::cout<<"and time is indeed:  "<<(m_evBags.begin()->first)<<std::endl; 
-            (*(m_evBags.begin()->second.begin()))->writeFile(std::cout); 
+            std::cout<<((m_evBags.back().second.size()));//->writeFile(std::cout); 
         }
         m_current_time = time.getValue();
     }

@@ -124,7 +124,7 @@ namespace model {
           return 0;
       }
 
-      if (mPhase == CHG_CONNECTION) {
+      if ((mPhase == CHG_CONNECTION) or (mPhase == WAIT_CONNECTION)) {
           return 0;
       }
 
@@ -157,6 +157,10 @@ namespace model {
           mCurrentTime = vd::Time(time);
           break;
       case CHG_CONNECTION:
+          mPhase = WAIT_CONNECTION;
+          mCurrentTime = vd::Time(time);
+          break;
+      case WAIT_CONNECTION:
           mPhase = SEND;
           mCurrentTime = vd::Time(time);
           break;

@@ -23,7 +23,7 @@
  */
 
 
-#include <vle/devs/Executive.hpp>
+#include <vle/devs/ExecutiveDbg.hpp>
 #include <GraphTranslator.hpp>
 #include <vle/value/Map.hpp>
 #include <boost/lexical_cast.hpp>
@@ -218,4 +218,4 @@ private:
 
 } // namespace model
  
-DECLARE_NAMED_EXECUTIVE(dyn_graphExecutive, model::GraphExecutive)
+DECLARE_NAMED_EXECUTIVE_DBG(dyn_graphExecutive, model::GraphExecutive)
