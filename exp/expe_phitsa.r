@@ -51,10 +51,11 @@ A= read.table("dsc-phitsa_surv_repport.dat", sep="\t")
 #c1
 x11()
 nb_outb_per_week<-matrix(0,max(data$Semaine)+1,3)
-for (i in 1:max(data$Semaine))
+for (i in 0:max(data$Semaine))
 {nb_outb_per_week[i,1]<-i
 nb_outb_per_week[i,2]<- length(which(data$Semaine==i))
-simu_report=eval(parse(text=paste("c(",A[i,2],")",sep="")))
+#simu_report=eval(parse(text=paste("c(",A[i,2],")",sep="")))
+simu_report=as.numeric(strsplit(paste(A[i,2],"",sep=""),",")[[1]])
 nb_outb_per_week[i,3]<-length(simu_report)
 }
 plot(nb_outb_per_week[,1], nb_outb_per_week[,2], ylim =

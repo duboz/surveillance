@@ -85,6 +85,7 @@ main=paste("Epidemic at time",i))
 }
 
 plot_prev<-function(res,duration){
+x11()
 times<-res[[1]][,1]
 SIRSec<-matrix(0,duration+1,4)
 for (i in 1:duration+1){

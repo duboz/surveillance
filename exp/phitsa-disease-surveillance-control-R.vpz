@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
 <structures>
-<model name="graph" type="coupled" width="616" height="520"  >
+<model name="graph" type="coupled" width="785" height="520"  >
 <submodels>
 <model name="control" type="atomic" conditions="cond_graph,control" dynamics="dyn_spatial_control" observables="control" x="321" y="201" width="100" height="45" >
 <in>
@@ -311,7 +311,7 @@
 <double>1.000000000000000</double>
 </port>
  <port name="probabilityRightI" >
-<double>0.800000000000000</double>
+<double>1.000000000000000</double>
 </port>
  <port name="probabilityRightSR" >
 <double>1.000000000000000</double>
