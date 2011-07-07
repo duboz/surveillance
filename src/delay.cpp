@@ -56,15 +56,15 @@ namespace model {
     {
         if (m_phase == WAITING) {
             typedef std::vector<vv::Map*>::const_iterator AttIterator;
-            std::cout<<(*m_evBags.begin()->second.begin())->begin()->first<<std::endl; 
+            //std::cout<<(*m_evBags.begin()->second.begin())->begin()->first<<std::endl; 
             for (AttIterator it = m_evBags.begin()->second.begin(); 
                  it !=  m_evBags.begin()->second.end(); it++) {
                 vd::ExternalEvent * ev = new vd::ExternalEvent ("output");
                 vv::Map attributes(*(*it));
                 ev->putAttributes(attributes);
                 output.addEvent (ev);
-                std::cout<<"evt got delayed at: "<<time<<
-                    " (first att being: "<< ev->getAttributes().begin()->first<<")"<<std::endl;
+                //std::cout<<"evt got delayed at: "<<time<<
+                //    " (first att being: "<< ev->getAttributes().begin()->first<<")"<<std::endl;
             }
         }
     }
@@ -112,13 +112,13 @@ namespace model {
              it != event.end(); ++it) {
             vv::Map* evtAttributes = new vv::Map(vv::toMapValue(*(*it)->getAttributes().clone()));
             //(*it)->getAttributes().writeFile(std::cout);
-            std::cout<<(*it)->getAttributes().begin()->first<<std::endl;
+            //std::cout<<(*it)->getAttributes().begin()->first<<std::endl;
             bag.second.push_back(evtAttributes);
             //evtAttributes->writeFile(std::cout);
-            std::cout<<"at: "<<time.getValue()<<" evt to be delayed to: "<<bag.first.getValue()<<
-                " (lenght att is: "<<m_evBags.size() << std::endl;//(*m_evBags.back().second.begin())->begin()->first<<")"<<std::endl;
-            std::cout<<"and time is indeed:  "<<(m_evBags.begin()->first)<<std::endl; 
-            std::cout<<((m_evBags.back().second.size()));//->writeFile(std::cout); 
+            //std::cout<<"at: "<<time.getValue()<<" evt to be delayed to: "<<bag.first.getValue()<<
+            //    " (lenght att is: "<<m_evBags.size() << std::endl;//(*m_evBags.back().second.begin())->begin()->first<<")"<<std::endl;
+            //std::cout<<"and time is indeed:  "<<(m_evBags.begin()->first)<<std::endl; 
+            //std::cout<<((m_evBags.back().second.size()));//->writeFile(std::cout); 
         }
         m_current_time = time.getValue();
     }
