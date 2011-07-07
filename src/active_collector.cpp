@@ -89,8 +89,8 @@ namespace model {
           for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
               if (it->second == "I"){
                   nodeObservations->addString(it->first, it->second);
-              std::cout<<"active coll: "<<getModelName()<<"told to control: "
-                  <<it->first<<" is "<<it->second<<std::endl;
+              /*std::cout<<"active coll: "<<getModelName()<<"told to control: "
+                  <<it->first<<" is "<<it->second<<std::endl;*/
               }
           }
           ev << vd::attribute ("infectedNodes", nodeObservations);
@@ -105,8 +105,8 @@ namespace model {
           typedef std::map<std::string, std::string>::const_iterator mapit;
           for (mapit it = mapResult.begin(); it != mapResult.end(); it++) {
               nodeObservations->addString(it->first, it->second);
-              std::cout<<"active coll: "<<getModelName()<<"told to info_center: "
-                  <<it->first<<" is "<<it->second<<std::endl;
+              /*std::cout<<"active coll: "<<getModelName()<<"told to info_center: "
+                  <<it->first<<" is "<<it->second<<std::endl;*/
           }
           ev << vd::attribute ("nodesStates", nodeObservations);
           output.addEvent (ev);
@@ -246,8 +246,8 @@ namespace model {
                     (*it)-> getStringAttributeValue ("value");
               std::string modelName = 
                           (*it)-> getStringAttributeValue ("modelName");
-              std::cout<<"active coll: "<<getModelName()<<"indeed recieved that: "
-                  <<modelName<<" is "<<value<<std::endl;
+              /*std::cout<<"active coll: "<<getModelName()<<"indeed recieved that: "
+                  <<modelName<<" is "<<value<<std::endl;*/
 
               if (value == "S" || value == "R") {
                   // probability of a wrong interpretation

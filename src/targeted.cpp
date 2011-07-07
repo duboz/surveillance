@@ -85,12 +85,12 @@ namespace model {
 for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
     if((*it)->onPort("newInfections")) {
-        std::cout<<"received an empty infection node?"<<std::endl;
+        /*std::cout<<"received an empty infection node?"<<std::endl;*/
 vv::Map infNodes = (*it)->getMapAttributeValue("infectedNodes");
                 for (vv::MapValue::const_iterator node = infNodes.begin();
                      node != infNodes.end(); node++) {
-          std::cout<<time.getValue()<<"targeted coll: "<<getModelName()<<" at least recieved that: "
-                  <<node->first<<" is infected (in phase: "<<mPhase<<")"<<std::endl;
+          /*std::cout<<time.getValue()<<"targeted coll: "<<getModelName()<<" at least recieved that: "
+                  <<node->first<<" is infected (in phase: "<<mPhase<<")"<<std::endl;*/
                 }}}
       if (mPhase == RECEIVE) {
         receiveData(event, time);
@@ -110,8 +110,8 @@ vv::Map infNodes = (*it)->getMapAttributeValue("infectedNodes");
                 vv::Map infNodes = (*it)->getMapAttributeValue("infectedNodes");
                 for (vv::MapValue::const_iterator node = infNodes.begin();
                      node != infNodes.end(); node++) {
-          std::cout<<"targeted coll: "<<getModelName()<<"at least recieved that: "
-                  <<node->first<<" is infected (ie must be observed)"<<std::endl;
+          /*std::cout<<"targeted coll: "<<getModelName()<<"at least recieved that: "
+                  <<node->first<<" is infected (ie must be observed)"<<std::endl;*/
                     mNewInfectedNodes.push_back(node->first);
                 }
             }
