@@ -57,8 +57,8 @@ public:
             typedef std::vector<std::string>::const_iterator NodeIterator;
     
             vv::Map* nodeObservations = vv::Map::create();
-            for (NodeIterator it = m_interventions.begin()->second.begin(); 
-                 it !=  m_interventions.begin()->second.end(); it++) {
+            for (NodeIterator it = m_interventions.begin()->subSystems.begin(); 
+                 it !=  m_interventions.begin()->subSystems.end(); it++) {
                 std::string spotedNode;
                 spotedNode = *it;
                 //std::cout<<"intervention sur: "<<spotedNode<<std::endl;

@@ -39,7 +39,13 @@ protected:
     enum Phase {INIT, IDLE, CONTROL, DISABLED};
     Phase m_phase;
     std::map<std::string, std::string> m_nodeStates;
-    typedef std::pair<double, std::vector<std::string> > Intervention;
+    struct Intervention {
+        double date;
+        std::vector<std::string> subSystems;
+        std::string type;
+        double ratio;
+        bool on;
+    };
     typedef std::vector<Intervention> InterventionPlan;
     InterventionPlan m_interventions;
     double m_delay;

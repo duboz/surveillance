@@ -111,8 +111,17 @@ namespace model {
                 } else
                     mPhase = IDLE;
             }
-            if (events[i]->onPort("control"))
-                cleaned = true;
+            if (events[i]->onPort("control")) {
+                if (events[i]->getStringAttributeValue("type") == "clean")
+                    cleaned = true;
+                if (events[i]->getStringAttributeValue("type") == "move_restriction") {
+                    double ratio = events[i]->getDoubleAttributeValue("ratio");
+                    if (events[i]->getBooleanAttributeValue("on"))
+                        mRate = mRate * ratio;
+                    else
+                        mRate = mRate / ratio;
+                }
+            }
         }
         if (cleaned)
             mPhase = IDLE;

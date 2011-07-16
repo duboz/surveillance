@@ -62,12 +62,21 @@ namespace model {
             typedef std::vector<std::string>::const_iterator NodeIterator;
     
             vv::Map* nodeObservations = vv::Map::create();
-            for (NodeIterator it = m_interventions.begin()->second.begin(); 
-                 it !=  m_interventions.begin()->second.end(); it++) {
-                nodeObservations->addString(*it, "R");
+            for (NodeIterator it = m_interventions.begin()->subSystems.begin(); 
+                 it !=  m_interventions.begin()->subSystems.end(); it++) {
                 vd::ExternalEvent * ev = new vd::ExternalEvent (*it);
-                ev << vd::attribute ("type", buildString("clean"));
+                if (m_interventions.begin()->type == "clean") {
+                    nodeObservations->addString(*it, "R");
+                    ev << vd::attribute ("type", buildString("clean"));
+                }
+                else if (m_interventions.begin()->type == "move_restriction") {
+                    vd::ExternalEvent * ev = new vd::ExternalEvent (*it);
+                    ev << vd::attribute ("type", buildString("move_restriction"));
+                    ev << vd::attribute ("ratio", buildDouble(m_interventions.begin()->ratio));
+                    ev << vd::attribute ("on", buildBoolean(m_interventions.begin()->on));
+                }
                 output.addEvent (ev);
+
             }
             if (getModel().existOutputPort("info_center")) {
                 vd::ExternalEvent * evInfo = new vd::ExternalEvent ("info_center");
@@ -82,7 +91,7 @@ namespace model {
     devs::Time controler::timeAdvance() const
     {
         if (m_phase == CONTROL)
-            return devs::Time(m_interventions.begin()->first - m_current_time);
+            return devs::Time(m_interventions.begin()->date - m_current_time);
         if (m_phase == INIT)
             return 0;
 
@@ -95,8 +104,8 @@ namespace model {
         if (m_phase == INIT)
             m_phase = IDLE;
         else if (m_phase == CONTROL) {
-            for (std::vector<std::string>::iterator node = m_interventions.begin()->second.begin();
-                 node != m_interventions.begin()->second.end(); node++) {
+            for (std::vector<std::string>::iterator node = m_interventions.begin()->subSystems.begin();
+                 node != m_interventions.begin()->subSystems.end(); node++) {
                 m_nodeStates[*node] = "R";
                 m_nbInterventions++;
             }
@@ -119,19 +128,31 @@ namespace model {
                 for (vv::MapValue::const_iterator node = infNodes.begin();
                      node != infNodes.end(); node++) {
                     m_nodeStates[node->first] = node->second->toString().value();
-                    newIntervention.second.push_back(node->first);
+                    newIntervention.subSystems.push_back(node->first);
                 }
-                newIntervention.first = time.getValue() + m_delay;
+                newIntervention.date = time.getValue() + m_delay;
+                newIntervention.type = "clean";
                 m_interventions.push_back(newIntervention);
                 if (m_phase == IDLE)
                     m_phase = CONTROL;
-                /*
-                else {
-                    vle::utils::InternalError error(
-                        "\nControler must recieve only one surveillance repport in this version\n");
-                    throw error;
-                    }
-                */
+            }
+           if ((*it)->onPort("decision")) {
+                Intervention newIntervention;
+                value::Map infNodes = (*it)->getMapAttributeValue("controledNodes");
+                for (vv::MapValue::const_iterator node = infNodes.begin();
+                     node != infNodes.end(); node++) {
+                    m_nodeStates[node->first] = node->second->toString().value();
+                    newIntervention.subSystems.push_back(node->first);
+                }
+                newIntervention.date = time.getValue() + m_delay;
+                newIntervention.type = (*it)->getStringAttributeValue("type");
+                if (newIntervention.type == "move_restriction") {
+                    newIntervention.ratio = (*it)->getDoubleAttributeValue("ratio");
+                    newIntervention.on = (*it)->getBooleanAttributeValue("on");
+                }
+                m_interventions.push_back(newIntervention);
+                if (m_phase == IDLE)
+                    m_phase = CONTROL;
             }
         }
         m_current_time = time.getValue();
