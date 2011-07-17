@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.1.0.dtd">
-<vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté">
+<vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
 <structures>
-<model name="graph" type="coupled" width="569" height="411"  >
+<model name="graph" type="coupled" width="569" height="306"  >
 <submodels>
 <model name="control" type="atomic" conditions="control" dynamics="dyn_control" x="246" y="155" width="100" height="45" >
 <in>
@@ -66,10 +66,6 @@
 <connections>
 <connection type="input">
  <origin model="vertex" port="control" />
- <destination model="infection" port="control" />
-</connection>
-<connection type="input">
- <origin model="vertex" port="control" />
  <destination model="transmission" port="control" />
 </connection>
 <connection type="internal">
@@ -104,10 +100,6 @@
 </model>
 </submodels>
 <connections>
-<connection type="input">
- <origin model="vertex" port="control" />
- <destination model="infection" port="control" />
-</connection>
 <connection type="input">
  <origin model="vertex" port="control" />
  <destination model="transmission" port="control" />

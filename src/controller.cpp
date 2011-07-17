@@ -70,7 +70,6 @@ namespace model {
                     ev << vd::attribute ("type", buildString("clean"));
                 }
                 else if (m_interventions.begin()->type == "move_restriction") {
-                    vd::ExternalEvent * ev = new vd::ExternalEvent (*it);
                     ev << vd::attribute ("type", buildString("move_restriction"));
                     ev << vd::attribute ("ratio", buildDouble(m_interventions.begin()->ratio));
                     ev << vd::attribute ("on", buildBoolean(m_interventions.begin()->on));

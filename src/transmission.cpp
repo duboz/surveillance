@@ -56,7 +56,7 @@ namespace model {
         return 0;
     }
 
-    void Transmission::output(const vd::Time& /*time*/,
+    void Transmission::output(const vd::Time& time,
                         vd::ExternalEventList& output) const
     {
         if (mPhase == INFECTING ) {
@@ -79,7 +79,7 @@ namespace model {
             return vd::Time::infinity;
         case INFECTING:
             if (mPortIndex < mPorts.size())
-                return vd::Time(mInfectionOffsets[mPortIndex] );
+                return vd::Time(mInfectionOffsets[mPortIndex]);
             else
                 return vd::Time::infinity;
         }
@@ -102,7 +102,7 @@ namespace model {
         bool cleaned = false;
         for (unsigned int i = 0; i < events.size(); i++) {
 
-            if (events[i]->existAttributeValue("state")) {
+            if (events[i]->onPort("state")) {
                 if (events[i]->getBooleanAttributeValue("state")) {
                     mPhase = INFECTING;
                     randomizeOrder();
@@ -111,6 +111,7 @@ namespace model {
                 } else
                     mPhase = IDLE;
             }
+
             if (events[i]->onPort("control")) {
                 if (events[i]->getStringAttributeValue("type") == "clean")
                     cleaned = true;
@@ -120,6 +121,9 @@ namespace model {
                         mRate = mRate * ratio;
                     else
                         mRate = mRate / ratio;
+                    if (mPhase == INFECTING) {
+                        randomizeInfectionTime();
+                    }
                 }
             }
         }

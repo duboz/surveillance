@@ -82,13 +82,14 @@ namespace model {
             output.addEvent(event);
         } else if (mPhase == R) {
             vd::ExternalEvent* event = new vd::ExternalEvent("state");
-            //event << vd::attribute("state", true);
+            event << vd::attribute("state", false);
             event << vd::attribute ("value", std::string("S"));
             event << vd::attribute ("modelName", 
                                        getModel().getParent()->getName());
             output.addEvent(event);
         } else if (mPhase == INIT) {
             vd::ExternalEvent* event = new vd::ExternalEvent("state");
+            event << vd::attribute("state", false);
             event << vd::attribute ("value", std::string("S"));
             event << vd::attribute ("modelName", 
                                        getModel().getParent()->getName());
@@ -164,6 +165,9 @@ namespace model {
         for (vd::ExternalEventList::const_iterator it = event.begin();
              it != event.end(); ++it) {
             if ((*it)->onPort("infection")) {
+                if (!(*it)->existAttributeValue("infection_evt"))
+                    throw vle::utils::ArgError(
+                    "Bad connection of vertex.\nOnly accepted ports in Vertex class are status? and control");
                 if (mPhase == S) {
                     mPhase = SI;
                     if (mConstPeriods)
@@ -173,12 +177,14 @@ namespace model {
                 }
             }
             else if ((*it)->onPort("control")) {
+                if ((*it)->getStringAttributeValue("type") == "clean") {
                 if ((mPhase == I) or (mPhase == SI)) {
                     mPhase = SECURED;
                     if (mConstPeriods)
                         mSecuredTimeLeft  = mSecuredPeriod;
                     else
                         mSecuredTimeLeft = rand().exponential(1/mSecuredPeriod);
+                }
                 }
             }
         }

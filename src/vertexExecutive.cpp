@@ -65,7 +65,7 @@ namespace model {
        //in
        addConnection(coupledmodelName(),"status?", "infection","status?");
        for (itin = listin.begin(); itin != listin.end(); ++itin) {
-           if (itin->first != "status?")
+           if ((itin->first != "status?") and (itin->first != "control") )
           	addConnection(coupledmodelName(),itin->first,"infection","infection");
        }
       //out
