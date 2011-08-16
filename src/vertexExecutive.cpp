@@ -106,4 +106,4 @@ namespace model {
 	return devs::Time::infinity;
     }}
 
-DECLARE_DYNAMICS(model::VertexExecutive);
+DECLARE_EXECUTIVE(model::VertexExecutive);

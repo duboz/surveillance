@@ -9,7 +9,9 @@ LINK_DIRECTORIES(
 
 ADD_LIBRARY(x_ray SHARED
                         xRay.cpp
-                	xRay.hpp)
+                	xRay.hpp
+	               	active_collector.cpp
+                	active_collector.hpp)
 
 TARGET_LINK_LIBRARIES(x_ray
   ${VLE_LIBRARIES}
@@ -48,7 +50,9 @@ INSTALL(TARGETS delay
 
 ADD_LIBRARY(targeted SHARED
 			targeted.cpp
-			targeted.hpp)
+			targeted.hpp
+			active_collector.cpp
+                	active_collector.hpp)
 
 TARGET_LINK_LIBRARIES(targeted
   ${VLE_LIBRARIES}
@@ -177,7 +181,9 @@ INSTALL(TARGETS dyn_vertexExecutive
   ARCHIVE DESTINATION lib)
 
 ADD_LIBRARY(dyn_graphExecutive SHARED	
-			graphExecutive.cpp)
+			graphExecutive.cpp
+			GraphTranslator.cpp
+			GraphTranslator.hpp)
 
 TARGET_LINK_LIBRARIES(dyn_graphExecutive
   ${VLE_LIBRARIES}
@@ -188,15 +194,15 @@ INSTALL(TARGETS dyn_graphExecutive
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
 
-ADD_LIBRARY(utils_grapTranslator SHARED	
+ADD_LIBRARY(utils_graphTranslator SHARED	
 			GraphTranslator.cpp
 			GraphTranslator.hpp)
 
-TARGET_LINK_LIBRARIES(utils_grapTranslator
+TARGET_LINK_LIBRARIES(utils_graphTranslator
   ${VLE_LIBRARIES}
   ${Boost_LIBRARIES})
 
-INSTALL(TARGETS utils_grapTranslator
+INSTALL(TARGETS utils_graphTranslator
   RUNTIME DESTINATION lib
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)

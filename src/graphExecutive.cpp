@@ -218,4 +218,4 @@ private:
 
 } // namespace model
 
-DECLARE_DYNAMICS(model::GraphExecutive);
+DECLARE_EXECUTIVE(model::GraphExecutive);
