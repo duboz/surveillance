@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#include <boost/lexical_cast.hpp>
 #include "vertexExecutive.hpp"
 #include <vle/graph/CoupledModel.hpp>
 #include <vle/devs/Executive.hpp>
@@ -103,8 +104,6 @@ namespace model {
 	if(m_phase == INIT)
 	    return devs::Time(0.);
 	return devs::Time::infinity;
-}
+    }}
 
-
-DECLARE_NAMED_EXECUTIVE(dyn_vertexExecutive, model::VertexExecutive)
-}
+DECLARE_DYNAMICS(model::VertexExecutive);

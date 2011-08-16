@@ -25,6 +25,7 @@
 
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
+#include <boost/lexical_cast.hpp>
 #include "data_collector.hpp"
 extern "C"{
     #include <unistd.h>
@@ -189,5 +190,4 @@ namespace model {
   }
 
 } // namespace vle example
-
-DECLARE_NAMED_DYNAMICS(data_collector, model::DataCollector)
+DECLARE_DYNAMICS(model::DataCollector);

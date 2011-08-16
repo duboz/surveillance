@@ -7,70 +7,196 @@ LINK_DIRECTORIES(
   ${VLE_LIBRARY_DIRS}
   ${Boost_LIBRARY_DIRS})
 
-ADD_LIBRARY(surveillance SHARED
+ADD_LIBRARY(x_ray SHARED
                         xRay.cpp
-                	xRay.hpp
+                	xRay.hpp)
+
+TARGET_LINK_LIBRARIES(x_ray
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS x_ray
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(controller SHARED
 			controller.hpp
-			controller.cpp
-			delay.cpp
-			delay.hpp
+			controller.cpp)
+
+TARGET_LINK_LIBRARIES(controller
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS controller
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(delay SHARED
+                        delay.cpp
+			delay.hpp)
+
+TARGET_LINK_LIBRARIES(delay
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS delay
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(targeted SHARED
 			targeted.cpp
-			targeted.hpp
-			spatialController.cpp
-                 	active_collector.cpp
-                	active_collector.hpp
+			targeted.hpp)
+
+TARGET_LINK_LIBRARIES(targeted
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS targeted
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(spatialControler SHARED
+			spatialController.cpp)
+
+TARGET_LINK_LIBRARIES(spatialControler
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS spatialControler
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(abs_Active_collector SHARED
+                  	active_collector.cpp
+                	active_collector.hpp)
+
+TARGET_LINK_LIBRARIES(abs_Active_collector
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS abs_Active_collector
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(passive_collector SHARED
  	              	passive_collector.cpp
-                	passive_collector.hpp
-			surv_scheduler.cpp
+                	passive_collector.hpp)
+
+TARGET_LINK_LIBRARIES(passive_collector
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS passive_collector
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(SurvScheduler SHARED
+ 			surv_scheduler.cpp)
+
+TARGET_LINK_LIBRARIES(SurvScheduler
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS SurvScheduler
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(information_center SHARED
 			information_center.cpp)
 
-ADD_LIBRARY(sir SHARED	infection.cpp
-			infection.hpp
-			transmission.cpp
-			transmission.hpp
-			SirDifferentialEquation.cpp
-			SirDifferentialEquation.hpp
-			SDess.cpp
-			SDess.hpp
-			RDess.cpp
-			RDess.hpp
-			IDess.cpp
-			IDess.hpp
-			#DessExec.cpp
-      			data_collector.hpp
-      			data_collector.cpp
-      			collector_test.cpp)
+TARGET_LINK_LIBRARIES(information_center
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
 
-ADD_LIBRARY(graph SHARED	
+INSTALL(TARGETS information_center
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(infection
+		SHARED	
+		infection.cpp
+		infection.hpp)
+
+TARGET_LINK_LIBRARIES(infection
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS infection
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(transmission
+		SHARED	
+		transmission.cpp
+		transmission.hpp)
+
+TARGET_LINK_LIBRARIES(transmission
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS transmission
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(data_collector
+	SHARED
+	data_collector.hpp
+      	data_collector.cpp)
+
+TARGET_LINK_LIBRARIES(data_collector
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS data_collector
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(dyn_vertexExecutive SHARED	
 			vertexExecutive.cpp
-			vertexExecutive.hpp
-			graphExecutive.cpp
+			vertexExecutive.hpp)
+
+TARGET_LINK_LIBRARIES(dyn_vertexExecutive
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS dyn_vertexExecutive
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(dyn_graphExecutive SHARED	
+			graphExecutive.cpp)
+
+TARGET_LINK_LIBRARIES(dyn_graphExecutive
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS dyn_graphExecutive
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(utils_grapTranslator SHARED	
 			GraphTranslator.cpp
 			GraphTranslator.hpp)
 
-TARGET_LINK_LIBRARIES(surveillance
+TARGET_LINK_LIBRARIES(utils_grapTranslator
   ${VLE_LIBRARIES}
   ${Boost_LIBRARIES})
 
-TARGET_LINK_LIBRARIES(sir
-  ${VLE_LIBRARIES}
-  ${Boost_LIBRARIES})
-
-TARGET_LINK_LIBRARIES(graph
-  ${VLE_LIBRARIES}
-  ${Boost_LIBRARIES})
-
-INSTALL(TARGETS surveillance
-  RUNTIME DESTINATION lib
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-
-INSTALL(TARGETS sir
-  RUNTIME DESTINATION lib
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-
-INSTALL(TARGETS graph
+INSTALL(TARGETS utils_grapTranslator
   RUNTIME DESTINATION lib
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)

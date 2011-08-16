@@ -62,4 +62,4 @@ double SirDiffentialEquation::compute(unsigned int i, const vd::Time& /* time */
 
 } // namespace model
  
-DECLARE_NAMED_DYNAMICS(sirDifferentialEquation, model::SirDiffentialEquation)
+DECLARE_DYNAMICS(model::SirDiffentialEquation);

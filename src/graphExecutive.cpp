@@ -217,5 +217,5 @@ private:
 };
 
 } // namespace model
- 
-DECLARE_NAMED_EXECUTIVE_DBG(dyn_graphExecutive, model::GraphExecutive)
+
+DECLARE_DYNAMICS(model::GraphExecutive);

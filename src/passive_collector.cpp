@@ -220,4 +220,4 @@ namespace model {
 
 } // namespace vle example
 
-DECLARE_NAMED_DYNAMICS(passive_collector, model::PassiveCollector)
+DECLARE_DYNAMICS(model::PassiveCollector);

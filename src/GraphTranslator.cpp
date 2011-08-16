@@ -177,3 +177,5 @@ void GraphTranslator::connectNodes(unsigned int from, unsigned int to)
 }
 
 }} //namespace vlebased translator
+
+DECLARE_DYNAMICS(model::GraphTranslator);

@@ -163,4 +163,4 @@ public:
 
 } // namespace model
 
-DECLARE_NAMED_DYNAMICS(information_center, model::information_center)
+DECLARE_DYNAMICS(model::information_center);

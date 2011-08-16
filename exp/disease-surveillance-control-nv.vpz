@@ -61,15 +61,15 @@
 </model>
 </structures>
 <dynamics>
-<dynamic name="Infection" library="sir" model="infection" package="surveillance" type="local"  />
-<dynamic name="Transmission" library="sir" model="transmission" package="surveillance" type="local"  />
-<dynamic name="collector" library="sir" model="data_collector" package="surveillance" type="local"  />
-<dynamic name="dyn_control" library="surveillance" model="controler" package="surveillance" type="local"  />
-<dynamic name="dyn_network" library="graph" model="dyn_graphExecutive" package="surveillance" type="local"  />
-<dynamic name="dyn_passive" library="surveillance" model="passive_collector" package="surveillance" type="local"  />
-<dynamic name="dyn_vertexExecutive" library="graph" model="dyn_vertexExecutive" package="surveillance" type="local"  />
-<dynamic name="dyn_xray" library="surveillance" model="x_ray" package="surveillance" type="local"  />
-<dynamic name="info_center" library="surveillance" model="information_center" package="surveillance" type="local"  />
+<dynamic name="Infection" library="infection" package="surveillance" type="local"  />
+<dynamic name="Transmission" library="transmission" package="surveillance" type="local"  />
+<dynamic name="collector" library="data_collector" package="surveillance" type="local"  />
+<dynamic name="dyn_control" library="controller" package="surveillance" type="local"  />
+<dynamic name="dyn_network" library="dyn_graphExecutive" package="surveillance" type="local"  />
+<dynamic name="dyn_passive" library="passive_collector" package="surveillance" type="local"  />
+<dynamic name="dyn_vertexExecutive" library="dyn_vertexExecutive" package="surveillance" type="local"  />
+<dynamic name="dyn_xray" library="x_ray" package="surveillance" type="local"  />
+<dynamic name="info_center" library="information_center" package="surveillance" type="local"  />
 </dynamics>
 <classes>
 <class name="InfectedVertex" >

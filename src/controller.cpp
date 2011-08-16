@@ -188,4 +188,4 @@ namespace model {
 
 } // namespace model
 
-DECLARE_NAMED_DYNAMICS(controler, model::controler)
+DECLARE_DYNAMICS(model::controler);

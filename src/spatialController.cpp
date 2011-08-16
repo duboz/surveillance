@@ -120,4 +120,4 @@ public:
 
 } // namespace model
 
-DECLARE_NAMED_DYNAMICS(spatialControler, model::spatialControler)
+DECLARE_DYNAMICS(model::spatialControler);

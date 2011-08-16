@@ -150,4 +150,4 @@ namespace model {
     
 } // namespace model
 
-DECLARE_NAMED_DYNAMICS_DBG(delay, model::Delay)
+DECLARE_DYNAMICS(model::Delay);

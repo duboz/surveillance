@@ -280,3 +280,5 @@ namespace model {
   }
 
 } // namespace vle example
+
+DECLARE_DYNAMICS(model::ActiveCollector);

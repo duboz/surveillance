@@ -182,4 +182,4 @@ public:
 
 } // namespace model
 
-DECLARE_NAMED_DYNAMICS_DBG(SurvScheduler, model::SurvScheduler)
+DECLARE_DYNAMICS(model::SurvScheduler);

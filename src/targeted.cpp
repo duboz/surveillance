@@ -23,6 +23,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <boost/lexical_cast.hpp>
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
 #include "targeted.hpp"
@@ -169,4 +170,4 @@ vv::Map infNodes = (*it)->getMapAttributeValue("infectedNodes");
 
 } // namespace vle example
 
-DECLARE_NAMED_DYNAMICS_DBG(targeted, model::Targeted)
+DECLARE_DYNAMICS(model::Targeted);

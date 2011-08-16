@@ -218,4 +218,4 @@ namespace model {
 
 } // namespace vle example
 
-DECLARE_NAMED_DYNAMICS(transmission, model::Transmission)
+DECLARE_DYNAMICS(model::Transmission);

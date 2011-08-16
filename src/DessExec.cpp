@@ -148,4 +148,4 @@ private:
 
 } // namespace model
  
-DECLARE_NAMED_EXECUTIVE_DBG(dyn_dessExec, model::DessExec)
+DECLARE_EXECUTIVE_DBG(model::DessExec)

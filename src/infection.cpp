@@ -259,4 +259,4 @@ namespace model {
 
 } // namespace vle example
 
-DECLARE_NAMED_DYNAMICS(infection, model::Infection)
+DECLARE_DYNAMICS(model::Infection);
