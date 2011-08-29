@@ -64,7 +64,7 @@
 <dynamic name="Infection" library="infection" package="surveillance" type="local"  />
 <dynamic name="Transmission" library="transmission" package="surveillance" type="local"  />
 <dynamic name="collector" library="data_collector" package="surveillance" type="local"  />
-<dynamic name="dyn_control" library="controller" package="surveillance" type="local"  />
+<dynamic name="dyn_control" library="controler" package="surveillance" type="local"  />
 <dynamic name="dyn_network" library="dyn_graphExecutive" package="surveillance" type="local"  />
 <dynamic name="dyn_passive" library="passive_collector" package="surveillance" type="local"  />
 <dynamic name="dyn_vertexExecutive" library="dyn_vertexExecutive" package="surveillance" type="local"  />
