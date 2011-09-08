@@ -162,7 +162,9 @@ namespace model {
             default :
                 return new vv::String("?");
             }
-        }else
+        }else if (event.onPort("rate")) {
+            return new vv::Double(mRate);
+        } else
             return 0;
     }
     
