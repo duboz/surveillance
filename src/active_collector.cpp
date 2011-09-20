@@ -39,6 +39,10 @@ namespace model {
     mProbabilityRightSR = vv::toDouble(events.get("probabilityRightSR"));
     mProbabilityRightI = vv::toDouble(events.get("probabilityRightI"));
     mObservationTimeStep =  vv::toDouble(events.get("timeStep"));
+    if (events.exist("asleep"))
+        mAsleep = vv::toBoolean(events.get("asleep"));
+    else
+        mAsleep = false;
     if (events.exist("obsAggregationThreshold")) { 
         mObsAggregationThreshold =  vv::toDouble(events.get("obsAggregationThreshold"));
     }
@@ -56,7 +60,7 @@ namespace model {
     mSampleSize = /*boost::lexical_cast<int>*/ (vv::toDouble(events.get("echProp")) * mNbModel);
     //std::cout<<"smplesize= "<<mSampleSize<<"\n";
     mPrevalence=0.; mIncidence=0.;
-      }
+  }
 
   ActiveCollector::~ActiveCollector()
   {
@@ -67,7 +71,10 @@ namespace model {
       mPhase = INIT;
       mCurrentTime = vd::Time(time);
       mLastRequestTime = vd::Time(time);
-      return vd::Time(0);
+      if (mAsleep)
+          return vd::Time(0);
+      else
+          return vd::Time::infinity;
   }
 
   void ActiveCollector::output(const vd::Time& /*time*/,
@@ -126,6 +133,10 @@ namespace model {
   vd::Time ActiveCollector::timeAdvance() const
   {
       if (mPhase == SEND) {
+          return 0;
+      }
+      
+      if (mPhase == INIT) {
           return 0;
       }
 

@@ -75,7 +75,6 @@ namespace model {
                     ev << vd::attribute ("on", buildBoolean(m_interventions.begin()->on));
                 }
                 output.addEvent (ev);
-
             }
             if (getModel().existOutputPort("info_center")) {
                 vd::ExternalEvent * evInfo = new vd::ExternalEvent ("info_center");

@@ -87,6 +87,7 @@ protected:
     double mPrevalence;
     double mIncidence;
     double mObsAggregationThreshold;
+    bool mAsleep;
 };
 
 } // namespace model

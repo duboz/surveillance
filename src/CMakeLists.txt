@@ -35,6 +35,30 @@ INSTALL(TARGETS controler
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
 
+ADD_LIBRARY(trigger SHARED
+			trigger.cpp)
+
+TARGET_LINK_LIBRARIES(trigger
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS trigger
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+ADD_LIBRARY(multi_trigger SHARED
+			multi_trigger.cpp)
+
+TARGET_LINK_LIBRARIES(multi_trigger
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS multi_trigger
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
 ADD_LIBRARY(delay SHARED
                         delay.cpp
 			delay.hpp)
