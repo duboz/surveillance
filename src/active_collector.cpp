@@ -190,11 +190,19 @@ namespace model {
   }
 
   void ActiveCollector::externalTransition(
-                                  const vd::ExternalEventList& event,
+                                  const vd::ExternalEventList& events,
                                   const vd::Time& time)
   {
-       if (mPhase == RECEIVE) {
-        receiveData(event, time);
+      if (mPhase == INIT) {
+        for (unsigned int i = 0; i < events.size(); i++) {
+            if (events[i]->onPort("start")) {
+                mPhase = SEND;
+                mAsleep = false;
+            }
+        }
+      }
+      else if (mPhase == RECEIVE) {
+        receiveData(events, time);
       }
   }
 

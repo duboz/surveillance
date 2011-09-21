@@ -45,7 +45,7 @@ public:
         const devs::InitEventList& events)
         : devs::Dynamics(init, events)
     {
-        m_init_control_rate = vv::toSetValue(events.get("control_steps"))->getDouble(1);
+        m_init_control_rate = vv::toSetValue(events.get("ratios"))->getDouble(1);
         m_nbSubModel = events.getMap("graphInfo").getInt("number");
         m_subModelPrefix = events.getMap("graphInfo").getString("prefix");
         m_phase = INIT;

@@ -2,7 +2,7 @@
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
 <vle_project version="1.0.0" date="dim, 26 jui 2009" author="Bruno Bonté" instance="0" replica="5">
 <structures>
-<model name="graph" type="coupled" width="667" height="431"  >
+<model name="graph" type="coupled" width="698" height="520"  >
 <submodels>
 <model name="control" type="atomic" conditions="control" dynamics="dyn_control" observables="control" x="306" y="142" width="100" height="60" >
 <in>
@@ -14,7 +14,7 @@
 </model>
 <model name="gen_network" type="atomic" conditions="collectors,cond_graph,controllers" dynamics="dyn_network" x="307" y="334" width="100" height="30" >
 </model>
-<model name="passiveCollector" type="atomic" conditions="passive_surv,xRay_1" dynamics="dyn_passive" observables="passive" x="41" y="249" width="100" height="60" >
+<model name="passiveCollector" type="atomic" conditions="passive_surv,xRay" dynamics="dyn_passive" observables="passive" x="41" y="249" width="100" height="60" >
 <out>
  <port name="control" />
  <port name="info_center" />
@@ -28,7 +28,7 @@
  <port name="control" />
 </out>
 </model>
-<model name="xRaySample" type="atomic" conditions="cond_graph,xRay_1" dynamics="dyn_xray" observables="xRay" x="297" y="239" width="100" height="60" >
+<model name="xRaySample" type="atomic" conditions="cond_graph,xRay" dynamics="dyn_xray" observables="xRay" x="297" y="239" width="100" height="60" >
 <in>
  <port name="start" />
 </in>
@@ -46,7 +46,7 @@
  <destination model="trigger" port="start" />
 </connection>
 <connection type="internal">
- <origin model="passiveCollector" port="control" />
+ <origin model="trigger" port="control" />
  <destination model="xRaySample" port="start" />
 </connection>
 <connection type="internal">
@@ -150,8 +150,8 @@
 </model>
 </class>
 </classes>
-<experiment name="under_control" duration="1000.000000000000000" begin="0.000000000000000" combination="total" seed="3890346734" >
-<replicas seed="3499211612" number="1" />
+<experiment name="under_control" duration="100.000000000000000" begin="0.000000000000000" combination="total" seed="581869302" >
+<replicas seed="581869302" number="1" />
 <conditions>
 <condition name="collector" >
  <port name="timeStep" >
@@ -177,7 +177,7 @@
  <port name="controlDelay" >
 <double>0.500000000000000</double>
 </port>
- <port name="control_steps" >
+ <port name="ratios" >
 <set><double>0.000000000000000</double><double>0.500000000000000</double><double>0.600000000000000</double><double>0.700000000000000</double></set>
 </port>
  <port name="disabled" >
@@ -194,15 +194,15 @@
 <double>3.000000000000000</double>
 </port>
  <port name="infectiousPeriod" >
-<double>10.000000000000000</double>
+<double>15.000000000000000</double>
 </port>
  <port name="securedPeriod" >
-<double>10.000000000000000</double>
+<double>0.000000000000000</double>
 </port>
 </condition>
 <condition name="passive_surv" >
  <port name="probabilityDeclaration" >
-<double>0.001000000000000</double>
+<double>0.050000000000000</double>
 </port>
 </condition>
 <condition name="susceptible" >
@@ -210,10 +210,10 @@
 <double>0.000000000000000</double>
 </port>
  <port name="infectiousPeriod" >
-<double>10.000000000000000</double>
+<double>15.000000000000000</double>
 </port>
  <port name="securedPeriod" >
-<double>10.000000000000000</double>
+<double>0.000000000000000</double>
 </port>
 </condition>
 <condition name="transmission" >
@@ -221,26 +221,12 @@
 <string>infection</string>
 </port>
  <port name="rate" >
-<double>0.003000000000000</double>
+<double>0.002000000000000</double>
 </port>
 </condition>
 <condition name="xRay" >
  <port name="echProp" >
-<double>1.000000000000000</double>
-</port>
- <port name="probabilityRightI" >
-<double>0.750000000000000</double>
-</port>
- <port name="probabilityRightSR" >
-<double>0.750000000000000</double>
-</port>
- <port name="timeStep" >
-<double>100.000000000000000</double>
-</port>
-</condition>
-<condition name="xRay_1" >
- <port name="echProp" >
-<double>0.000000000000000</double>
+<double>0.100000000000000</double>
 </port>
  <port name="probabilityRightI" >
 <double>1.000000000000000</double>
@@ -249,7 +235,7 @@
 <double>1.000000000000000</double>
 </port>
  <port name="timeStep" >
-<double>10.000000000000000</double>
+<double>5.000000000000000</double>
 </port>
 </condition>
 </conditions>
