@@ -119,9 +119,9 @@ namespace model {
                     double ratio = events[i]->getDoubleAttributeValue("ratio");
                     std::cout<<"car control ratio: "<<ratio<<" on? "<<events[i]->getBooleanAttributeValue("on")<<std::endl;
                     if (events[i]->getBooleanAttributeValue("on"))
-                        mRate = mRate * ratio;
+                        mRate = mRate - mRate * ratio;
                     else
-                        mRate = mRate / ratio;
+                        mRate = mRate + mRate / ratio;
                 }
             }
         }
