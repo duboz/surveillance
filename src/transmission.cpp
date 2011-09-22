@@ -121,7 +121,7 @@ namespace model {
                     if (events[i]->getBooleanAttributeValue("on"))
                         mRate = mRate - mRate * ratio;
                     else
-                        mRate = mRate + mRate / ratio;
+                        mRate = mRate / (1. - ratio);
                 }
             }
         }
