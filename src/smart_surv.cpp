@@ -37,6 +37,7 @@ namespace model {
       : model::ActiveCollector(init, events)
   {
     mPrecision = vv::toDouble(events.get("relative_precision"));
+    mSampleMin = vv::toDouble(events.get("echProp"));
   }
 
   smart_surv::~smart_surv()
@@ -60,6 +61,12 @@ namespace model {
         //std::cout<<"Prev is "<<mPrevalence<<"\n";
         return buildDouble(mPrevalence);
     }
+    if (event.onPort("proportion")){
+        //std::cout<<"Prev is "<<mPrevalence<<"\n";
+        double doubleSize = mSampleSize;
+        return buildDouble(doubleSize/mNbModel);
+    }
+
     if (event.onPort("incidence")){
         //std::cout<<"incidence is "<<mIncidence<<"\n";
         return buildDouble(mIncidence);
@@ -105,7 +112,7 @@ namespace model {
       if (mPrevalence > 0)
           prev = mPrevalence;
       double infSample = std::pow(1.96,2) * prev * (1. - prev) / std::pow(prev * mPrecision,2);
-      mSampleSize = 1./(1./infSample + 1./mNbModel);
+      mSampleSize = std::max(1./(1./infSample + 1./mNbModel), mSampleMin);
   }
 
 } // namespace vle example

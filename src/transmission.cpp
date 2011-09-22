@@ -117,6 +117,7 @@ namespace model {
                     cleaned = true;
                 if (events[i]->getStringAttributeValue("type") == "move_restriction") {
                     double ratio = events[i]->getDoubleAttributeValue("ratio");
+                    std::cout<<"car control ratio: "<<ratio<<" on? "<<events[i]->getBooleanAttributeValue("on")<<std::endl;
                     if (events[i]->getBooleanAttributeValue("on"))
                         mRate = mRate * ratio;
                     else
@@ -184,6 +185,7 @@ namespace model {
         mInfectionOffsets = new double[mPorts.size()];
         // Generate dates
         double infectionDates[mPorts.size()];
+        std::cout<<"call exponential with rate= "<<mRate<<std::endl;
         for (unsigned int i = 0; i < mPorts.size(); i++)
             infectionDates[i] = rand().exponential(mRate);
         // Sort this dates

@@ -172,8 +172,10 @@ namespace model {
     }
 
     value::Value* controler::observation(
-        const devs::ObservationEvent& /* event */) const
+        const devs::ObservationEvent& event) const
     {
+        if (event.onPort("on-off"))
+            return (buildBoolean(m_nbInterventions>0));
         return buildInteger(m_nbInterventions);
     }
 

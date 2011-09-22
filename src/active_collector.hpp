@@ -70,7 +70,7 @@ public:
 
     //Generic active collector functions
     virtual void connectToNodes(vd::ExternalEventList& output) const = 0;
-    void computeSampleProp();
+    virtual void computeSampleProp();
     virtual void receiveData(const vd::ExternalEventList& event,
                                   const vd::Time& time);
 protected:

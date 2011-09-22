@@ -59,6 +59,7 @@ public:
     void computeSampleProp();
 private:
     double mPrecision;
+    double mSampleMin;
 };
 
 
