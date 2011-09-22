@@ -25,6 +25,7 @@
 
 #include <vle/value.hpp>
 #include <vle/devs.hpp>
+#include <active_collector.hpp>
 
 namespace vd = vle::devs;
 namespace vv = vle::value;
@@ -48,47 +49,17 @@ namespace model {
  *   by the observation method.
  *
  */
-class ActiveCollector : public vd::Dynamics
+class smart_surv: public model::ActiveCollector
 {
 public:
-    ActiveCollector(const vd::DynamicsInit& init, const vd::InitEventList& events);
-    virtual ~ActiveCollector();
-    virtual vd::Time init(const vd::Time& time);
-    void output(const vd::Time& /*time*/,
-                        vd::ExternalEventList& output) const;
-    virtual vd::Time timeAdvance() const;
-    virtual void internalTransition(const vd::Time& time);
-    virtual void externalTransition(const vd::ExternalEventList& event,
-                                    const vd::Time& time);
-    virtual void confluentTransitions(const vd::Time& time,
-                                      const vd::ExternalEventList& events);
-    virtual void request(const vd::RequestEvent& /*event*/,
-                         const vd::Time& /*time*/,
-                         vd::ExternalEventList& /*output*/) const;
-    virtual vv::Value* observation(const vd::ObservationEvent& /*event*/) const;
-    virtual void finish();  
-
-    //Generic active collector functions
-    virtual void connectToNodes(vd::ExternalEventList& output) const = 0;
+    smart_surv(const vd::DynamicsInit& init, const vd::InitEventList& events);
+    ~smart_surv();
+    vv::Value* observation(const vd::ObservationEvent& /*event*/) const;
+    virtual void connectToNodes(vd::ExternalEventList& output) const;
     void computeSampleProp();
-    virtual void receiveData(const vd::ExternalEventList& event,
-                                  const vd::Time& time);
-protected:
-    enum PHASE {SEND, RECEIVE, SEND_OBS, INIT, IDLE, CHG_CONNECTION, WAIT_CONNECTION};
-    PHASE mPhase;
-    vd::Time mLastRequestTime;
-    vd::Time mCurrentTime;
-    double mObservationTimeStep;
-    double mProbabilityRightSR;
-    double mProbabilityRightI;
-    int mSampleSize;    
-    int mNbModel;
-    std::string mPrefix;
-    std::map<std::string, std::string> mapResult;
-    double mPrevalence;
-    double mIncidence;
-    double mObsAggregationThreshold;
-    bool mAsleep;
+private:
+    double mPrecision;
 };
+
 
 } // namespace model

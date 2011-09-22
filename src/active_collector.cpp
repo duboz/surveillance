@@ -71,6 +71,7 @@ namespace model {
       mPhase = INIT;
       mCurrentTime = vd::Time(time);
       mLastRequestTime = vd::Time(time);
+      computeSampleProp();
       if (mAsleep)
           return vd::Time(0);
       else
@@ -170,6 +171,7 @@ namespace model {
           break;
       case SEND_OBS:
           mPhase = CHG_CONNECTION; 
+          computeSampleProp();
           mCurrentTime = vd::Time(time);
           break;
       case CHG_CONNECTION:
@@ -250,6 +252,10 @@ namespace model {
   }
 
   void ActiveCollector::finish()
+  {
+  }
+
+  void ActiveCollector::computeSampleProp()
   {
   }
   

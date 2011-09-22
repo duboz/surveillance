@@ -121,11 +121,11 @@ namespace model {
                         mRate = mRate * ratio;
                     else
                         mRate = mRate / ratio;
-                    if (mPhase == INFECTING) {
-                        randomizeInfectionTime();
-                    }
                 }
             }
+        }
+        if (mPhase == INFECTING) {
+            randomizeInfectionTime();
         }
         if (cleaned)
             mPhase = IDLE;

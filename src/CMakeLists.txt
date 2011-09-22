@@ -22,6 +22,21 @@ INSTALL(TARGETS x_ray
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
 
+ADD_LIBRARY(smart_surv SHARED
+                       	smart_surv.cpp
+                	smart_surv.hpp
+	               	active_collector.cpp
+                	active_collector.hpp)
+
+TARGET_LINK_LIBRARIES(smart_surv
+  ${VLE_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+INSTALL(TARGETS smart_surv
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
 ADD_LIBRARY(controler SHARED
 			controller.hpp
 			controller.cpp)
