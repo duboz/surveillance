@@ -65,7 +65,6 @@ public:
         const devs::Time& /*time*/,
         devs::ExternalEventList& output) const
     {
-        std::cout<<"intrusion!\n";
         vd::ExternalEvent * ev = new vd::ExternalEvent ("control");
         vv::Map* nodes = vv::Map::create();
         for (int num = 0; num < m_nbSubModel; num ++) {
