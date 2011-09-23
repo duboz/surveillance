@@ -56,6 +56,7 @@ public:
     virtual void finish();  
 private:
     enum PHASE {IDLE, SEND_RESULT};
+    int mNbOutbreaks;
     PHASE mPhase;
     double mProbabilityRightSR;
     double mProbabilityRightI;

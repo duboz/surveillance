@@ -40,6 +40,7 @@ namespace model {
     mProbabilityRightSR = vv::toDouble(events.get("probabilityRightSR"));
     mProbabilityRightI = vv::toDouble(events.get("probabilityRightI"));
     mProbabilityDeclaration = vv::toDouble(events.get("probabilityDeclaration"));
+    mNbOutbreaks = 0;
   }
 
   PassiveCollector::~PassiveCollector()
@@ -133,6 +134,7 @@ namespace model {
                           std::pair<std::string, vd::Time> (value, time);
                   
                   } else if (value == "I") {
+                      mNbOutbreaks++;
                       if (randValue > mProbabilityRightI) {
                         value = "S";
                       }
@@ -200,6 +202,17 @@ namespace model {
         //std::cout<<"Prev is "<<mPrevalence<<"\n";
         return buildInteger(Is);
     }
+    
+    if (event.onPort("nb_outbreaks")){
+        //std::cout<<"Prev is "<<mPrevalence<<"\n";
+        return buildInteger(mNbOutbreaks);
+    }
+
+    if (event.onPort("epidemic_width")){
+        //std::cout<<"Prev is "<<mPrevalence<<"\n";
+        return buildInteger(mapResult.size());
+    }
+
 
     if (event.onPort("nbSs")){
         //std::cout<<"Prev is "<<mPrevalence<<"\n";
