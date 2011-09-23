@@ -57,6 +57,7 @@ public:
 private:
     enum PHASE {IDLE, SEND_RESULT};
     int mNbOutbreaks;
+    std::map<std::string, bool> mEpidemicWidth;
     PHASE mPhase;
     double mProbabilityRightSR;
     double mProbabilityRightI;

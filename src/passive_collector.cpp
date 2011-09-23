@@ -135,6 +135,7 @@ namespace model {
                   
                   } else if (value == "I") {
                       mNbOutbreaks++;
+                      mEpidemicWidth[modelName] = true;
                       if (randValue > mProbabilityRightI) {
                         value = "S";
                       }
@@ -210,7 +211,7 @@ namespace model {
 
     if (event.onPort("epidemic_width")){
         //std::cout<<"Prev is "<<mPrevalence<<"\n";
-        return buildInteger(mapResult.size());
+        return buildInteger(mEpidemicWidth.size());
     }
 
 
