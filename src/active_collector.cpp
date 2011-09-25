@@ -201,11 +201,16 @@ namespace model {
                 mPhase = SEND;
                 mAsleep = false;
             }
+            if (events[i]->onPort("stop")) {
+                mPhase = INIT;
+                mAsleep = true;
+            }
         }
       }
       else if (mPhase == RECEIVE) {
         receiveData(events, time);
       }
+
   }
 
   void ActiveCollector::confluentTransitions(const vd::Time& time,

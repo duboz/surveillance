@@ -32,11 +32,13 @@ namespace model {
 class Trigger : public devs::Dynamics
 {
 private:
-    enum Phase {INIT, IDLE, TRIGGER};
+    enum Phase {INIT, IDLE, TRIGGER, OFF};
     Phase m_phase;
     double m_init_control_rate;
     double m_starting_time;
     int m_nbSubModel;
+    int m_nulPrev;
+    int m_max_nulPrev;
     std::string m_subModelPrefix;
 
 public:
@@ -49,6 +51,8 @@ public:
         m_nbSubModel = events.getMap("graphInfo").getInt("number");
         m_subModelPrefix = events.getMap("graphInfo").getString("prefix");
         m_phase = INIT;
+        m_nulPrev = 0;
+        m_max_nulPrev = events.getInt("nb_obs_min");
     }
 
     virtual ~Trigger()
@@ -64,24 +68,30 @@ public:
     virtual void output(
         const devs::Time& /*time*/,
         devs::ExternalEventList& output) const
-    {
-        vd::ExternalEvent * ev = new vd::ExternalEvent ("control");
-        vv::Map* nodes = vv::Map::create();
-        for (int num = 0; num < m_nbSubModel; num ++) {
-        std::string vetName = 
-        m_subModelPrefix + "-" + boost::lexical_cast<std::string>(num);
-        nodes->addString(vetName, "to_control");
-      }
-        ev << vd::attribute ("controledNodes", nodes);
-        ev << vd::attribute ("type", buildString("move_restriction"));
-        ev << vd::attribute ("ratio", vv::Double::create(m_init_control_rate));
-        ev << vd::attribute ("on", vv::Boolean::create(true));
-        output.addEvent (ev);
+    { 
+        if (m_phase == TRIGGER) {
+            vd::ExternalEvent * ev = new vd::ExternalEvent ("control");
+            vv::Map* nodes = vv::Map::create();
+            for (int num = 0; num < m_nbSubModel; num ++) {
+            std::string vetName = 
+            m_subModelPrefix + "-" + boost::lexical_cast<std::string>(num);
+            nodes->addString(vetName, "to_control");
+            }
+            ev << vd::attribute ("controledNodes", nodes);
+            ev << vd::attribute ("type", buildString("move_restriction"));
+            ev << vd::attribute ("ratio", vv::Double::create(m_init_control_rate));
+            ev << vd::attribute ("on", vv::Boolean::create(true));
+            output.addEvent (ev);
+        }
+        else if (m_phase == OFF) {
+            vd::ExternalEvent * ev = new vd::ExternalEvent ("stop");
+            output.addEvent (ev);
+        }
     }
 
     virtual devs::Time timeAdvance() const
     {
-        if (m_phase == TRIGGER)
+        if ((m_phase == TRIGGER) or (m_phase == OFF))
             return devs::Time(0); 
         else 
             return devs::Time::infinity;
@@ -94,11 +104,26 @@ public:
     }
 
     virtual void externalTransition(
-        const devs::ExternalEventList& /* event */,
+        const devs::ExternalEventList& event,
         const devs::Time& /* time */)
     {
         if (m_phase == INIT)
             m_phase = TRIGGER;
+        else if(m_phase == IDLE)
+        {
+            for (devs::ExternalEventList::const_iterator it = event.begin();
+                    it != event.end(); ++it) {
+                if ((*it)->onPort("continue")) {
+                    double prev =(*it)->getDoubleAttributeValue("value");
+                    if (prev >0)
+                        m_nulPrev = 0;
+                    else
+                        m_nulPrev++;
+                }
+            }
+            if (m_nulPrev > m_max_nulPrev)
+                m_phase = OFF;
+        }
     }
 
     void confluentTransitions(
