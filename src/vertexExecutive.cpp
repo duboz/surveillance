@@ -74,8 +74,8 @@ namespace model {
         addOutputPort("infection", m_active_collectors[j]->writeToString());
         addConnection("infection", m_active_collectors[j]->writeToString(),
                       coupledmodelName(),m_active_collectors[j]->writeToString());
-        addConnection("infection","state",coupledmodelName(),"passiveCollectors");
       }
+        addConnection("infection","state",coupledmodelName(),"passiveCollectors");
         int nb = 0;
         for (it = list.begin(); it != list.end(); ++it) {
 	    bool isCollector=false;
