@@ -115,7 +115,7 @@ public:
                     it != event.end(); ++it) {
                 if ((*it)->onPort("continue")) {
                     double prev =(*it)->getDoubleAttributeValue("value");
-                    if (prev >0)
+                    if (prev > 0.000000001)
                         m_nulPrev = 0;
                     else
                         m_nulPrev++;

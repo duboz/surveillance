@@ -138,7 +138,7 @@ namespace model {
       }
       
       if (mPhase == INIT) {
-          return 0;
+          return vd::Time::infinity;
       }
 
       if ((mPhase == CHG_CONNECTION) or (mPhase == WAIT_CONNECTION)) {
@@ -195,22 +195,21 @@ namespace model {
                                   const vd::ExternalEventList& events,
                                   const vd::Time& time)
   {
-      if (mPhase == INIT) {
-        for (unsigned int i = 0; i < events.size(); i++) {
+      for (unsigned int i = 0; i < events.size(); i++) {
+        if (mPhase == INIT) {
             if (events[i]->onPort("start")) {
                 mPhase = SEND;
                 mAsleep = false;
             }
-            if (events[i]->onPort("stop")) {
-                mPhase = INIT;
-                mAsleep = true;
-            }
         }
+          if (events[i]->onPort("stop")) {
+              mPhase = INIT;
+              mAsleep = true;
+          }
       }
-      else if (mPhase == RECEIVE) {
+      if (mPhase == RECEIVE) {
         receiveData(events, time);
       }
-
   }
 
   void ActiveCollector::confluentTransitions(const vd::Time& time,
